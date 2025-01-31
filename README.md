@@ -3,15 +3,6 @@
 
 
 <!-- PROJECT SHIELDS -->
-<!--
-
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![project_license][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
-
 
 
 <!-- PROJECT LOGO -->
@@ -29,7 +20,6 @@
     <a href="https://www.mediafire.com/file/bhxwcrpim6e8aw6/XoDos3.4.apk/file"><strong> Download XoDos 3.4 glibc APK</strong></a>
     <br />
     <br />
-    <br />
     <a href="https://www.mediafire.com/file/l0zafek73qt4oyl/XoDos_V4-bionic.apk/file"><strong> Download XoDos 4 bionic APK</strong></a>
     <br />
     <br />
@@ -50,7 +40,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+[![Product Name Screen Shot][product-screenshot]](https://youtu.be/WPfbSrp5EFI?si=thZkm_WIWnFk6l3g)
 
 There's a lot of windows emulators these days and few are customizable , but this one is fully customizable and have More than just emulator ,, from Linux operating system to wine both glibc and bionic also it support proot ,, for now it has All necessary needs running Linux apps and windows games ,,
 it's has 
@@ -65,82 +55,6 @@ available versions,,
 XoDos 3.4 glibc ::
 XoDos 4 bionic ::
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-### Built With
-
-
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
-<a id="readme-top"></a>
-
-
-<!-- PROJECT SHIELDS -->
-<!--
-
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![project_license][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
-
-
-
-<!-- PROJECT LOGO -->
-<br />
-<div align="center">
-  <a href="https://github.com/xodiosx/XoDos/">
-    <img src="logo.png" alt="Logo" width="80" height="80">
-  </a>
-
-<h3 align="center">project_title</h3>
-
-  <p align="center">
-    project_description
-        <br />
-    <a href="https://www.mediafire.com/file/bhxwcrpim6e8aw6/XoDos3.4.apk/file"><strong> Download XoDos 3.4 glibc APK</strong></a>
-    <br />
-    <br />
-    <br />
-    <a href="https://www.mediafire.com/file/l0zafek73qt4oyl/XoDos_V4-bionic.apk/file"><strong> Download XoDos 4 bionic APK</strong></a>
-    <br />
-    <br />
-    <a href="https://youtu.be/WPfbSrp5EFI?si=89OOBwATBGOx_4zl">View YouTube video</a>
-    &middot;
-    <a href="https://github.com/xodiosx/XoDos/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
-    &middot;
-    <a href="https://github.com/xodiosx/XoDos/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
-  </p>
-</div>
-
-
-
-<!-- TABLE OF CONTENTS -->
-
-
-
-<!-- ABOUT THE PROJECT -->
-## About The Project
-
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-
-There's a lot of windows emulators these days and few are customizable , but this one is fully customizable and have More than just emulator ,, from Linux operating system to wine both glibc and bionic also it support proot ,, for now it has All necessary needs running Linux apps and windows games ,,
-it's has 
-turnip drivers
-VirGl drivers
-Vulkan wrappers
-DXVK
-wineD3D
-and everything needed
-available versions,,
-
-XoDos 3.4 glibc ::
-XoDos 4 bionic ::
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-### Built With
-
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -269,5 +183,3 @@ YouTube channel: [https://www.youtube.com/@xodmods5082)
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
