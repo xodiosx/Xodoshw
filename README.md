@@ -99,9 +99,9 @@ Distributed under the XoDos project. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-xodios - [@XAleiwi](https://x.com/XAleiwi) -x.com
-YouTube channel: [https://www.youtube.com/@xodmods5082)
- telegram Group: [https://t.me/xodemulatorr)
+xodios - [@XAleiwi](https://x.com/XAleiwi)
+[YouTube channel:](https://www.youtube.com/@xodmods5082)
+ [Telegram Group:](https://t.me/xodemulatorr)
 
 
 
@@ -112,11 +112,11 @@ YouTube channel: [https://www.youtube.com/@xodmods5082)
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
-* [https://github.com/jiaxinchen-max/](termux mod)
-* [https://github.com/termux](termux)
-* [https://www.winehq.org](Wine)
-* [https://www.mesa3d.org](mesa 3d)
-* [https://github.com/ValveSoftware/dxvk](DXVk)
+* [termux mod](https://github.com/jiaxinchen-max/)
+* [termux](https://github.com/termux)
+* [wine](https://www.winehq.org)
+* [Mesa 3d](https://www.mesa3d.org)
+* [DXVK](https://github.com/ValveSoftware/dxvk)
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
