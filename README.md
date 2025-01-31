@@ -9,7 +9,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/xodiosx/XoDos/blob/main/Logo.png">
-    <img src="https://github.com/xodiosx/XoDos/blob/main/Logo.png" alt="Logo" width="80" height="80">
+    <img src="https://github.com/xodiosx/XoDos/blob/main/Logo.png" alt="Logo" width="300" height="300">
   </a>
 
 <h3 align="center">XoDos emulator</h3>
