@@ -21,10 +21,10 @@
     <img src="https://github.com/xodiosx/XoDos/blob/main/Logo.png" alt="Logo" width="80" height="80">
   </a>
 
-<h3 align="center">project_title</h3>
+<h3 align="center">XoDos emulator</h3>
 
   <p align="center">
-    project_description
+    windows and Linux emulator for Android it sims to rub windows and Linux games and Apps with x86_64 and glibc and bionic wine builds
         <br />
     <a href="https://www.mediafire.com/file/bhxwcrpim6e8aw6/XoDos3.4.apk/file"><strong> Download XoDos 3.4 glibc APK</strong></a>
     <br />
