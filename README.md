@@ -17,8 +17,8 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/xodiosx/XoDos/">
-    <img src="logo.png" alt="Logo" width="80" height="80">
+  <a href="https://github.com/xodiosx/XoDos/blob/main/Logo.png">
+    <img src="https://github.com/xodiosx/XoDos/blob/main/Logo.png" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">project_title</h3>
