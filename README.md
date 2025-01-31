@@ -15,7 +15,7 @@
 <h3 align="center">XoDos emulator</h3>
 
   <p align="center">
-    windows and Linux emulator for Android it sims to rub windows and Linux games and Apps with x86_64 and glibc and bionic wine builds
+    windows and Linux emulator for Android it aims to run windows and Linux games and Apps on android with x86_64 and glibc and bionic wine builds
         <br />
     <a href="https://www.mediafire.com/file/bhxwcrpim6e8aw6/XoDos3.4.apk/file"><strong> Download XoDos 3.4 glibc APK</strong></a>
     <br />
@@ -80,7 +80,7 @@ XoDos 4 bionic ::
 - [ ] support More drivers for more devices
 - [ ] More languages
 - [ ] easier installation with progress percentage
-    - [ ] Nested Feature
+
 
 
 <!-- CONTRIBUTING -->
@@ -90,7 +90,7 @@ XoDos 4 bionic ::
 <!-- LICENSE -->
 ## License
 
-Distributed under the project_license. See `LICENSE.txt` for more information.
+Distributed under the XoDos project. See `LICENSE.txt` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -113,8 +113,10 @@ YouTube channel: [https://www.youtube.com/@xodmods5082)
 ## Acknowledgments
 
 * [https://github.com/jiaxinchen-max/](termux mod)
-
-
+* [https://github.com/termux](termux)
+* [https://www.winehq.org](Wine)
+* [https://www.mesa3d.org](mesa 3d)
+* [https://github.com/ValveSoftware/dxvk](DXVk)
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
@@ -134,52 +136,3 @@ YouTube channel: [https://www.youtube.com/@xodmods5082)
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/linkedin_username
 [product-screenshot]: images/screenshot.png
-￼Enter<!-- GETTING STARTED -->
-## Getting Started
-
-### Installation
-
-1. Get XoDos APK from the inks above
-2. install it
-3. open the XoDos Settings and Press install XoDos system (wait and give storage permission)
-4. Wait until it closes automatically 
-5. open again enjoy
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- USAGE EXAMPLES -->
-
-
-<!-- ROADMAP -->
-## To-do
-
-- [ ] support More drivers for more devices
-- [ ] More languages
-- [ ] easier installation with progress percentage
-    - [ ] Nested Feature
-
-CONTRIBUTING -->
-
-
-
-<!-- LICENSE -->
-## License
-
-Distributed under the project_license. See `LICENSE.txt` for more information.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- CONTACT -->
-## Contact
-
-xodios - [@XAleiwi](https://x.com/XAleiwi) -x.com
-YouTube channel: [https://www.youtube.com/@xodmods5082)
- telegram Group: [https://t.me/xodemulatorr)
-
-
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
