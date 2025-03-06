@@ -18,8 +18,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.ref }}  
-          submodules: 'recursive'  # Ensure submodules are cloned
-          token: ${{ secrets.GITHUB_TOKEN }}  # Required for private submodules
+          submodules: 'recursive'  
+          token: ${{ secrets.GITHUB_TOKEN }}
 
  - name: Make Gradle Wrapper executable
         run: chmod +x ./gradlew
