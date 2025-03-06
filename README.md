@@ -12,7 +12,7 @@
     <img src="https://github.com/xodiosx/XoDos/blob/main/Logo.png" alt="Logo" width="330" height="300">
   </a>
 
-<h3 align="center">XoDos emulator</h3>
+##XoDos
 
   <p align="center">
     windows and Linux emulator for Android it aims to run windows and Linux games and Apps on android with x86_64 and glibc and bionic wine builds
