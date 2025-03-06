@@ -31,6 +31,23 @@ or
 ```
 
 
+# About
+it's a fully fledged X server with termux and winlator touch controls together in one App. It is built with Android NDK.
+
+## Submodules
+This repo uses submodules. Use 
+
+```
+~ $ git clone --recurse-submodules https://github.com/xodiosx/XoDos
+```
+or
+```
+~ $ git clone https://github.com/xodiosx/XoDos
+~ $ cd XoDos
+~ $ git submodule update --init --recursive
+```
+
+
   <p align="center">
     windows and Linux emulator for Android it aims to run windows and Linux games and Apps on android with x86_64 and glibc and bionic wine builds
         <br />
