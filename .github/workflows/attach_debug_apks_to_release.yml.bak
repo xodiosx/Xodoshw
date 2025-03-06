@@ -14,11 +14,20 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - name: Clone repository
+      - name: Clone repository and submodules
         uses: actions/checkout@v4
         with:
-          ref: ${{ env.GITHUB_REF }}
-          submodules: 'true'
+          ref: ${{ github.ref }}  
+          submodules: 'recursive'  # Ensure submodules are cloned
+          token: ${{ secrets.GITHUB_TOKEN }}  # Required for private submodules
+
+ - name: Make Gradle Wrapper executable
+        run: chmod +x ./gradlew
+
+      - name: Initialize/Update Submodules
+        run: |
+          git submodule sync
+          git submodule update --init --recursive
 
       - name: Set up Java
         uses: actions/setup-java@v4
