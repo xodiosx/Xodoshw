@@ -411,7 +411,7 @@ public class TermuxActivity extends com.termux.x11.MainActivity implements Servi
             public void reInstallX11StartScript(Activity activity) {
                 activity.runOnUiThread(() -> {
                     FileUtils.copyAssetsFile2Phone(activity, "install");
-                    FileUtils.copyAssetsFile2Phone(activity, "xodoss.tar.xz");
+                    FileUtils.copyAssetsFile2Phone(activity, "xodos.tar.xz");
                     FileUtils.copyAssetsFile2Phone(activity, "wine.tar");
                     FileUtils.copyAssetsFile2Phone(activity, "setup");
                     FileUtils.copyAssetsFile2Phone(activity, "installproot");
@@ -1140,7 +1140,7 @@ FileUtils.copyAssetsFile2Phone(activity, "fix");
 
     public void reInstallCustomStartScript(Integer mode) {
         runOnUiThread(() -> {
-            FileUtils.copyAssetsFile2Phone(this, "xodoss.tar.xz");
+            FileUtils.copyAssetsFile2Phone(this, "xodos.tar.xz");
             FileUtils.copyAssetsFile2Phone(this, "installkali");
             FileUtils.copyAssetsFile2Phone(this, "installproot");
             FileUtils.copyAssetsFile2Phone(this, "switch");

@@ -354,7 +354,7 @@ while ((line = reader.readLine()) != null) {
         checkpointCount++;
         
         // Calculate progress with floating-point division
-        int progress = 50 + (int) ((checkpointCount * 50.0) / 50);
+        int progress = 50 + (int) ((checkpointCount * 50.0) / 55);
         progress = Math.min(99, progress); // Cap at 99%
         
         // Create a final copy of progress for the lambda

@@ -264,14 +264,55 @@ toggleExtraKeys();
                 }
             }
         
-    if (isGamepadConnected()) { // Run only if a gamepad is connected
-        InputDevice device = e.getDevice();
-        if (device != null && (device.getSources() & InputDevice.SOURCE_GAMEPAD) != 0) {
-            Log.d("MainActivity", "Forwarding Gamepad Button: " + e.getKeyCode());
-            winHandler.onKeyEvent(e); // Send gamepad button to Wine
-            return mInputHandler.sendKeyEvent(v, e); // Consume event
+    if (isGamepadConnected() && 
+        ((e.getSource() & InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK ||
+         (e.getSource() & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD)) {
+        
+        // First let WinHandler try to process the event
+        boolean handled = winHandler.onGenericMotionEvent(e);
+        
+        // If not handled, process as mouse movement
+        if (!handled) {
+            // Define sensitivity and deadzone
+            final float DEADZONE = 0.2f;
+            final float SENSITIVITY = 2.5f;
+            
+            // Process left stick for mouse movement
+            float x = e.getAxisValue(MotionEvent.AXIS_X);
+            float y = e.getAxisValue(MotionEvent.AXIS_Y);
+            
+            if (Math.abs(x) < DEADZONE) x = 0;
+            if (Math.abs(y) < DEADZONE) y = 0;
+            
+            int dx = (int) (x * SENSITIVITY * 100); // Scale for better precision
+            int dy = (int) (y * SENSITIVITY * 100);
+
+            // Send relative mouse movement
+            winHandler.mouseEvent(MouseEventFlags.MOVE_RELATIVE, dx, dy, 0);
         }
+        
+        // Process triggers as keyboard events
+        float leftTrigger = e.getAxisValue(MotionEvent.AXIS_LTRIGGER);
+        float rightTrigger = e.getAxisValue(MotionEvent.AXIS_RTRIGGER);
+        
+        if (leftTrigger > 0.5f) {
+            winHandler.keyboardEvent((byte) 0xA2, KeyEvent.ACTION_DOWN); // Left Ctrl
+        } else {
+            winHandler.keyboardEvent((byte) 0xA2, KeyEvent.ACTION_UP);
+        }
+        
+        if (rightTrigger > 0.5f) {
+            winHandler.keyboardEvent((byte) 0xA3, KeyEvent.ACTION_DOWN); // Right Ctrl
+        } else {
+            winHandler.keyboardEvent((byte) 0xA3, KeyEvent.ACTION_UP);
+        }
+        
+        return true;
     }
+    return false;
+});
+
+
             return mInputHandler.sendKeyEvent(v, e);
         };
         lorieParent.setOnTouchListener((v, event) -> true);

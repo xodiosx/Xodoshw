@@ -238,14 +238,5 @@
 <string name="bootstrap_installer_title">Installing Termux</string>
 <string name="bootstrap_installer_body">Initializing environment...</string>
 <string name="bootstrap_error_title">Installation Error</string>
-<!-- Add these lines -->
-<string name="storage_permission_title">Storage Access Required</string>
-<string name="storage_permission_message">Termux needs storage permissions to install packages.</string>
-<string name="error_permission_denied">Permission Denied</string>
-<string name="error_storage_permission_required">Storage permissions are required for installation.</string>
-<!-- Add these entries -->
-<string name="action_grant">Grant</string>
-<string name="action_exit">Exit</string>
-<string name="action_retry">Retry</string>
 
 </resources>

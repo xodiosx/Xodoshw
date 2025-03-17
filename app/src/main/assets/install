@@ -97,7 +97,58 @@ echo "[*] extracting patches"
 sleep 1
 
 	# Process Symlinks
-	
+	cp -rf /data/data/com.termux/files/usr/bin/xodos /data/data/com.termux/files/xodos-normal
+cp -rf /data/data/com.termux/files/usr/bin/xodosset /data/data/com.termux/files/wineglibc-settings
+cp -rf  /data/data/com.termux/files/usr/bin/xodx /data/data/com.termux/files/xodx-bettergpu
+cp -rf /data/data/com.termux/files/usr/bin/xodxd /data/data/com.termux/files/xodxd-proot
+cp -rf /data/data/com.termux/files/usr/bin/xodset /data/data/com.termux/files/glibc-settings2
+cp -rf /data/data/com.termux/files/usr/bin/xodos-mali /data/data/com.termux/files/xodos-maligpu
+cp -rf  /data/data/com.termux/files/usr/bin/kali /data/data/com.termux/files/kali-kaliroot
+cp -rf  /data/data/com.termux/files/usr/bin/kaliu /data/data/com.termux/files/kaliu-kaliuser
+cp -rf  /data/data/com.termux/files/home/switch /data/data/com.termux/files/switch-container
+cp -f /data/data/com.termux/files/home/switch /data/data/com.termux/files/usr/bin/switch
+cp -rf  /data/data/com.termux/files/usr/bin/xodxx2 /data/data/com.termux/files/XoDos-bionic
+cp -rf  /data/data/com.termux/files/usr/bin/xodxx3 /data/data/com.termux/files/all-drivers-bionic
+cp -rf  /data/data/com.termux/files/usr/bin/xodx3 /data/data/com.termux/files/Zink-GPU
+cp -rf  /data/data/com.termux/files/usr/bin/xodx3 /data/data/com.termux/files/New-fast-GPU
+cp -rf  /data/data/com.termux/files/usr/bin/xodx1 /data/data/com.termux/files/VirGl-gpu
+#cp -rf  /data/data/com.termux/files/usr/bin/nat /data/data/com.termux/files/XoDos-native
+#cp -rf  /data/data/com.termux/files/usr/bin/nat3 /data/data/com.termux/files/all-drivers-native
+cp -rf /data/data/com.termux/files/usr/bin/xodxx /data/data/com.termux/files/XoDos-glibc
+
+sleep 0.5
+chmod +x /data/data/com.termux/files/usr/bin/xodos
+chmod +x /data/data/com.termux/files/usr/bin/xodos-mali
+chmod +x /data/data/com.termux/files/usr/bin/xodxx
+chmod +x /data/data/com.termux/files/usr/bin/xodosset
+chmod +x /data/data/com.termux/files/usr/bin/xodxl
+chmod +x /data/data/com.termux/files/usr/bin/xod
+chmod +x  /data/data/com.termux/files/usr/bin/xodset
+chmod +x /data/data/com.termux/files/usr/bin/xodxd
+chmod +x  /data/data/com.termux/files/usr/etc/bash.bashrc
+chmod +x  /data/data/com.termux/files/home/x11
+chmod +x /data/data/com.termux/files/xodos-normall
+chmod +x /data/data/com.termux/files/XoDos-glibc 
+chmod +x /data/data/com.termux/files/wineglibc-settings
+chmod +x /data/data/com.termux/files/xodx-bettergpu
+chmod +x /data/data/com.termux/files/xodxd-proot
+chmod +x  /data/data/com.termux/files/New-fast-GPU
+chmod +x /data/data/com.termux/files/*
+chmod +x /data/data/com.termux/files/xodos-maligpu
+chmod +x /data/data/com.termux/files/usr/bin/kali
+chmod +x /data/data/com.termux/files/usr/bin/kaliu
+chmod +x /data/data/com.termux/files/usr/bin/switch
+chmod +x /data/data/com.termux/files/switch
+chmod +x /data/data/com.termux/files/usr/bin/xodai
+chmod +x /data/data/com.termux/files/usr/bin/xodaixx
+chmod +x /data/data/com.termux/files/usr/bin/installproot
+chmod +x /data/data/com.termux/files/usr/bin/installkali
+chmod +x /data/data/com.termux/files/usr/bin/fix
+chmod +x /data/data/com.termux/files/XoDos-bionic
+ chmod +x /data/data/com.termux/files/Zink-GPU
+chmod +x /data/data/com.termux/files/all-drivers-bionic
+chmod +x /data/data/com.termux/files/usr/bin/fix
+chmod +x /data/data/com.termux/files/home/fix
 	#cd $PREFIX/../usr2
 	#while read
 	#rm SYMLINKS.txt
@@ -111,7 +162,7 @@ sleep 1
     echo $pathEnv >> ~/.bashrc
 
     tar -xf ~/wine.tar -C $winePathEnv/lib/
-    cp -rf ~/wfm.exe $PREFIX/glibc/opt/apps/
+    
     cp -rf ~/winhandler.exe $PREFIX/glibc/opt/apps/
     #sed -i '/"dinput"="builtin,native"/d' $PREFIX/glibc/opt/prefix/user.reg
     #sed -i '/"dinput"="native,builtin"/d' $PREFIX/glibc/opt/prefix/user.reg
@@ -273,13 +324,13 @@ chmod +x /data/data/com.termux/files/usr/bin/xodos-mali
 chmod +x /data/data/com.termux/files/usr/bin/xodxx
 chmod +x /data/data/com.termux/files/usr/bin/xodosset
 chmod +x /data/data/com.termux/files/usr/bin/xodx
-chmod +x /data/data/com.termux/files/usr/bin/xod
-chmod +x  /data/data/com.termux/files/usr/bin/xodset
+chmod +x /data/data/com.termux/files/usr/bin/xodx3
+chmod +x  /data/data/com.termux/files/usr/bin/xodx1
 chmod +x /data/data/com.termux/files/usr/bin/xodxd
 chmod +x  /data/data/com.termux/files/usr/etc/bash.bashrc
 chmod +x  /data/data/com.termux/files/home/x11
 chmod +x /data/data/com.termux/files/xodos-normal
-chmod +x /data/data/com.termux/files/xodxx-gamemode
+chmod +x /data/data/com.termux/files/*
 chmod +x /data/data/com.termux/files/xodosset-settings
 chmod +x /data/data/com.termux/files/xodx-bettergpu
 chmod +x /data/data/com.termux/files/xodxd-proot
@@ -288,9 +339,10 @@ chmod +x /data/data/com.termux/files/xodset-settings
 chmod +x /data/data/com.termux/files/xodos-maligpu
 chmod +x /data/data/com.termux/files/usr/bin/kali
 chmod +x /data/data/com.termux/files/usr/bin/kaliu
-chmod +x /data/data/com.termux/files/usr/bin/switch
+chmod +x /data/data/com.termux/files/usr/bin/fix
 chmod +x /data/data/com.termux/files/switch
 sleep 1
+resetXoDos
  rm -f /data/data/com.termux/files/home/xodos.tar.xz 
 sleep 2
 cd ~
@@ -311,3 +363,56 @@ go 1>> "$LOG_FILE"
 
 
 # END OF MESSAGE EOM 
+function resetXoDos(){
+    echo "XoDosHomeEnv="$XoDosHomeEnv
+    winePathEnv=/data/data/com.termux/files/usr/glibc/xod9.9
+    echo "pathEnv="$pathEnv
+    echo "winePathEnv="$winePathEnv
+    
+    echo $XoDosHomeEnv >> ~/.bashrc
+    echo $pathEnv >> ~/.bashrc
+echo $winePathEnv/lib
+sleep 1
+    tar -xvf ~/wine.tar -C $winePathEnv/lib/
+    cp -rf ~/wfm.exe $PREFIX/glibc/opt/apps/
+    cp -rf ~/winhandler.exe $PREFIX/glibc/opt/apps/
+    #sed -i '/"dinput"="builtin,native"/d' $PREFIX/glibc/opt/prefix/user.reg
+    #sed -i '/"dinput"="native,builtin"/d' $PREFIX/glibc/opt/prefix/user.reg
+    #sed -i '/"xinput1_4"="builtin,native"/d' $PREFIX/glibc/opt/prefix/user.reg
+    #sed -i '/"xinput1_4"="native,builtin"/d' $PREFIX/glibc/opt/prefix/user.reg
+    #sed -i '/"xinputuap"="builtin,native"/d' $PREFIX/glibc/opt/prefix/user.reg
+    #sed -i '/"xinputuap"="native,builtin"/d' $PREFIX/glibc/opt/prefix/user.reg
+    #sed -i '/^$/d' $PREFIX/glibc/opt/prefix/user.reg
+    sed -i 's/"dinput8"="native,builtin"/"dinput"="builtin,native"\n"dinput8"="builtin,native"/g' $PREFIX/glibc/opt/prefix/user.reg
+    sed -i 's/"xinput1_1"="native,builtin"/"xinput1_1"="builtin,native"/g' $PREFIX/glibc/opt/prefix/user.reg
+    sed -i 's/"xinput1_2"="native,builtin"/"xinput1_2"="builtin,native"/g' $PREFIX/glibc/opt/prefix/user.reg
+    sed -i 's/"xinput1_3"="native,builtin"/"xinput1_3"="builtin,native"\n"xinput1_4"="builtin,native"/g' $PREFIX/glibc/opt/prefix/user.reg
+    sed -i 's/"xinput9_1_0"="native,builtin"/"xinput9_1_0"="builtin,native"\n"xinputuap"="builtin,native"/g' $PREFIX/glibc/opt/prefix/user.reg
+    sed -i 's/\$PREFIX\/glibc\/opt\/apps\/tfm.exe/\$PREFIX\/glibc\/opt\/apps\/winhandler.exe/g' $PREFIX/glibc/opt/scripts/start-tfm
+    sed -i '/\$PREFIX\/glibc\/bin\/ib.exe/d' $PREFIX/glibc/opt/scripts/start-tfm
+    source ~/.bashrc
+}
+if [ -f ~/.bashrc ];then
+    echo ".bashrc already exist"
+else
+    touch ~/.bashrc
+fi
+if [ -d "${PREFIX}/glibc" ];then
+	echo "XoDos installed"
+	XoDosHomeEnv="export XoDos_HOME=\$PREFIX/glibc"
+	pathEnv="export PATH=\$PATH:\$XoDos_HOME/opt/scripts"
+	prefixPath=$(echo $PREFIX)
+	winePath=$(cat $PREFIX/glibc/opt/conf/wine_path.conf|grep "WINE_PATH="|cut -d= -f2|sed 's/$PREFIX//g')
+	winePathEnv=$prefixPath$winePath
+	if [  $XoDos_HOME ];then
+		echo "XoDos env has been set, now update"
+		sed -i '/XoDos_HOME/d' ~/.bashrc
+		sed -i '/^$/d' ~/.bashrc
+		resetXoDos
+	else
+		echo "XoDos env not set, now set"
+		resetXoDos
+	fi
+else
+	echo "XoDos not installed"
+fi

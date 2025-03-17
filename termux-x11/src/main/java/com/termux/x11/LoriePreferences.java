@@ -397,7 +397,7 @@ public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable S
                 desc.setMovementMethod(LinkMovementMethod.getInstance());
                 new android.app.AlertDialog.Builder(getActivity())
                     .setView(view)
-                    .setTitle("ReInstall XoDos system")
+                    .setTitle("ReInstall XoDos + xinput")
                     .setPositiveButton("OK",
                         (dialog, whichButton) -> {
                             if (preferenceActivity != null) {

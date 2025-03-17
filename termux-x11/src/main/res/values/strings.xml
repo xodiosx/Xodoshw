@@ -45,7 +45,7 @@
     <string name="open_controller">Open Controller</string>
     <string name="close_controller">Close Controller</string>
     <string name="progress_manager">Progress manager</string>
-    <string name="install_x11_server_bridge">Install XoDos system</string>
+    <string name="install_x11_server_bridge">ReInstall XoDos xinput</string>
     <string name="stop_desktop">Stop desktop</string>
     <string name="stretch_to_fit_display">Stretch to fit display</string>
     <string name="reseed_screen">Reseed screen while soft keyboard is  open</string>
@@ -99,7 +99,7 @@
     <string name="log_level_value">Logcat log level set to \"%1$s\"</string>
     <string name="start_button_start_x11">start x11 server</string>
     <string name="exit_button_exit_app">Exit</string>
-    <string name="x11_server_bridge_config">Install XoDos system its going to take some time please wait until the app exited automatically if it stays open longer than 5 minutes close it manually and than read the error in terminal or From errors log in download folder. The installation will ask for permission please allow it and wait and have a cup of coffee,,.by XOD M.aleiwi.</string>
+    <string name="x11_server_bridge_config">Install XoDos + xinput system its going to take some time please wait until the app exited automatically if it stays open longer than 5 minutes close it manually and than read the error From errors log in download folder. if The installation ask for permission please allow it and wait and have a cup of coffee,,.by XOD M.aleiwi.</string>
 
     <!--inpt controller-->
     <string name="run">Run</string>
