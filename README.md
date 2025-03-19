@@ -30,25 +30,6 @@ or
 ~ $ git submodule update --init --recursive
 ```
 
-
-# About
-it's a fully fledged X server with termux and winlator touch controls together in one App. It is built with Android NDK.
-
-## Submodules
-This repo uses submodules. Use 
-
-```
-~ $ git clone --recurse-submodules https://github.com/xodiosx/XoDos
-```
-or
-```
-~ $ git clone https://github.com/xodiosx/XoDos
-~ $ cd XoDos
-~ $ git submodule update --init --recursive
-```
-
-
-=======
 or build app
 ```
 git clone -b main https://github.com/xodiosx/XoDos && cd XoDos && git submodule update --init --recursive && ./gradlew syncDebugJarLibs && ./gradlew assembleDebug
@@ -63,6 +44,9 @@ git clone -b main https://github.com/xodiosx/XoDos && cd XoDos && git submodule 
     <br />
     <br />
     <a href="https://www.mediafire.com/file/37dw6t855d3xcgv/XoDos-V5_full_arm64-v8a.apk/file"><strong> Download XoDos V5 bionic+glibc full.APK 1.86 GB</strong></a>
+    <br />
+    <br />
+      <a href="https://www.mediafire.com/file/bnioapg2jmasaay/XoDos5_gamepad.apk/file"><strong> Download XoDosv5.0.1-gamepad_support.APK 47.MB</strong></a>
     <br />
     <br />
     <a href="https://youtu.be/iY-NcRbcofo?si=t2qnuzIf618Of8Zi">View YouTube video</a>
