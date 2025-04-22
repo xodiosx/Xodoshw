@@ -49,13 +49,13 @@ git clone -b main https://github.com/xodiosx/XoDos && cd XoDos && git submodule 
       <a href="https://www.mediafire.com/file/b0vcqke2u4mvkn3/XoDos5.0.2-full.apk/file"><strong> Download XoDos v5.0.2-full smaller version .APK 1.61 GB</strong></a>
     <br />
     <br />
-    <a href="https://youtu.be/iY-NcRbcofo?si=t2qnuzIf618Of8Zi">installing XoDos 5 YouTube video</a>
-    &middot;
+    <a href="https://youtu.be/iY-NcRbcofo?si=t2qnuzIf618Of8Zi"><strong>installing XoDos 5 YouTube video</strong></a>
       <br />
-    <a href="https://github.com/xodiosx/XoDos">if you like this project you can give it a Star to And if you want to modify it clone it and build</a>
       <br />
-    &middot;
-    <a href="https://sites.google.com/view/xodos/home">showcase & telegram</a>
+    <a href="https://github.com/xodiosx/XoDos"><strong>if you like this project you can give it a Star to And if you want to modify it clone it and build</strong></a>
+      <br />
+    <br />
+    <a href="https://sites.google.com/view/xodos/home"><strong>showcase & telegram</strong></a>
   </p>
 </div>
 
