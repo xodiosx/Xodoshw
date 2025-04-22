@@ -52,7 +52,8 @@ git clone -b main https://github.com/xodiosx/XoDos && cd XoDos && git submodule 
     <a href="https://youtu.be/iY-NcRbcofo?si=t2qnuzIf618Of8Zi"><strong>installing XoDos 5 YouTube video</strong></a>
       <br />
       <br />
-    <a href="https://github.com/xodiosx/XoDos"><strong>if you like this project you can give it a Star to And if you want to modify it clone it and build</strong></a>
+      if you like this project you can give it a Star And if you want to modify it clone it and build
+    <a href="https://github.com/xodiosx/XoDos"><strong> XoDos GitHub</strong></a>
       <br />
     <br />
     <a href="https://sites.google.com/view/xodos/home"><strong>showcase & telegram</strong></a>
