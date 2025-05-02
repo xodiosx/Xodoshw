@@ -1,4 +1,10 @@
 package com.termux.app;
+// ======== Imports ========
+import android.Manifest;
+import androidx.core.content.ContextCompat;
+import androidx.core.app.ActivityCompat;
+import android.content.pm.PackageManager;
+// ======== Imports ========
 
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
 import static com.termux.shared.termux.TermuxConstants.TERMUX_FILES_DIR_PATH;
@@ -112,9 +118,15 @@ import java.util.List;
  * about memory leaks.
  */
 public class TermuxActivity extends com.termux.x11.MainActivity implements ServiceConnection {
-    private static final int FILE_REQUEST_BACKUP_CODE = 101;
-
+    public static final int FILE_REQUEST_BACKUP_CODE = 101;
+private static final int REQUEST_CODE_STORAGE_PERMISSION = 2000; // Add this line
+public static final int FILE_REQUEST_WINE_CODE = 1002;
     private DisplaySlidingWindow mMainContentView;
+    
+    ////////////
+    private StartEntryClient mStartEntryClient;
+
+    //
     /**
      * The connection to the {@link TermuxService}. Requested in {@link #onCreate(Bundle)} with a call to
      * {@link #bindService(Intent, ServiceConnection, int)}, and obtained and stored in
@@ -353,7 +365,11 @@ public class TermuxActivity extends com.termux.x11.MainActivity implements Servi
         setToggleKeyboardView();
 
         mMenuEntryClient = new MenuEntryClient(this, mTermuxTerminalSessionActivityClient);
-
+        
+// After initializing mTermuxTerminalSessionActivityClient
+    mStartEntryClient = new StartEntryClient(this, mTermuxTerminalSessionActivityClient);
+    mStartEntryClient.init();
+    
         registerForContextMenu(mTerminalView);
 
         FileReceiverActivity.updateFileReceiverActivityComponentsState(this);
@@ -411,13 +427,11 @@ public class TermuxActivity extends com.termux.x11.MainActivity implements Servi
             public void reInstallX11StartScript(Activity activity) {
                 activity.runOnUiThread(() -> {
                     FileUtils.copyAssetsFile2Phone(activity, "install");
-                    FileUtils.copyAssetsFile2Phone(activity, "xodos.tar.xz");
-                    FileUtils.copyAssetsFile2Phone(activity, "wine.tar");
+                    FileUtils.copyAssetsFile2Phone(activity, "xodosu.tar.xz");
                     FileUtils.copyAssetsFile2Phone(activity, "setup");
                     FileUtils.copyAssetsFile2Phone(activity, "installproot");
 FileUtils.copyAssetsFile2Phone(activity, "installkali");
 FileUtils.copyAssetsFile2Phone(activity, "switch");
-FileUtils.copyAssetsFile2Phone(activity, "winhandler.exe");
 FileUtils.copyAssetsFile2Phone(activity, "fix");
                     FileUtils.copyAssetsFile2Phone(activity, "collect_process_info");
                     CommandUtils.exec(activity, "chmod", new ArrayList<>(Arrays.asList("+x", TERMUX_FILES_DIR_PATH + "/home/install")));
@@ -673,19 +687,20 @@ FileUtils.copyAssetsFile2Phone(activity, "fix");
         setIntent(null);
 
         if (mTermuxService.isTermuxSessionsEmpty()) {
-            if (mIsVisible) {
+            if (mIsVisible) {                   
+                     // ======== Add Permission Check  ========
+            checkStoragePermissionsAndRun(() -> {
                 TermuxInstaller.setupBootstrapIfNeeded(TermuxActivity.this, () -> {
-                    if (mTermuxService == null) return; // Activity might have been destroyed.
+                    if (mTermuxService == null) return;
                     try {
-                        boolean launchFailsafe = false;
-                        if (intent != null && intent.getExtras() != null) {
-                            launchFailsafe = intent.getExtras().getBoolean(TERMUX_ACTIVITY.EXTRA_FAILSAFE_SESSION, false);
-                        }
+                        boolean launchFailsafe = (intent != null && intent.getExtras() != null) 
+                            && intent.getExtras().getBoolean(TERMUX_ACTIVITY.EXTRA_FAILSAFE_SESSION, false);
                         mTermuxTerminalSessionActivityClient.addNewSession(launchFailsafe, null);
                     } catch (WindowManager.BadTokenException e) {
-                        // Activity finished - ignore.
+                        finishActivityIfNotFinishing();
                     }
                 });
+            });
             } else {
                 // The service connected while not in foreground - just bail out.
                 finishActivityIfNotFinishing();
@@ -707,6 +722,35 @@ FileUtils.copyAssetsFile2Phone(activity, "fix");
         mTermuxService.setTermuxTerminalSessionClient(mTermuxTerminalSessionActivityClient);
     }
 
+// ======== Add These Methods ========
+private void checkStoragePermissionsAndRun(Runnable onGranted) {
+    if (hasStoragePermissions()) {
+        onGranted.run();
+    } else {
+        new AlertDialog.Builder(this)
+            .setTitle(R.string.storage_permission_title)
+            .setMessage(R.string.storage_permission_message)
+            .setPositiveButton(R.string.action_grant, (dialog, which) -> {
+                ActivityCompat.requestPermissions(
+                    TermuxActivity.this,
+                    new String[]{
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    },
+                    REQUEST_CODE_STORAGE_PERMISSION
+                );
+            })
+            .setNegativeButton(R.string.action_exit, (dialog, which) -> finish())
+            .setCancelable(false)
+            .show();
+    }
+}
+
+private boolean hasStoragePermissions() {
+    return ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+}
+// ======== End of Methods ========
     @Override
     public void onServiceDisconnected(ComponentName name) {
         Logger.logDebug(LOG_TAG, "onServiceDisconnected");
@@ -764,8 +808,8 @@ FileUtils.copyAssetsFile2Phone(activity, "fix");
                 handler.postDelayed(() -> isExit = false, 2000);
             }
         });
-        StartEntryClient startEntryClient = new StartEntryClient(this, mTermuxTerminalSessionActivityClient);
-        startEntryClient.init();
+      //  StartEntryClient startEntryClient = new StartEntryClient(this, mTermuxTerminalSessionActivityClient);
+        mstartEntryClient.init();
     }
 
     private void startX11Display() {
@@ -787,10 +831,10 @@ FileUtils.copyAssetsFile2Phone(activity, "fix");
         findViewById(R.id.backup_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String command = "tar -zcf /sdcard/termux-backup.tar.gz -C /data/data/com.termux/files ./home ./usr \n";
+                String command = "tar -Jcf /sdcard/xodos-backup.tar.xz -C /data/data/com.termux/files ./home ./usr \n";
                 File file = new File(getFilesDir().getAbsolutePath() + File.separator + "home" + File.separator + "storage");
                 if (!file.exists()) {
-                    command = "termux-setup-storage;sleep 5s;tar -zcf /sdcard/termux-backup.tar.gz -C /data/data/com.termux/files ./home ./usr \n";
+                    command = "termux-setup-storage;sleep 5s;tar -Jcf /sdcard/xodos-backup.tar.xz -C /data/data/com.termux/files ./home ./usr \n";
                 }
                 mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write(command);
                 mMainContentView.setTerminalViewSwitchSlider(true);
@@ -1133,6 +1177,12 @@ FileUtils.copyAssetsFile2Phone(activity, "fix");
         if (requestCode == PermissionUtils.REQUEST_GRANT_STORAGE_PERMISSION) {
             requestStoragePermission(true);
         }
+        if (requestCode == FILE_REQUEST_WINE_CODE && resultCode == RESULT_OK && data != null) {
+    Uri uri = data.getData();
+    if (uri != null && mStartEntryClient != null) {
+        mStartEntryClient.handleWineFile(uri);
+    }
+}
         if (requestCode == FILE_REQUEST_BACKUP_CODE) {
             onRequestLoadBackFile(requestCode, resultCode, data);
         }
@@ -1140,7 +1190,7 @@ FileUtils.copyAssetsFile2Phone(activity, "fix");
 
     public void reInstallCustomStartScript(Integer mode) {
         runOnUiThread(() -> {
-            FileUtils.copyAssetsFile2Phone(this, "xodos.tar.xz");
+            FileUtils.copyAssetsFile2Phone(this, "xodosu.tar.xz");
             FileUtils.copyAssetsFile2Phone(this, "installkali");
             FileUtils.copyAssetsFile2Phone(this, "installproot");
             FileUtils.copyAssetsFile2Phone(this, "switch");
@@ -1172,9 +1222,9 @@ FileUtils.copyAssetsFile2Phone(activity, "fix");
                 @Override
                 public void run() {
                     File file = new File(getFilesDir().getAbsolutePath() + File.separator + "home" + File.separator + "storage");
-                    String command = "termux-setup-storage;sleep 5s;tar -zxf " + realPath + " -C " + TERMUX_FILES_DIR_PATH + " --recursive-unlink" + " --preserve-permissions && exit \n";
+                    String command = "termux-setup-storage;sleep 5s;tar -xvf " + realPath + " -C " + TERMUX_FILES_DIR_PATH + " --preserve-permissions && fix && exit \n";
                     if (file.exists()) {
-                        command = "tar -zxf " + realPath + " -C " + TERMUX_FILES_DIR_PATH + " --recursive-unlink" + " --preserve-permissions && exit \n";
+                        command = "tar -xvf " + realPath + " -C " + TERMUX_FILES_DIR_PATH + " --preserve-permissions && fix && exit \n";
                     }
                     mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write(command);
                 }
@@ -1187,6 +1237,29 @@ FileUtils.copyAssetsFile2Phone(activity, "fix");
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         Logger.logVerbose(LOG_TAG, "onRequestPermissionsResult: requestCode: " + requestCode + ", permissions: " + Arrays.toString(permissions) + ", grantResults: " + Arrays.toString(grantResults));
+            // ======== Add permission Block ========
+    if (requestCode == REQUEST_CODE_STORAGE_PERMISSION) {
+        if (grantResults.length > 0 
+            && grantResults[0] == PackageManager.PERMISSION_GRANTED
+            && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+            // Retry setup if permissions granted
+            checkStoragePermissionsAndRun(() -> {
+                TermuxInstaller.setupBootstrapIfNeeded(TermuxActivity.this, () -> {
+                    if (mTermuxService != null && mTermuxService.isTermuxSessionsEmpty()) {
+                        mTermuxTerminalSessionActivityClient.addNewSession(false, null);
+                    }
+                });
+            });
+        } else {
+            new AlertDialog.Builder(this)
+                .setTitle(R.string.error_permission_denied)
+                .setMessage(R.string.error_storage_permission_required)
+                .setPositiveButton(R.string.action_retry, (d, w) -> checkStoragePermissionsAndRun(() -> {}))
+                .setNegativeButton(R.string.action_exit, (d, w) -> finish())
+                .show();
+        }
+    }
+    // ======== End of Added Block ========
         if (requestCode == PermissionUtils.REQUEST_GRANT_STORAGE_PERMISSION) {
             requestStoragePermission(true);
         }

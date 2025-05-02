@@ -226,4 +226,17 @@
     <string name="remove_shortcut">क्या इस शॉर्टकट को हटाना चाहते हैं?</string>
     <string name="remove">हटाएं</string>
     <string name="invalid_config">अमान्य कॉन्फ़िगरेशन</string>
+    <string name="toolbox_button_text2">शुरू</string>
+    <string name="toolbox_ai">AI</string>
+<string name="toolbox_xodos">Xodos</string>
+<string name="toolbox_proot">Proot</string>
+<string name="toolbox_kali">Kali</string>
+<string name="toolbox_switch">यूज़र बदलें</string>
+<string name="toolbox_settings">सेटिंग्स</string>
+<string name="toolbox_wine_glibc">Wine-Glibc</string>
+<string name="toolbox_wine_bionic">Wine-Bionic</string>
+<string name="toolbox_xbox">Xbox</string>
+<string name="toolbox_backup">बैकअप</string>
+<string name="toolbox_restore">पुनर्स्थापित करें</string>
+<string name="toolbox_wine">Wine</string>
 </resources>

@@ -269,25 +269,15 @@ case "restore":
     
    TextView tv = new TextView(mTermuxActivity);
     // Match original text styling
-        tv.setLayoutParams(new LinearLayout.LayoutParams(
-        ViewGroup.LayoutParams.MATCH_PARENT,
+    tv.setLayoutParams(new LinearLayout.LayoutParams(   
+        size, 
         ViewGroup.LayoutParams.WRAP_CONTENT
     ));
     
     tv.setText(title);
     tv.setGravity(Gravity.CENTER);
     tv.setTextColor(Color.WHITE);
-    tv.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
-    tv.setAutoSizeTextTypeUniformWithConfiguration(
-        8, // Minimum text size (sp)
-        14, // Maximum text size (sp)
-        1, // Step size (sp)
-        TypedValue.COMPLEX_UNIT_SP
-    );
-
-    // Ensure text wraps if needed
-    tv.setMaxLines(2);
-    tv.setEllipsize(TextUtils.TruncateAt.END);
+    tv.setTextSize(10);
     tv.setPadding(0, 8, 0, 0);
     tv.setEllipsize(TextUtils.TruncateAt.END);
    

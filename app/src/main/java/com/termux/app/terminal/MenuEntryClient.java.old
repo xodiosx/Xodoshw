@@ -1,4 +1,11 @@
 package com.termux.app.terminal;
+///////////
+import java.io.File;
+import android.content.Intent;
+
+
+
+////////////
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -60,70 +67,46 @@ public class MenuEntryClient implements FileBrowser.FileSlectedAdapter {
     }
 
     private void setToolBoxView() {
-        mPop = new PopupWindow(mTermuxActivity);
-        mPop.setBackgroundDrawable(mTermuxActivity.getDrawable(R.drawable.tool_box_background));
-        int width = ScreenUtils.getScreenWidth(mTermuxActivity);
-        mPop.setWidth(width);
-        mPop.setHeight(width);
-        ScrollView mToolBoxView = new ScrollView(mTermuxActivity);
-        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        param.gravity = Gravity.CENTER | Gravity.TOP;
-        mToolBoxView.setLayoutParams(param);
-        GridLayout gridLayout = new GridLayout(mTermuxActivity);
-        mGrideLayout = gridLayout;
-//        int r = 3;
-        int c = 4;
-
-        gridLayout.setColumnCount(c);
-//        gridLayout.setRowCount(r);
-        gridLayout.setVerticalScrollBarEnabled(true);
-        LinearLayout.LayoutParams grideParam = new LinearLayout.LayoutParams(width, width);
-        grideParam.gravity = Gravity.CENTER_VERTICAL;
-        gridLayout.setLayoutParams(grideParam);
-        gridLayout.setPadding(50, 8, 50, 8);
-
-        mGrideLayout.removeAllViews();
-        updateMenuItems(width, gridLayout);
-
-        LinearLayout linearLayout = new LinearLayout(mTermuxActivity);
-        linearLayout.setLayoutParams(param);
-        mainContentView = new LinearLayout(mTermuxActivity);
-        LinearLayout.LayoutParams mainContentViewLayoutParam = new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
-        mainContentViewLayoutParam.gravity = Gravity.CENTER;
-        mainContentView.setOrientation(LinearLayout.VERTICAL);
-        mainContentView.setLayoutParams(mainContentViewLayoutParam);
-        LinearLayout closeLinearLayout = new LinearLayout(mTermuxActivity);
-        closeLinearLayout.setGravity(Gravity.RIGHT);
-        LinearLayout.LayoutParams closeLinearLayoutLayoutParam = new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT);
-        closeLinearLayoutLayoutParam.setMargins(0, 5, 5, 5);
-        closeLinearLayout.setLayoutParams(closeLinearLayoutLayoutParam);
-        ImageButton closeButton = new ImageButton(mTermuxActivity);
-        closeButton.setBackground(mTermuxActivity.getDrawable(R.drawable.ic_close));
-        closeButton.setOnClickListener(v -> {
-            mPop.dismiss();
-        });
-        closeLinearLayout.addView(closeButton);
-
-        linearLayout.addView(gridLayout);
-        mToolBoxView.addView(linearLayout);
-        mainContentView.addView(closeLinearLayout);
-        mainContentView.addView(mToolBoxView);
-        mPop.setContentView(mainContentView);
         mTermuxActivity.findViewById(R.id.toggle_tool_box).setOnClickListener(v -> {
-            int x = 0;
-            int y = 120;
-            if (mTermuxActivity.getExtraKeysView().getVisibility() == View.VISIBLE) {
-                y += mTermuxActivity.getExtraKeysView().getHeight();
-            }
-            mPop.showAtLocation(mTermuxActivity.findViewById(R.id.left_drawer), Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, x, y);
-        });
-        mPop.setOnDismissListener(()->{
-            mMenutryEntry.saveMenuItems();
+            showBackupRestoreDialog();
         });
     }
 
+    private void showBackupRestoreDialog() {
+        new AlertDialog.Builder(mTermuxActivity)
+            .setTitle("XoDOS Management")
+            .setMessage("Choose an action:")
+            .setPositiveButton("Backup", (dialog, which) -> executeBackupCommand())
+            .setNegativeButton("Restore", (dialog, which) -> launchFilePicker())
+            .setNeutralButton(android.R.string.cancel, null)
+            .show();
+    }
+
+    private void executeBackupCommand() {
+        String command = "tar -Jcf /sdcard/xodos-backup.tar.xz -C /data/data/com.termux/files ./home ./usr \n";
+        File storageDir = new File(mTermuxActivity.getFilesDir(), "home/storage");
+        if (!storageDir.exists()) {
+            command = "termux-setup-storage; sleep 5; " + command;
+        }
+        mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write(command);
+    }
+
+    private void launchFilePicker() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT)
+            .setType("*/*")
+            .addCategory(Intent.CATEGORY_OPENABLE);
+        mTermuxActivity.startActivityForResult(intent, TermuxActivity.FILE_REQUEST_BACKUP_CODE);
+    }
+
+// Keep all other existing methods intact
+
+
+
+
+
+
     private void updateMenuItems(int width, GridLayout gridLayout) {
-        LinearLayout recover = createImageButton("script", "Reinstall", width / 5);
+        LinearLayout recover = createImageButton("script", "addXoDos", width / 5);
         gridLayout.addView(recover);
 
         recover.setOnClickListener(v -> {
@@ -293,3 +276,7 @@ public class MenuEntryClient implements FileBrowser.FileSlectedAdapter {
         title.setText(fileInfo.getName());
     }
 }
+
+
+
+

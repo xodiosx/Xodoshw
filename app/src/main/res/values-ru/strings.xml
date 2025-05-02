@@ -229,4 +229,17 @@
     <string name="remove_shortcut">удалить этот ярлык?</string>
     <string name="remove">удалить</string>
     <string name="invalid_config">неверная конфигурация</string>
+    <string name="toolbox_button_text2">НАЧИНАТЬ</string>
+    <string name="toolbox_ai">ИИ</string>
+<string name="toolbox_xodos">Xodos</string>
+<string name="toolbox_proot">Proot</string>
+<string name="toolbox_kali">Kali</string>
+<string name="toolbox_switch">Сменить пользователя</string>
+<string name="toolbox_settings">Настройки</string>
+<string name="toolbox_wine_glibc">Wine-Glibc</string>
+<string name="toolbox_wine_bionic">Wine-Bionic</string>
+<string name="toolbox_xbox">Xbox</string>
+<string name="toolbox_backup">Резервная копия</string>
+<string name="toolbox_restore">Восстановить</string>
+<string name="toolbox_wine">Wine</string>
 </resources>

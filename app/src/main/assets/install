@@ -155,6 +155,28 @@ chmod +x /data/data/com.termux/files/home/fix
 	 
 	# Create Second Stage Script
 	echo "[*] second stage fix"
+	FILE="$PREFIX/glibc/opt/scripts/xodos_wine"
+
+
+# Use sed to replace the line
+sed -i.bak '
+s/^taskset -c \$PRIMARY_CORES \$GLIBC_BIN\/box64 \$GLIBC_BIN\/wine "\$@"$/DISPLAY=:0 taskset -c $SECONDARY_CORES $GLIBC_BIN\/box64 $GLIBC_BIN\/wine $PREFIX\/glibc\/bin\/ib.exe \&>\/dev\/null \&\
+taskset -c $PRIMARY_CORES $GLIBC_BIN\/box64 $GLIBC_BIN\/wine $PREFIX\/glibc\/opt\/apps\/winhandler.exe  "$@"/' "$FILE"
+
+# second:
+sleep 1
+
+# Define the file path
+FILE="$PREFIX/bin/xodxx"
+
+# Define the old and new lines
+OLD_LINE='DISPLAY=:0 LC_ALL=$(cat $PREFIX/glibc/opt/locale.conf) taskset -c $PRIMARY_CORES $GLIBC_BIN/box64 $GLIBC_BIN/wine explorer /desktop=shell,$RESOLUTION $PREFIX/glibc/opt/apps/tfm.exe >$LOG_PATH 2>&1 &'
+NEW_LINE='DISPLAY=:0 LC_ALL=$(cat $PREFIX/glibc/opt/locale.conf) taskset -c $PRIMARY_CORES $GLIBC_BIN/box64 $GLIBC_BIN/wine explorer /desktop=shell,$RESOLUTION $PREFIX/glibc/opt/apps/winhandler.exe $PREFIX/glibc/opt/apps/wfm.exe >$LOG_PATH 2>&1 &'
+
+# Replace the old line while keeping the same position
+awk -v old="$OLD_LINE" -v new="$NEW_LINE" '{if ($0 == old) print new; else print $0}' "$FILE" > "$FILE.tmp" && mv "$FILE.tmp" "$FILE"
+    
+
 	echo "fixesHomeEnv="$fixesHomeEnv
     echo "pathEnv="$pathEnv
     echo "winePathEnv="$winePathEnv
@@ -259,49 +281,13 @@ chmod +x /data/data/com.termux/files/home/fix
 #    sed -i 's/"xinput1_1"="native,builtin"/"xinput1_1"="builtin,native"/g' $PREFIX/glibc/opt/prefix/user.reg
 #    sed -i 's/"xinput1_2"="native,builtin"/"xinput1_2"="builtin,native"/g' $PREFIX/glibc/opt/prefix/user.reg
 #    sed -i 's/"xinput1_3"="native,builtin"/"xinput1_3"="builtin,native"\n"xinput1_4"="builtin,native"/g' $PREFIX/glibc/opt/prefix/user.reg
-#    sed -i 's/"xinput9_1_0"="native,builtin"/"xinput9_1_0"="builtin,native"\n"xinputuap"="builtin,native"/g' $PREFIX/glibc/opt/prefix/user.reg
-    sed -i 's/\$PREFIX\/glibc\/opt\/apps\/tfm.exe/\$PREFIX\/glibc\/opt\/apps\/winhandler.exe/g' $PREFIX/glibc/opt/scripts/start-tfm
-    sed -i '/\$PREFIX\/glibc\/bin\/ib.exe/d' $PREFIX/glibc/opt/scripts/start-tfm
-    source ~/.bashrc
 
 if [ -f ~/.bashrc ];then
     echo ".bashrc already exist"
 else
     touch ~/.bashrc
 fi
-if [ -d "${PREFIX}/glibc" ];then
-	echo "fixes installed"
-	fixesHomeEnv="export fixes_HOME=\$PREFIX/glibc"
-	pathEnv="export PATH=\$PATH:\$fixes_HOME/opt/scripts"
-	prefixPath=$(echo $PREFIX)
-	winePath=$(cat $PREFIX/glibc/opt/conf/wine_path.conf|grep "WINE_PATH="|cut -d= -f2|sed 's/$PREFIX//g')
-	winePathEnv=$prefixPath$winePath
-	if [  $fixes_HOME ];then
-		echo "fixes env has been set, now update"
-		sed -i '/fixes_HOME/d' ~/.bashrc
-        if [ $# -eq 0 ]; then
-            resetfixes
-        else
-            resetfixes "$1"
-        fi
-	else
-		echo "fixes env not set, now set"
-		if [ $# -eq 0 ]; then
-            resetfixes
-        else
-            resetfixes "$1"
-        fi
-	fi
-else
-	echo "fixes not installed"
-fi
-
-	echo "just another Note"
-	#mv usr usr64-old
 	echo " almost done"
-	#cp -rf usr2 usr
-	#rm secondstage-setup.sh
-	echo "[✓] Done, Please Close and Reopen the app after 3 minutes"
 	sleep 2
 	pkg remove termux-display-nightly -y 2>> "$LOG_FILE"
 pkg remove termux-x11-nightly -y 2>> "$LOG_FILE"
@@ -342,28 +328,18 @@ chmod +x /data/data/com.termux/files/usr/bin/kaliu
 chmod +x /data/data/com.termux/files/usr/bin/fix
 chmod +x /data/data/com.termux/files/switch
 sleep 1
-resetXoDos
+
+echo "xinput installing"
  rm -f /data/data/com.termux/files/home/xodos.tar.xz 
-sleep 2
-cd ~
-bash fix 1>> "$LOG_FILE"
-sleep 2
-exit
-	kill -KILL $PPID
-	EOM
-	#chmod 755 $PREFIX/../secondstage-setup.sh
-	cd $PREFIX/..
+
 
 	# Kill Current Process and Do Second Stage Setup
 	#exec /system/bin/env -i ./secondstage-setup.sh
 	
-}
-go 1>> "$LOG_FILE"
-
 
 
 # END OF MESSAGE EOM 
-function resetXoDos(){
+
     echo "XoDosHomeEnv="$XoDosHomeEnv
     winePathEnv=/data/data/com.termux/files/usr/glibc/xod9.9
     echo "pathEnv="$pathEnv
@@ -374,29 +350,8 @@ function resetXoDos(){
 echo $winePathEnv/lib
 sleep 1
     tar -xvf ~/wine.tar -C $winePathEnv/lib/
-    cp -rf ~/wfm.exe $PREFIX/glibc/opt/apps/
-    cp -rf ~/winhandler.exe $PREFIX/glibc/opt/apps/
-    #sed -i '/"dinput"="builtin,native"/d' $PREFIX/glibc/opt/prefix/user.reg
-    #sed -i '/"dinput"="native,builtin"/d' $PREFIX/glibc/opt/prefix/user.reg
-    #sed -i '/"xinput1_4"="builtin,native"/d' $PREFIX/glibc/opt/prefix/user.reg
-    #sed -i '/"xinput1_4"="native,builtin"/d' $PREFIX/glibc/opt/prefix/user.reg
-    #sed -i '/"xinputuap"="builtin,native"/d' $PREFIX/glibc/opt/prefix/user.reg
-    #sed -i '/"xinputuap"="native,builtin"/d' $PREFIX/glibc/opt/prefix/user.reg
-    #sed -i '/^$/d' $PREFIX/glibc/opt/prefix/user.reg
-    sed -i 's/"dinput8"="native,builtin"/"dinput"="builtin,native"\n"dinput8"="builtin,native"/g' $PREFIX/glibc/opt/prefix/user.reg
-    sed -i 's/"xinput1_1"="native,builtin"/"xinput1_1"="builtin,native"/g' $PREFIX/glibc/opt/prefix/user.reg
-    sed -i 's/"xinput1_2"="native,builtin"/"xinput1_2"="builtin,native"/g' $PREFIX/glibc/opt/prefix/user.reg
-    sed -i 's/"xinput1_3"="native,builtin"/"xinput1_3"="builtin,native"\n"xinput1_4"="builtin,native"/g' $PREFIX/glibc/opt/prefix/user.reg
-    sed -i 's/"xinput9_1_0"="native,builtin"/"xinput9_1_0"="builtin,native"\n"xinputuap"="builtin,native"/g' $PREFIX/glibc/opt/prefix/user.reg
-    sed -i 's/\$PREFIX\/glibc\/opt\/apps\/tfm.exe/\$PREFIX\/glibc\/opt\/apps\/winhandler.exe/g' $PREFIX/glibc/opt/scripts/start-tfm
-    sed -i '/\$PREFIX\/glibc\/bin\/ib.exe/d' $PREFIX/glibc/opt/scripts/start-tfm
-    source ~/.bashrc
-}
-if [ -f ~/.bashrc ];then
-    echo ".bashrc already exist"
-else
-    touch ~/.bashrc
-fi
+  # Define the file path
+
 if [ -d "${PREFIX}/glibc" ];then
 	echo "XoDos installed"
 	XoDosHomeEnv="export XoDos_HOME=\$PREFIX/glibc"
@@ -406,8 +361,7 @@ if [ -d "${PREFIX}/glibc" ];then
 	winePathEnv=$prefixPath$winePath
 	if [  $XoDos_HOME ];then
 		echo "XoDos env has been set, now update"
-		sed -i '/XoDos_HOME/d' ~/.bashrc
-		sed -i '/^$/d' ~/.bashrc
+		
 		resetXoDos
 	else
 		echo "XoDos env not set, now set"
@@ -416,3 +370,14 @@ if [ -d "${PREFIX}/glibc" ];then
 else
 	echo "XoDos not installed"
 fi
+sleep 2
+cd ~
+bash fix 1>> "$LOG_FILE"
+sleep 2
+exit
+	kill -KILL $PPID
+	EOM
+	#chmod 755 $PREFIX/../secondstage-setup.sh
+	cd $PREFIX/..
+}
+go 1>> "$LOG_FILE"

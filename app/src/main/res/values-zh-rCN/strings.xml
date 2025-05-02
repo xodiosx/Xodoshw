@@ -132,4 +132,17 @@
     <string name="remove_shortcut">删除快捷方式?</string>
     <string name="remove">删除</string>
     <string name="invalid_config">无效的参数</string>
+    <string name="toolbox_button_text2">开始</string>
+    <string name="toolbox_ai">人工智能</string>
+<string name="toolbox_xodos">Xodos</string>
+<string name="toolbox_proot">Proot</string>
+<string name="toolbox_kali">Kali</string>
+<string name="toolbox_switch">切换用户</string>
+<string name="toolbox_settings">设置</string>
+<string name="toolbox_wine_glibc">Wine-Glibc</string>
+<string name="toolbox_wine_bionic">Wine-Bionic</string>
+<string name="toolbox_xbox">Xbox</string>
+<string name="toolbox_backup">备份</string>
+<string name="toolbox_restore">恢复</string>
+<string name="toolbox_wine">Wine</string>
 </resources>

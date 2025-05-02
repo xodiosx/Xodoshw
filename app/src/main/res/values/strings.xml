@@ -33,7 +33,7 @@
     <string name="action_create_named_session_confirm">Create</string>
 
     <string name="action_toggle_soft_keyboard">Keyboard</string>
-    <string name="action_toggle_tool_box">ToolBox</string>
+    <string name="action_toggle_tool_box">Toolbox</string>
 
     <string name="msg_enabling_terminal_toolbar">Enabling Terminal Toolbar</string>
     <string name="msg_disabling_terminal_toolbar">Disabling Terminal Toolbar</string>
@@ -238,5 +238,27 @@
 <string name="bootstrap_installer_title">Installing Termux</string>
 <string name="bootstrap_installer_body">Initializing environment...</string>
 <string name="bootstrap_error_title">Installation Error</string>
-
+<!-- Add these lines -->
+<string name="storage_permission_title">Storage Access Required</string>
+<string name="storage_permission_message">App needs storage permissions to install packages.</string>
+<string name="error_permission_denied">Permission Denied</string>
+<string name="error_storage_permission_required">Storage permissions are required for installation.</string>
+<!-- Add these entries -->
+<string name="action_grant">Grant</string>
+<string name="action_exit">Exit</string>
+<string name="action_retry">Retry</string>
+<string name="action_toggle_tool_box2">START</string>
+<!-- Toolbox Buttons -->
+<string name="toolbox_ai">Ai</string>
+<string name="toolbox_xodos">Xodos</string>
+<string name="toolbox_proot">Proot</string>
+<string name="toolbox_kali">Kali</string>
+<string name="toolbox_switch">switch-User</string>
+<string name="toolbox_settings">Settings</string>
+<string name="toolbox_wine_glibc">Wine-Glibc</string>
+<string name="toolbox_wine_bionic">Wine-Bionic</string>
+<string name="toolbox_xbox">Xbox</string>
+<string name="toolbox_backup">Backup</string>
+<string name="toolbox_restore">Restore</string>
+<string name="toolbox_wine">Wine</string>
 </resources>

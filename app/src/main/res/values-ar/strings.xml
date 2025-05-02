@@ -226,4 +226,26 @@
     <string name="remove_shortcut">هل تريد إزالة هذا الاختصار؟</string>
     <string name="remove">حذف</string>
     <string name="invalid_config">تهيئة غير صالحة</string>
+    
+    <string name="storage_permission_title">التطبيق يحتاج اذونات الذاكرة</string>
+<string name="storage_permission_message">يرجى السماح باذونات الذاكرة.</string>
+<string name="error_permission_denied">تم رفض الاذن</string>
+<string name="error_storage_permission_required">يرجى السماح باذونات الذاكرة للتثبيت.</string>
+<!-- Add these entries -->
+<string name="action_grant">سماح</string>
+<string name="action_exit">خروج</string>
+<string name="action_retry">اعادة</string>
+<string name="action_toggle_tool_box2">أبدأ</string>
+<string name="toolbox_ai">ذكاء اصطناعي</string>
+<string name="toolbox_xodos">Xodos</string>
+<string name="toolbox_proot">Proot</string>
+<string name="toolbox_kali">Kali</string>
+<string name="toolbox_switch">تبديل المستخدم</string>
+<string name="toolbox_settings">الإعدادات</string>
+<string name="toolbox_wine_glibc">Wine-Glibc</string>
+<string name="toolbox_wine_bionic">Wine-Bionic</string>
+<string name="toolbox_xbox">اكسبوكس</string>
+<string name="toolbox_backup">نسخة احتياطية</string>
+<string name="toolbox_restore">استعادة</string>
+<string name="toolbox_wine">Wine</string>
 </resources>

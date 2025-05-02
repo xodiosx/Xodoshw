@@ -15,23 +15,10 @@ import java.util.HashSet;
 public class StartEntry {
 
     public static class Entry {
-    private String type;  // 
         private String path;
         private String fileName;
         private String iconPath;
-        private String title; //
-       
-        /// 
-          // Add these getter/setter methods
-        public String getType() {
-            return type;
-        }
 
-        public void setType(String type) {
-            this.type = type;
-        }
-        
-        ///
         public String getPath() {
             return path;
         }
