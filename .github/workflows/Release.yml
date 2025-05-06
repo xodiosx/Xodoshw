@@ -1,10 +1,10 @@
 name: Upload XoDos Release
 
 on:
-  workflow_dispatch:    # Allows manual triggering
+  workflow_dispatch:
     inputs:
       version_tag:
-        description: 'Version tag (e.g., 5.1.0)' 
+        description: 'Version tag (e.g., 5.1.0)'
         required: true
         default: '5.1.0'
   push:
@@ -18,15 +18,15 @@ jobs:
       - name: Download APK
         run: |
           pip install gdown
-          gdown "13SiZvv2qd1WIdeS-t0C_MzdP78OpAR3w" -O XoDos-5.1.0-full_arm64-v8a.apk
-          
+          gdown "13SiZvv2qd1WIdeS-t0C_MzdP78OpAR3w" -O XoDos-${{ github.event.inputs.version_tag }}-full_arm64-v8a.apk
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref_name }}
-          files: XoDos-5.1.0-full_arm64-v8a.apk
+          tag_name: ${{ github.event.inputs.version_tag }}
+          name: XoDos ${{ github.event.inputs.version_tag }}
           body: |
             New Exodus release for arm64
             What's new?
@@ -46,7 +46,4 @@ jobs:
             Discord: https://discord.gg/d2ChVhPfnF
             
             Thank you for choosing XoDos by xodios M.aleiw
-          files: |
-            XoDos-5.1.0-full_arm64-v8a.apk
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          files: XoDos-${{ github.event.inputs.version_tag }}-full_arm64-v8a.apk
