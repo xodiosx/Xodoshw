@@ -37,23 +37,21 @@ git clone -b main https://github.com/xodiosx/XoDos && cd XoDos && git submodule 
   <p align="center">
     windows and Linux emulator for Android it aims to run windows and Linux games and Apps on android with x86_64 and glibc and bionic wine builds and Linux debain proot and Kali operating system installable with pre installed small native Linux xfce4 desktop 
         <br />
-    <a href="https://www.mediafire.com/file/yikyfbq8kxjkbhm/XoDos-debian.tar.xz/file"><strong> Download XoDos debain proot small</strong></a>
+      <br />
+    <a href="https://github.com/xodiosx/XoDos/releases"><strong> Download XoDos Full and proot debian and other files from the releases</strong></a>
     <br />
     <br />
-      <a href="https://www.mediafire.com/file/8mkdjxq0waq26vz/XoDos-kali.tar.xz/file"><strong> Download XoDos Kali chroot full</strong></a>
+      <a href="https://www.mediafire.com/file/8mkdjxq0waq26vz/XoDos-kali.tar.xz/file"><strong> Download XoDos Kali chroot full➕🧩(extra package)</strong></a>
     <br />
     <br />
-    <a href="https://www.mediafire.com/file/37dw6t855d3xcgv/XoDos-V5_full_arm64-v8a.apk/file"><strong> Download XoDos Old V5 bionic+glibc full Big version.APK 1.86 GB</strong></a>
-    <br />
-    <br />
-      <a href="https://www.mediafire.com/file/b0vcqke2u4mvkn3/XoDos5.0.2-full.apk/file"><strong> Download XoDos v5.0.2-full smaller version .APK 1.61 GB</strong></a>
+    <a href="https://www.mediafire.com/file/37dw6t855d3xcgv/XoDos-V5_full_arm64-v8a.apk/file"><strong> Download XoDos Old V5.0.0 bionic+glibc full with icons Big (Old) version.APK 1.86 GB</strong></a>
     <br />
     <br />
     <a href="https://youtu.be/iY-NcRbcofo?si=t2qnuzIf618Of8Zi"><strong>installing XoDos 5 YouTube video</strong></a>
       <br />
       <br />
       if you like this project you can give it a Star And if you want to modify it clone it and build
-    <a href="https://github.com/xodiosx/XoDos"><strong> XoDos GitHub</strong></a>
+    <a href="https://youtu.be/LcR6FxXrvCQ?si=SVeiMK82GokjjrjQ"><strong> XoDos GitHub</strong></a>
       <br />
     <br />
     <a href="https://sites.google.com/view/xodos/home"><strong>showcase & telegram</strong></a>
