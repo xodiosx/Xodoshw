@@ -1,0 +1,61 @@
+name: Upload XoDos Release
+
+on:
+  push:
+    tags:
+      - '5.1.0'  # Trigger when 5.1.0 tag is created
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+   name: Upload XoDos Release
+
+on:
+  push:
+    tags:
+      - '5.1.0'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download APK
+        run: |
+          # Choose ONE method below:
+          
+          # Option 1: Google Drive (using gdown)
+          pip install gdown
+          gdown "13SiZvv2qd1WIdeS-t0C_MzdP78OpAR3w" -O XoDos-5.1.0-full_arm64-v8a.apk
+          
+          # Option 2: MediaFire (using wget)
+          # wget --trust-server-names --content-disposition "https://download.mediafire.com/zhzehejjl34gr98/XoDos-5.1.0-full_arm64-v8a.apk"
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: XoDos ${{ github.ref_name }}
+          body: |
+            New Exodus release for arm64
+            What's new?
+            - Changed and fixed UI
+            - Added More features for easier usage
+            - Added information about android device in terminal
+            - And More
+            
+            For best experience download the full version APK (1.6 GB) with Bionic and Glibc wine pre-installed
+            
+            **Credits:**
+            Team: @Xodios🇾🇪 & @DevArys🇨🇴 & @Mondo_Lambert🇲🇫 & @Aurora0y🇧🇷 & @Chest1902🇧🇩 & jiaxinchen 🇨🇳 & @Snap888🇷🇺
+            Logo designer: @xl_v6/ashen🇮🇶
+            
+            **Support:**
+            Telegram: https://t.me/xodemulatorr
+            Discord: https://discord.gg/d2ChVhPfnF
+            
+            Thank you for choosing XoDos by xodios M.aleiw
+          files: |
+            XoDos-5.1.0-full_arm64-v8a.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
