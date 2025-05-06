@@ -54,7 +54,7 @@ jobs:
           body: |
             New XoDos release for arm64
 
-**What's new?**
+**What is new?**
             - Changed and fixed UI
             - Added More features for easier usage
              - added full system data 
