@@ -4,12 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       version_tag:
-        description: 'Version tag (e.g., 5.1.0full)'
+        description: 'Version5.1.0"
         required: true
         default: '5.1.0.full'
 
-permissions: 
+permissions:
   contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -29,7 +30,11 @@ jobs:
       - name: Download APK
         run: |
           pip install gdown
-          gdown "13SiZvv2qd1WIdeS-t0C_MzdP78OpAR3w" -O XoDos-${{ github.event.inputs.version_tag }}-full_arm64-v8a.apk
+          gdown "13SiZvv2qd1WIdeS-t0C_MzdP78OpAR3w" -O XoDos-${{ github.event.inputs.version_tag }}-full_arm64-v8a.apk || exit 1
+          
+          # Verify download
+          ls -lh XoDos-*.apk
+          file XoDos-${{ github.event.inputs.version_tag }}-full_arm64-v8a.apk
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
@@ -37,24 +42,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.event.inputs.version_tag }}
-          name: XoDos ${{ github.event.inputs.version_tag }}
-          body: |
-            New Exodus release for arm64
-            What's new?
-            - Changed and fixed UI
-            - Added More features for easier usage
-            - Added information about android device in terminal
-            - And More
-            
-            For best experience download the full version APK (1.6 GB) with Bionic and Glibc wine pre-installed
-            
-            **Credits:**
-            Team: @Xodios🇾🇪 & @DevArys🇨🇴 & @Mondo_Lambert🇲🇫 & @Aurora0y🇧🇷 & @Chest1902🇧🇩 & jiaxinchen 🇨🇳 & @Snap888🇷🇺
-            Logo designer: @xl_v6/ashen🇮🇶
-            
-            **Support:**
-            Telegram: https://t.me/xodemulatorr
-            Discord: https://discord.gg/d2ChVhPfnF
-            
-            Thank you for choosing XoDos by xodios M.aleiw
-          files: XoDos-${{ github.event.inputs.version_tag }}-full_arm64-v8a.apk
+          files: |
+            ./XoDos-${{ github.event.inputs.version_tag }}-full_arm64-v8a.apk
