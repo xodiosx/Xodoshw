@@ -4,17 +4,30 @@ on:
   workflow_dispatch:
     inputs:
       version_tag:
-        description: 'Version tag (e.g., 5.1.0)'
+        description: 'Version tag (e.g., 5.1.0full)'
         required: true
-        default: '5.1.0'
-  push:
-    tags:
-      - '5.1.0'
+        default: '5.1.0.full'
+
+permissions:
+  contents: write
+  releases: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create Git Tag
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git tag ${{ github.event.inputs.version_tag }}
+          git push origin ${{ github.event.inputs.version_tag }}
+
       - name: Download APK
         run: |
           pip install gdown
