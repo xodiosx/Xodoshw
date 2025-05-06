@@ -8,10 +8,8 @@ on:
         required: true
         default: '5.1.0.full'
 
-permissions:
+permissions: 
   contents: write
-  releases: write
-
 jobs:
   build:
     runs-on: ubuntu-latest
