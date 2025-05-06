@@ -6,7 +6,7 @@ on:
       version_tag:
         description: 'Version tag (5.1.0.full)'
         required: true
-        default: '5.1.0(full)'
+        default: '5.1.0-full)'
 
 permissions:
   contents: write
