@@ -44,18 +44,11 @@ jobs:
           files: |
             XoDos-${{ github.event.inputs.version_tag }}-full_arm64-v8a.apk
             XoDos-debian.tar.xz
-          body: |
-         New XoDos release for arm64
-
-What's new?
+          body: | 
+            New XoDos release for arm64 + proot
+            What's new?
             - Changed and fixed UI
             - Added More features for easier usage
-            - added full system data
-            - added new Glibc drivers and DXVk
-            - added new Bionic Wine 10.0 with new drivers and box64
-            - changed and fixed settings app
-            - added Mangohud for both Bionic and Glibc
-            - added direct game play to open games right from android file picker with wine
             - Added information about android device in terminal
             - And More
             
@@ -69,4 +62,4 @@ What's new?
             Telegram: https://t.me/xodemulatorr
             Discord: https://discord.gg/d2ChVhPfnF
             
-            Thank you for choosing XoDos by xodios M.alei
+            Thank you for choosing XoDos by xodios M.aleiw
