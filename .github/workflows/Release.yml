@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       version_tag:
-        description: 'Version tag full (5.1.0.r1)'
+        description: 'Version tag (5.1.0.full)'
         required: true
-        default: '5.1.0.r1'
+        default: '5.1.0(full)'
 
 permissions:
   contents: write
@@ -25,21 +25,48 @@ jobs:
           git tag ${{ github.event.inputs.version_tag }}
           git push origin ${{ github.event.inputs.version_tag }}
 
-      - name: Download APK (Google Drive)
+      - name: Download Main APK
         run: |
           pip install gdown
-          gdown "13SiZvv2qd1WIdeS-t0C_MzdP78OpAR3w" -O XoDos-${{ github.event.inputs.version_tag }}.apk
+          gdown "13SiZvv2qd1WIdeS-t0C_MzdP78OpAR3w" -O XoDos-${{ github.event.inputs.version_tag }}-full_arm64-v8a.apk || exit 1
 
-      
-      - name: Verify APK
+      - name: Download Additional File
         run: |
-          ls -lh *.apk
-          file *.apk
+          gdown "1-3RccaqhYtdAAgvQ4cNGKvOyfp6jP_be" -O XoDos-debian.tar.xz || exit 1
 
-      - name: Create Release
+      - name: Create Release with Both Files
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.event.inputs.version_tag }}
-          files: XoDos-${{ github.event.inputs.version_tag }}.apk
+          name: XoDos ${{ github.event.inputs.version_tag }}
+          files: |
+            XoDos-${{ github.event.inputs.version_tag }}-full_arm64-v8a.apk
+            XoDos-debian.tar.xz
+          body: |
+         New XoDos release for arm64
+
+What's new?
+            - Changed and fixed UI
+            - Added More features for easier usage
+            - added full system data
+            - added new Glibc drivers and DXVk
+            - added new Bionic Wine 10.0 with new drivers and box64
+            - changed and fixed settings app
+            - added Mangohud for both Bionic and Glibc
+            - added direct game play to open games right from android file picker with wine
+            - Added information about android device in terminal
+            - And More
+            
+            For best experience download the full version APK (1.6 GB) with Bionic and Glibc wine pre-installed
+            
+            **Credits:**
+            Team: @Xodios🇾🇪 & @DevArys🇨🇴 & @Mondo_Lambert🇲🇫 & @Aurora0y🇧🇷 & @Chest1902🇧🇩 & jiaxinchen 🇨🇳 & @Snap888🇷🇺
+            Logo designer: @xl_v6/ashen🇮🇶
+            
+            **Support:**
+            Telegram: https://t.me/xodemulatorr
+            Discord: https://discord.gg/d2ChVhPfnF
+            
+            Thank you for choosing XoDos by xodios M.alei
