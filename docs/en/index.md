@@ -2,12 +2,13 @@
 page_ref: /docs/apps/termux/index.html
 ---
 
-# Termux App Docs
+# XoDos help 
 
 <!--- DOC_HEADER_PLACEHOLDER -->
 
-Welcome to documentation for the [Termux App].
+Welcome to documentation for [XoDos].
+coming soon,,,⏳
 
-##
+## Thank you❤️
 
-[Termux App]: https://github.com/termux/termux-app
+[XoDos]: https://github.com/xodiosx/XoDos/releases
