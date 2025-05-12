@@ -38,6 +38,7 @@ git clone -b main https://github.com/xodiosx/XoDos && cd XoDos && git submodule 
     windows and Linux emulator for Android it aims to run windows and Linux games and Apps on android with x86_64 and glibc and bionic wine builds and Linux debain proot and Kali operating system installable with pre installed small native Linux xfce4 desktop 
         <br />
       <br />
+      ## IMPORTANT :⚠️ YOU NEED TO UNINSTALL TERMUX IF YOU CAN'T INSTALL XODOS ⚠️
     <a href="https://github.com/xodiosx/XoDos/releases"><strong>✅Download latest versions of XoDos Full and proot debian and other files from the releases📥</strong></a>
     <br />
     <br />
