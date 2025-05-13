@@ -1,49 +1,30 @@
+
 #!/data/data/com.termux/files/usr/bin/sh
-
-#termux-setup-storage
-
 am broadcast --user 0 \
 		 --es com.termux.app.reload_style storage \
 		 -a com.termux.app.reload_style com.termux > /dev/null
 
- sleep 3
-# Log file
-LOG_FILE="/storage/emulated/0/Download/XoDos_error.log"
- 
- 
-# Function to handle errors
-handle_error() {
-    local command="$1"
-    local error="$2"
-    local timestamp=$(date +"%Y-%m-%d %T")
-    
-
-    # Log the error
-    echo "[$timestamp] Error in command: $command" >> "$LOG_FILE"
-    echo "[$timestamp] Error message: $error" >> "$LOG_FILE"
-    echo >> "$LOG_FILE"  # Add a newline
-    
-    # Additional error handling logic
-    true
-}
-
-# Set the error handler function
-trap 'handle_error "$BASH_COMMAND" "$?"' ERR
-ps 1>> "$LOG_FILE"
-lscpu 1>> "$LOG_FILE"
-uname -a 1>> "$LOG_FILE"
-echo "checking stuff please wait" 1>> "$LOG_FILE"
-echo “正在检查内容，请稍候” 1>> "$LOG_FILE"
-echo "「確認中ですのでお待ちください" 1>> "$LOG_FILE"
-echo "Vérification des choses, veuillez patienter" 1>> "$LOG_FILE"
-echo "सामान की जाँच हो रही है कृपया प्रतीक्षा करें" 1>> "$LOG_FILE"
-echo "رﺎﻈﺘﻧﻹﺍ ءﺎﺟﺮﺑ ءﺎﻴﺷﻷﺍ ﻦﻣ ﻖﻘﺤﺘﻟﺍ يﺭﺎﺟ" 1>> "$LOG_FILE"
-sleep 0.5
+ sleep 4
     pkg remove termux-display-nightly -y
 pkg remove termux-x11-nightly -y
-dpkg -i /data/data/com.termux/files/home/termux-x11-nightly-1.03.10-0-all.deb
+dpkg -i /data/data/com.termux/files/home/termux-x11-nightly-1.03.10-0-all.deb  
 sleep 1
-#cp -f /data/data/com.termux/files/fix /data/data/com.termux/files/usr/bin
+cp /data/data/com.termux/files/usr/bin/xodos /data/data/com.termux/files/xodos-normal
+cp /data/data/com.termux/files/usr/bin/xodxx /data/data/com.termux/files/xodxx-gamemode
+cp /data/data/com.termux/files/usr/bin/xodosset /data/data/com.termux/files/xodosset-settings
+cp  /data/data/com.termux/files/usr/bin/xodx /data/data/com.termux/files/xodx-bettergpu
+cp /data/data/com.termux/files/usr/bin/xodxd /data/data/com.termux/files/xodxd-proot
+cp /data/data/com.termux/files/usr/bin/xodset /data/data/com.termux/files/xodset-settings
+cp /data/data/com.termux/files/usr/bin/xodos-mali /data/data/com.termux/files/xodos-maligpu
+cp  /data/data/com.termux/files/usr/bin/kali /data/data/com.termux/files/kali-kaliroot
+cp  /data/data/com.termux/files/usr/bin/kaliu /data/data/com.termux/files/kaliu-kaliuser
+cp  /data/data/com.termux/files/home/switch /data/data/com.termux/files/switch-container
+#cp  /data/data/com.termux/files/home/switch /data/data/com.termux/files/usr/bin/switch
+#cp  /data/data/com.termux/files/usr/bin/xodxx2 /data/data/com.termux/files/XoDos-bionic
+#cp  /data/data/com.termux/files/usr/bin/xodxx3 /data/data/com.termux/files/all-drivers-bionic
+#cp  /data/data/com.termux/files/usr/bin/xodx3 /data/data/com.termux/files/New-fast-GPU
+#cp  /data/data/com.termux/files/usr/bin/nat /data/data/com.termux/files/XoDos-native
+#cp  /data/data/com.termux/files/usr/bin/nat3 /data/data/com.termux/files/all-drivers-native
 cp -f /data/data/com.termux/files/fix /data/data/com.termux/files/home
 
 cp /data/data/com.termux/files/usr/bin/xodxx /data/data/com.termux/files/XoDos-glibc
@@ -60,24 +41,26 @@ cp  /data/data/com.termux/files/usr/bin/ps1-z /data/data/com.termux/files/PS1
 cp  /data/data/com.termux/files/usr/bin/gba-z /data/data/com.termux/files/Gameboy
 cp  /data/data/com.termux/files/usr/bin/xodos /data/data/com.termux/files/XoDos-desktop
 cp /data/data/com.termux/files/usr/bin/xodos6 /data/data/com.termux/files/XoDos-soundfixed
-l
+termux-setup-storage
+ sleep 2
+sleep 1
 chmod +x /data/data/com.termux/files/usr/bin/xodos
 chmod +x /data/data/com.termux/files/usr/bin/xodos-mali
 chmod +x /data/data/com.termux/files/usr/bin/xodxx
 chmod +x /data/data/com.termux/files/usr/bin/xodosset
-chmod +x /data/data/com.termux/files/usr/bin/xodxl
+chmod +x /data/data/com.termux/files/usr/bin/xodx
 chmod +x /data/data/com.termux/files/usr/bin/xod
 chmod +x  /data/data/com.termux/files/usr/bin/xodset
 chmod +x /data/data/com.termux/files/usr/bin/xodxd
 chmod +x  /data/data/com.termux/files/usr/etc/bash.bashrc
 chmod +x  /data/data/com.termux/files/home/x11
-chmod +x /data/data/com.termux/files/xodos-normall
-chmod +x /data/data/com.termux/files/XoDos-glibc 
-chmod +x /data/data/com.termux/files/wineglibc-settings
+chmod +x /data/data/com.termux/files/xodos-normal
+chmod +x /data/data/com.termux/files/xodxx-gamemode
+chmod +x /data/data/com.termux/files/xodosset-settings
 chmod +x /data/data/com.termux/files/xodx-bettergpu
 chmod +x /data/data/com.termux/files/xodxd-proot
-chmod +x  /data/data/com.termux/files/New-fast-GPU
-chmod +x /data/data/com.termux/files/*
+chmod +x  /data/data/com.termux/files/bash.bashrc
+chmod +x /data/data/com.termux/files/xodset-settings
 chmod +x /data/data/com.termux/files/xodos-maligpu
 chmod +x /data/data/com.termux/files/usr/bin/kali
 chmod +x /data/data/com.termux/files/usr/bin/kaliu
@@ -89,14 +72,13 @@ chmod +x /data/data/com.termux/files/usr/bin/installproot
 chmod +x /data/data/com.termux/files/usr/bin/installkali
 chmod +x /data/data/com.termux/files/usr/bin/fix
 chmod +x /data/data/com.termux/files/XoDos-bionic
- chmod +x /data/data/com.termux/files/Zink-GPU
+ chmod +x /data/data/com.termux/files/*
 chmod +x /data/data/com.termux/files/all-drivers-bionic
-chmod +x /data/data/com.termux/files/usr/bin/fix
-chmod +x /data/data/com.termux/files/home/fix
-ln -sf $(df -H | grep -o "/storage/....-....") "$HOME/Desktop/ext-sdcard"
-sleep 0.5
-
-rm -f /data/data/com.termux/files/xod/xodos.tar.xz && rm -f /data/data/com.termux/files/home/xodos.tar.xz && rm -f /data/data/com.termux/files/xod/*.tar.xz && rm -f /data/data/com.termux/files/xodos.tar.xzl
+chmod +x /data/data/com.termux/files/all-drivers-native
+chmod +x /data/data/com.termux/files/XoDos-native
+ln -sf $(df -H | grep -o "/storage/....-....") "$HOME/Desktop/ext-sdcard" &>/dev/null
+sleep 1
+rm -f /data/data/com.termux/files/xod/xodos.tar.xz && rm -f /data/data/com.termux/files/home/xodos.tar.xz 
 sleep 3
 killall -9 com.termux
 exit

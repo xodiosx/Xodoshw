@@ -231,7 +231,7 @@
     <string name="invalid_config">неверная конфигурация</string>
     <string name="toolbox_button_text2">НАЧИНАТЬ</string>
     <string name="toolbox_ai">ИИ</string>
-<string name="toolbox_xodos">Xodos</string>
+<string name="toolbox_xodos">XoDos</string>
 <string name="toolbox_proot">Proot</string>
 <string name="toolbox_kali">Kali</string>
 <string name="toolbox_switch">Сменить пользователя</string>
@@ -240,6 +240,28 @@
 <string name="toolbox_wine_bionic">Wine-Bionic</string>
 <string name="toolbox_xbox">Xbox</string>
 <string name="toolbox_backup">Резервная копия</string>
-<string name="toolbox_restore">Восстановить</string>
-<string name="toolbox_wine">Wine</string>
+<string name="toolbox_restore">Установить/Восстановить </string>
+<string name="toolbox_wine">Wine </string>
+<string name="choose_wine_env">Выбрать окружение Wine 🌐</string>
+<string name="wine_glibc">Wine Glibc 📚</string>
+<string name="wine_bionic">Wine Bionic ⚡</string>
+<string name="wine_glibc_missing">Сначала установите Wine Glibc! ⚠️</string>
+<string name="wine_bionic_missing">Сначала установите Wine Bionic! ⚠️</string>
+<string-array name="tutorial_steps">
+    <item>🐧 XoDos: Быстрый нативный Linux-десктоп для Android</item>
+    <item>🧰 Proot: Запуск полных Linux-дистрибутивов с root-доступом</item>
+    <item>🔓 Kali Linux: Комплект для тестирования безопасности с 100+ инструментами</item>
+    <item>🖥️ Wine Glibc: Эмуляция Windows для большинства устройств</item>
+    <item>⚙️ Wine Glibc: Эмуляция с нативной обёрткой драйверов</item>
+    <item>📂 Wine: Запускайте EXE-файлы из любой папки</item>
+    <item>🎮 Эмулятор Xbox: Играйте в оригинальные игры Xbox через Xemu</item>
+    <item>⚙️ Настройки: Конфигурация версий Wine/DXVK/Box и драйверов</item>
+    <item>🤖 AI-чат: Локальный ИИ с поддержкой DeepSeek и 100+ моделей</item>
+    <item>🔄 Восстановление: Установите обновления XoDos и системы Kali/Proot</item>
+    <item>💾 Резервная копия: Полный снимок системы в один клик</item>
+    <item>🔄 Переключение: Переход между контейнерами пользователей</item>
+    <item>➕ Добавить кнопку: Создавайте ярлыки для скриптов/приложений</item>
+</string-array>
+<string name="next">Далее ▶️</string>
+<string name="finish_tutorial">Завершить 🏁</string>
 </resources>

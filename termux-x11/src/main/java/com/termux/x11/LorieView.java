@@ -1,5 +1,9 @@
 package com.termux.x11;
 
+////////
+
+
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ClipData;
@@ -44,6 +48,11 @@ public class LorieView extends SurfaceView implements InputStub {
     public ScreenInfo screenInfo;
     public CursorLocker cursorLocker;
     public WinHandler winHandler;
+///////////////
+
+// In LorieView.java
+
+
 
     public void setWinHandler(WinHandler handler) {
         this.winHandler = handler;

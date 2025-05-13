@@ -2,6 +2,8 @@ package com.termux.x11;
 
 import android.view.InputDevice; // For InputDevice.SOURCE_GAMEPAD
 import android.widget.Toast;
+import android.graphics.PointF;
+import com.termux.x11.input.InputEventSender;
 
 import static android.Manifest.permission.WRITE_SECURE_SETTINGS;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
@@ -283,6 +285,10 @@ toggleExtraKeys();
         lorieView.setOnHoverListener((v, e) -> mInputHandler.handleTouchEvent(lorieParent, lorieView, e));
      // =================   
         
+        
+ 
+        
+        
         lorieView.setOnGenericMotionListener((v, e) -> {
     if (isGamepadConnected() && (e.getSource() & InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK) {
         Log.d("MainActivity", "Joystick Moved: AXIS_X=" + e.getAxisValue(MotionEvent.AXIS_X) +
@@ -402,6 +408,9 @@ toggleExtraKeys();
             shortcut = new Shortcut(container, new File(shortcutPath));
 
     }
+
+//////////////
+
 
     //Register the needed events to handle stylus as left, middle and right click
     @SuppressLint("ClickableViewAccessibility")

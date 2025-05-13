@@ -218,7 +218,18 @@ public class TouchInputHandler {
                     float scrollY = -100 * event.getAxisValue(MotionEvent.AXIS_VSCROLL);
                     float scrollX = -100 * event.getAxisValue(MotionEvent.AXIS_HSCROLL);
 
-                    mInjector.sendMouseWheelEvent(scrollX, scrollY);
+                  //  mInjector.sendMouseWheelEvent(scrollX, scrollY);
+                            // WITH THIS CODE:
+            if (scrollY != 0) {
+                int button = (scrollY > 0) ? 
+                    InputStub.BUTTON_SCROLL_UP : 
+                    InputStub.BUTTON_SCROLL_DOWN;
+                
+                // Send press+release for scroll buttons
+                mInjector.sendMouseEvent(null, button, true, true);
+                mInjector.sendMouseEvent(null, button, false, true);
+            }
+                               
                     return true;
 
                 case MotionEvent.ACTION_POINTER_DOWN:

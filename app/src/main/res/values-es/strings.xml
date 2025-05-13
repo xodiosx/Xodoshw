@@ -236,6 +236,28 @@
 <string name="toolbox_wine_bionic">Wine-Bionic</string>
 <string name="toolbox_xbox">Xbox</string>
 <string name="toolbox_backup">Copia de seguridad</string>
-<string name="toolbox_restore">Restaurar</string>
-<string name="toolbox_wine">Wine</string>
+<string name="toolbox_restore">Instalar/Restaurar </string>
+<string name="toolbox_wine">Wine </string>
+<string name="choose_wine_env">Elegir entorno Wine 🌐</string>
+<string name="wine_glibc">Wine Glibc 📚</string>
+<string name="wine_bionic">Wine Bionic ⚡</string>
+<string name="wine_glibc_missing">¡Instala Wine Glibc primero! ⚠️</string>
+<string name="wine_bionic_missing">¡Instala Wine Bionic primero! ⚠️</string>
+<string-array name="tutorial_steps">
+    <item>🐧 XoDos: Escritorio Linux nativo ultrarrápido para Android</item>
+    <item>🧰 Proot: Ejecuta distribuciones Linux completas con acceso root</item>
+    <item>🔓 Kali Linux: Kit de pruebas de penetración con 100+ herramientas</item>
+    <item>🖥️ Wine Glibc: Emulación Windows compatible con la mayoría de dispositivos</item>
+    <item>⚙️ Wine Glibc: Emulación con envoltura de controladores nativos</item>
+    <item>📂 Wine: Ejecuta archivos EXE desde cualquier carpeta</item>
+    <item>🎮 Emulador Xbox: Juegos originales de Xbox usando Xemu</item>
+    <item>⚙️ Ajustes: Configura versiones de Wine/DXVK/Box y drivers</item>
+    <item>🤖 Chat AI: IA local privada con soporte para DeepSeek y 100+ modelos</item>
+    <item>🔄 Restaurar: Instala actualizaciones de XoDos y sistemas como Kali</item>
+    <item>💾 Copia de seguridad: Captura completa del sistema en un clic</item>
+    <item>🔄 Cambiar: Alterna entre contenedores de usuario</item>
+    <item>➕ Añadir botón: Crea accesos directos para scripts/apps/Python</item>
+</string-array>
+<string name="next">Siguiente ▶️</string>
+<string name="finish_tutorial">Finalizar 🏁</string>
 </resources>

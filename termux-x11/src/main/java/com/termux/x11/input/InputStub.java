@@ -18,7 +18,9 @@ public interface InputStub {
     int BUTTON_MIDDLE = 2;
     int BUTTON_RIGHT = 3;
     int BUTTON_SCROLL = 4;
-
+// In InputStub.java
+public static final int BUTTON_SCROLL_UP = 4;
+public static final int BUTTON_SCROLL_DOWN = 5;
     /** Sends a mouse event. */
     void sendMouseEvent(float x, float y, int whichButton, boolean buttonDown, boolean relative);
 

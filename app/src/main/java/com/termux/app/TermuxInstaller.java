@@ -248,7 +248,6 @@ extractionProgressDialog.show();
 
 
 
-
     // Inside the try block after bootstrap installation:
 // --------------------------------------------
 // --------------------------------------------
@@ -276,7 +275,7 @@ new Thread(() -> {
         // Get total file size for progress
         long totalBytes = assetManager.openFd("xodos.tar.xz").getLength();
         long copiedBytes = 0;
-        byte[] copybuffer = new byte[1024 * 16]; // 16KB buffer
+        byte[] copybuffer = new byte[1024 * 128]; // 16KB buffer
 
         int bytesRead;
         while ((bytesRead = in.read(copybuffer)) != -1) {
@@ -314,7 +313,7 @@ new Thread(() -> {
 
 // Calculate dynamic checkpoint interval for smoother updates
 int bytesPerRecord = 512; // Tar's block size
-int targetCheckpoints = 500; // Aim for 200 checkpoints (~0.25% per update)
+int targetCheckpoints = 200; // Aim for 200 checkpoints (~0.25% per update)
 
 // Calculate records per checkpoint
 long totalRecords = (totalBytes + bytesPerRecord - 1) / bytesPerRecord;

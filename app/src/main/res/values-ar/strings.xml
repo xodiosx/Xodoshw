@@ -246,6 +246,28 @@
 <string name="toolbox_wine_bionic">Wine-Bionic</string>
 <string name="toolbox_xbox">اكسبوكس</string>
 <string name="toolbox_backup">نسخة احتياطية</string>
-<string name="toolbox_restore">استعادة</string>
-<string name="toolbox_wine">Wine</string>
+<string name="toolbox_restore">تثبيت/استعادة </string>
+<string name="toolbox_wine">واين </string>
+<string name="choose_wine_env">اختر بيئة واين 🌐</string>
+<string name="wine_glibc">واين جلِبك 📚</string>
+<string name="wine_bionic">واين بايونيك ⚡</string>
+<string name="wine_glibc_missing">الرجاء تثبيت واين جلِبك أولاً! ⚠️</string>
+<string name="wine_bionic_missing">الرجاء تثبيت واين بايونيك أولاً! ⚠️</string>
+<string-array name="tutorial_steps">
+    <item>🐧 XoDos: سطح مكتب لينكس سريع لأجهزة أندرويد</item>
+    <item>🧰 Proot: تشغيل توزيعات لينكس كاملة مع صلاحيات root</item>
+    <item>🔓 Kali Linux: مجموعة اختبار الاختراق مع 100+ أداة</item>
+    <item>🖥️ Wine Glibc: محاكاة ويندوز لأغلب الأجهزة (استخدم VirGl لغير سنابدراجون)</item>
+    <item>⚙️ Wine Glibc: محاكاة مع تغليف درايفرز أصلية</item>
+    <item>📂 Wine: شغّل ملفات EXE من أي مجلد على جهازك</item>
+    <item>🎮 محاكي Xbox: العب ألعاب Xbox الأصلية باستخدام Xemu</item>
+    <item>⚙️ الإعدادات: اضبط إصدارات Wine/DXVK/Box والدرايفرز</item>
+    <item>🤖 الدردشة الذكية: ذكاء اصطناعي خاص يدعم DeepSeek و100+ نموذج</item>
+    <item>🔄 الاستعادة: ثبّت تحديثات XoDos وأنظمة مثل Kali/Proot</item>
+    <item>💾 النسخ الاحتياطي: لقطة كاملة للنظام بنقرة واحدة</item>
+    <item>🔄 التبديل: انتقل بين حاويات المستخدمين</item>
+    <item>➕ إضافة زر: أنشئ اختصارات للبرامج النصية/التطبيقات</item>
+</string-array>
+<string name="next">التالي ▶️</string>
+<string name="finish_tutorial">إنهاء 🏁</string>
 </resources>

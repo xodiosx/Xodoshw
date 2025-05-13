@@ -1,9 +1,9 @@
 #!/data/data/com.termux/files/usr/bin/bash
-function resetMobox(){
-    echo "moboxHomeEnv="$moboxHomeEnv
+function resetXoDos(){
+    echo "XoDosHomeEnv="$XoDosHomeEnv
     echo "pathEnv="$pathEnv
     echo "winePathEnv="$winePathEnv
-    echo $moboxHomeEnv >> ~/.bashrc
+    echo $XoDosHomeEnv >> ~/.bashrc
     echo $pathEnv >> ~/.bashrc
 
     tar -xf ~/wine.tar -C $winePathEnv/lib/
@@ -31,21 +31,21 @@ else
     touch ~/.bashrc
 fi
 if [ -d "${PREFIX}/glibc" ];then
-	echo "mobox installed"
-	moboxHomeEnv="export MOBOX_HOME=\$PREFIX/glibc"
-	pathEnv="export PATH=\$PATH:\$MOBOX_HOME/opt/scripts"
+	echo "XoDos installed"
+	XoDosHomeEnv="export XoDos_HOME=\$PREFIX/glibc"
+	pathEnv="export PATH=\$PATH:\$XoDos_HOME/opt/scripts"
 	prefixPath=$(echo $PREFIX)
 	winePath=$(cat $PREFIX/glibc/opt/conf/wine_path.conf|grep "WINE_PATH="|cut -d= -f2|sed 's/$PREFIX//g')
 	winePathEnv=$prefixPath$winePath
-	if [  $MOBOX_HOME ];then
-		echo "mobox env has been set, now update"
-		sed -i '/MOBOX_HOME/d' ~/.bashrc
+	if [  $XoDos_HOME ];then
+		echo "XoDos env has been set, now update"
+		sed -i '/XoDos_HOME/d' ~/.bashrc
 		sed -i '/^$/d' ~/.bashrc
-		resetMobox
+		resetXoDos
 	else
-		echo "mobox env not set, now set"
-		resetMobox
+		echo "XoDos env not set, now set"
+		resetXoDos
 	fi
 else
-	echo "mobox not installed"
+	echo "XoDos not installed"
 fi

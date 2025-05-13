@@ -1,0 +1,1004 @@
+package com.termux.app.terminal;
+import android.util.DisplayMetrics;
+
+import static com.termux.shared.termux.TermuxConstants.TERMUX_BIN_PREFIX_DIR_PATH;
+
+import android.widget.GridLayout;
+import android.widget.PopupWindow;
+import android.view.Gravity;
+import android.widget.ScrollView;
+import com.termux.app.terminal.utils.ScreenUtils;
+import android.widget.ImageView;
+import android.widget.TextView;
+import com.termux.app.terminal.utils.FilePathUtils; ///////
+import android.os.Handler;
+import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+// Add with other imports
+import android.view.Window;
+import android.view.WindowManager;
+import android.content.DialogInterface;
+import android.graphics.drawable.ColorDrawable;
+
+
+import android.app.AlertDialog;
+import android.content.Intent;
+import java.io.File;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import android.content.Context;
+import android.net.Uri;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.FileOutputStream;
+// Add with other imports
+import android.graphics.Color;
+import android.util.TypedValue;
+import android.text.TextUtils;
+import android.graphics.Typeface;
+//////////
+
+import static com.termux.shared.termux.TermuxConstants.TERMUX_HOME_DIR_PATH;
+import org.json.JSONException;
+import com.termux.x11.controller.core.FileUtils;
+
+
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.Toast;
+
+import com.termux.R;
+import com.termux.app.TermuxActivity;
+
+import java.io.File;
+import java.util.ArrayList;
+
+///
+public class StartEntryClient implements FileBrowser.FileSlectedAdapter{
+
+// Add these class members
+private View mBlockingView;
+private final Handler mHandler = new Handler();
+public static final int FILE_REQUEST_WINE_CODE = 1002;
+private int mTutorialStep = 0;
+private AlertDialog mTutorialDialog;
+
+private PopupWindow mToolboxPopup;
+private GridLayout mToolboxGrid;
+private View mConfigPopupContent;
+
+    private TermuxActivity mTermuxActivity;
+    private TermuxTerminalSessionActivityClient mTermuxTerminalSessionActivityClient;
+    private LinearLayout mStartItemEntriesConfig;
+    private Button mLaunchButton;
+    private ImageButton mSelectConfigButton;
+    private ImageButton mAddConfigButton;
+    private ImageButton mRemoveConfigButton;
+    private Spinner mLaunchItemSpinner;
+    private ArrayList<StartEntry.Entry> mEntries;
+    private StartEntryArrayAdapter mAdapter;
+    private int mCurrentCommand;
+    private FileBrowser mFileBrowser;
+
+    //// helper ////////
+// Add this method any
+
+
+private void startTutorial() {
+    mTutorialStep = 0;
+    showTutorialStep();
+}
+
+private void showTutorialStep() {
+    String[] steps = mTermuxActivity.getResources().getStringArray(R.array.tutorial_steps);
+    if (mTutorialStep >= steps.length) {
+        mToolboxPopup.setFocusable(true);
+        return;
+    }
+
+    // Clear previous highlights
+    for(int i=0; i<mToolboxGrid.getChildCount(); i++) {
+        mToolboxGrid.getChildAt(i).setBackgroundResource(R.drawable.tool_box_background);
+    }
+
+    AlertDialog.Builder builder = new AlertDialog.Builder(mTermuxActivity);
+builder.setMessage(steps[mTutorialStep])
+       .setCancelable(false)
+       .setPositiveButton(mTutorialStep < steps.length-1 ? 
+           R.string.next : R.string.finish_tutorial, (dialog, which) -> {
+           mTutorialStep++;
+           if(mTutorialStep >= steps.length) {
+               // Final step - dismiss both dialog and toolbox
+               mToolboxPopup.dismiss();
+           } else {
+               // Continue to next step
+               showTutorialStep();
+           }
+       });
+
+    AlertDialog dialog = builder.create();
+    
+    // Semi-transparent background instead of full transparent
+    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.argb(200, 30, 30, 30))); // Dark gray
+    // Position dialog at bottom
+    Window window = dialog.getWindow();
+    if (window != null) {
+        window.setGravity(Gravity.BOTTOM);
+        WindowManager.LayoutParams params = window.getAttributes();
+        params.width = WindowManager.LayoutParams.MATCH_PARENT;
+        params.horizontalMargin = 32;
+        params.verticalMargin = 16;
+        window.setAttributes(params);
+    }
+    dialog.show();
+
+
+    // Custom text styling (from previous answer)
+    TextView messageText = dialog.findViewById(android.R.id.message);
+    if (messageText != null) {
+        messageText.setGravity(Gravity.CENTER);
+        messageText.setTextColor(Color.WHITE);
+        messageText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        messageText.setPadding(32, 32, 32, 32);
+    }
+
+    // Custom button styling
+    Button positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+    if (positiveButton != null) {
+        positiveButton.setTextColor(Color.parseColor("#BB86FC"));
+        positiveButton.setBackgroundResource(R.drawable.tutorial_button_bg);
+        positiveButton.setAllCaps(false);
+        positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+    }
+
+
+
+    // Highlight current button 
+    int[] highlightOrder = {0,1,2,3,4,5,6,7,8,9,10,11,12}; // Match your grid order
+    if(mTutorialStep < highlightOrder.length) {
+        View targetButton = mToolboxGrid.getChildAt(highlightOrder[mTutorialStep]);
+        targetButton.setBackgroundColor(Color.argb(150, 255, 165, 0)); // Orange overlay
+    }
+    
+}
+
+
+
+
+private void showBlockingView() {
+    // Create root container
+    RelativeLayout blockingLayout = new RelativeLayout(mTermuxActivity);
+    blockingLayout.setLayoutParams(new ViewGroup.LayoutParams(
+        ViewGroup.LayoutParams.MATCH_PARENT,
+        ViewGroup.LayoutParams.MATCH_PARENT
+    ));
+    blockingLayout.setBackgroundColor(Color.parseColor("#80000000")); // Semi-transparent dark
+    
+    // Create loading container
+    LinearLayout loadingContainer = new LinearLayout(mTermuxActivity);
+    loadingContainer.setOrientation(LinearLayout.VERTICAL);
+    loadingContainer.setGravity(Gravity.CENTER);
+    
+    // Create progress spinner
+    ProgressBar progress = new ProgressBar(mTermuxActivity, null, android.R.attr.progressBarStyleLarge);
+    progress.setIndeterminate(true);
+    
+    // Create loading text
+    TextView text = new TextView(mTermuxActivity);
+    text.setText("Loading...");
+    text.setTextColor(Color.WHITE);
+    text.setTextSize(18);
+    text.setPadding(0, 16, 0, 0);
+    
+    // Add views
+    loadingContainer.addView(progress);
+    loadingContainer.addView(text);
+    blockingLayout.addView(loadingContainer, new RelativeLayout.LayoutParams(
+        ViewGroup.LayoutParams.WRAP_CONTENT,
+        ViewGroup.LayoutParams.WRAP_CONTENT
+    ) {
+        {
+            addRule(RelativeLayout.CENTER_IN_PARENT);
+        }
+    });
+    
+    // Add to window
+    ViewGroup rootView = (ViewGroup) mTermuxActivity.getWindow().getDecorView();
+    rootView.addView(blockingLayout);
+    
+    mBlockingView = blockingLayout;
+}
+
+private void hideBlockingView() {
+    if (mBlockingView != null) {
+        ViewGroup rootView = (ViewGroup) mBlockingView.getParent();
+        if (rootView != null) {
+            rootView.removeView(mBlockingView);
+        }
+        mBlockingView = null;
+    }
+}
+
+
+public static String getRealPath(Context context, Uri uri) {
+    try (InputStream in = context.getContentResolver().openInputStream(uri)) {
+        File tempFile = File.createTempFile("temp_", null, context.getCacheDir());
+        try (OutputStream out = new FileOutputStream(tempFile)) {
+            byte[] buffer = new byte[1024];
+            int read;
+            while ((read = in.read(buffer)) != -1) {
+                out.write(buffer, 0, read);
+            }
+        }
+        return tempFile.getAbsolutePath();
+    } catch (Exception e) {
+        return null;
+    }
+}
+
+private String mSelectedWineCommand;
+private final String[] wineCommands = {
+    "/data/data/com.termux/files/usr/glibc/opt/scripts/xodos_wine2",
+    "/data/data/com.termux/files/usr/bin/xbio2"
+};
+
+
+private void saveToStartMenuEntries() {
+    File file = new File(TERMUX_HOME_DIR_PATH, ".startMenuEntries");
+    try {
+        JSONObject data = new JSONObject();
+        data.put("version", "1.0");
+        data.put("name", "startMenuEntries");
+        data.put("currentStartItem", mCurrentCommand);
+
+        JSONArray elementsJSONArray = new JSONArray();
+        for (StartEntry.Entry entry : StartEntry.getStartItemList()) {
+            JSONObject entryJson = new JSONObject();
+            entryJson.put("path", entry.getPath());
+            entryJson.put("fileName", entry.getFileName());
+            entryJson.put("iconPath", entry.getIconPath());
+            entryJson.put("type", entry.getType() != null ? entry.getType() : "file");
+            entryJson.put("title", entry.getFileName());
+            elementsJSONArray.put(entryJson);
+        }
+        data.put("elements", elementsJSONArray);
+        
+             // Make sure parent directory exists
+        file.getParentFile().mkdirs();
+        FileUtils.writeString(file, data.toString());
+    } catch (JSONException e) {
+        Toast.makeText(mTermuxActivity, "Failed to save entries: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+    }
+}
+
+private void loadFromStartMenuEntries() {
+    File file = new File(TERMUX_HOME_DIR_PATH, ".startMenuEntries");
+    if (!file.exists() || !file.isFile()) {
+        return;
+    }
+
+    try {
+        JSONObject config = new JSONObject(FileUtils.readString(file));
+        JSONArray elements = config.getJSONArray("elements");
+        
+        for (int i = 0; i < elements.length(); i++) {
+            JSONObject item = elements.getJSONObject(i);
+            StartEntry.Entry entry = new StartEntry.Entry();
+            entry.setPath(item.getString("path"));
+            entry.setFileName(item.getString("fileName"));
+            entry.setIconPath(item.getString("iconPath"));
+            entry.setType(item.optString("type", "file"));
+            StartEntry.addStartEntry(entry);
+            refreshToolboxItems(); 
+        }
+        
+        if (config.has("currentStartItem")) {
+            mCurrentCommand = config.getInt("currentStartItem");
+        }
+    } catch (Exception e) {
+        Toast.makeText(mTermuxActivity, "Failed to load entries: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+    }
+}
+
+private void addCommandButton(String type, String title, String command) {
+    LinearLayout btn = createToolboxButton(type, title);
+    btn.setOnClickListener(v -> {   
+        mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write(command + "\n");
+        mToolboxPopup.dismiss();
+    });
+    mToolboxGrid.addView(btn);
+}
+
+private String determineFileType(FileInfo fileInfo) {
+    if (fileInfo == null || fileInfo.getName() == null) return "file";
+    
+    String fileName = fileInfo.getName().toLowerCase();
+    if (fileName.endsWith(".sh")) return "script";
+    if (fileName.endsWith(".txt")) return "text";
+    if (fileName.endsWith(".py")) return "python";
+    if (fileName.endsWith(".deb")) return "package";
+    return "file";
+}
+
+private LinearLayout createToolboxButton(String type, String title) {
+  // Handle null type
+    if (type == null) {
+        type = "unknown"; // Default fallback
+        // Log the error for debugging
+        Toast.makeText(mTermuxActivity, "Null type encountered for: " + title, 
+        Toast.LENGTH_SHORT).show();
+    }
+
+    LinearLayout layout = new LinearLayout(mTermuxActivity);
+    int size = ScreenUtils.getScreenWidth(mTermuxActivity) / 5;
+    LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(size, size);
+    param.setMargins(10, 10, 10, 10);
+    layout.setLayoutParams(param);
+    layout.setOrientation(LinearLayout.VERTICAL);
+    layout.setGravity(Gravity.CENTER);
+  //  layout.setBackgroundResource(R.drawable.tool_box_background); // Add background
+layout.setBackgroundResource(R.drawable.button_press_effect);
+    
+    // Add for better interaction:
+    layout.setClickable(true);
+    layout.setFocusable(true);
+    layout.setForeground(mTermuxActivity.getResources()
+        .getDrawable(R.drawable.button_press_effect));
+
+
+    ImageView iv = new ImageView(mTermuxActivity);
+    // Set image based on type
+// Add weight to image view like original
+    int imageSize = (int) (size * 0.6);
+    LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(
+        imageSize, 
+        imageSize
+    );
+    iv.setLayoutParams(imageParams); // Critical missing line
+    iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+
+iv.setScaleType(ImageView.ScaleType.FIT_CENTER); // Add this for proper scaling
+  
+      switch(type) {
+      case "help":
+    iv.setImageResource(R.drawable.ihelp); //
+    break;
+    case "switch":
+    iv.setImageResource(R.drawable.iswitch); // 
+    break;
+    case "ai":
+    iv.setImageResource(R.drawable.iai); // 
+    break;
+    case "kali":
+    iv.setImageResource(R.drawable.ikali); // 
+    break;
+    case "proot":
+    iv.setImageResource(R.drawable.iproot); // 
+    break;
+    case "wine":
+    iv.setImageResource(R.drawable.iwine); // 
+    break;
+    case "xset":
+    iv.setImageResource(R.drawable.iset); 
+    break;
+    case "xgl":
+    iv.setImageResource(R.drawable.igl); 
+    break;
+    case "xbio":
+    iv.setImageResource(R.drawable.ibi); 
+    break;
+    case "xbox":
+    iv.setImageResource(R.drawable.ixbox); 
+    break;
+    case "xodos":
+    iv.setImageResource(R.drawable.idesk); 
+    break;
+        case "backup":
+    iv.setImageResource(R.drawable.ibackup);
+    break;
+case "restore":
+    iv.setImageResource(R.drawable.irestore);
+    break;
+    case "add":
+        iv.setImageResource(R.drawable.iadd); 
+        break;
+      // Add new cases from second code block
+        case "script":
+            iv.setImageResource(R.drawable.iscript);
+            break;
+        case "executable":
+            iv.setImageResource(R.drawable.iexcut);
+            break;
+        case "short_cut":
+            iv.setImageResource(R.drawable.ic_shortcut_click);
+            break;
+        case "terminal":
+            iv.setImageResource(R.drawable.iterm);
+            break;
+        default:
+            iv.setImageResource(R.drawable.iexcut); // Changed to custom default
+    }
+
+
+    
+   TextView tv = new TextView(mTermuxActivity);
+    // Match original text styling
+        tv.setLayoutParams(new LinearLayout.LayoutParams(
+        ViewGroup.LayoutParams.MATCH_PARENT,
+        ViewGroup.LayoutParams.WRAP_CONTENT
+    ));
+    
+    tv.setText(title);
+    tv.setGravity(Gravity.CENTER);
+    tv.setTextColor(Color.WHITE);
+    tv.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
+    tv.setAutoSizeTextTypeUniformWithConfiguration(
+        8, // Minimum text size (sp)
+        14, // Maximum text size (sp)
+        1, // Step size (sp)
+        TypedValue.COMPLEX_UNIT_SP
+    );
+
+    // Ensure text wraps if needed
+    tv.setMaxLines(2);
+    tv.setEllipsize(TextUtils.TruncateAt.END);
+    tv.setPadding(0, 8, 0, 0);
+    tv.setEllipsize(TextUtils.TruncateAt.END);
+   
+  //  tv.setMaxLines(2);
+    
+tv.setTextColor(Color.parseColor("#FFFFFF")); // Ensure white text
+tv.setBackgroundColor(Color.parseColor("#40000000")); // Add subtle background
+tv.setTypeface(Typeface.DEFAULT_BOLD); // Improve readability
+
+    layout.addView(iv);
+    layout.addView(tv);
+    return layout;
+}
+
+private LinearLayout createToolboxButton(StartEntry.Entry entry) {
+    return createToolboxButton(entry.getType(), entry.getFileName());
+}
+
+
+    private StartEntryClient() {
+    }
+
+    public StartEntryClient(TermuxActivity activity, TermuxTerminalSessionActivityClient termuxTerminalSessionActivityClient) {
+        this.mTermuxActivity = activity;
+        this.mTermuxTerminalSessionActivityClient = termuxTerminalSessionActivityClient;
+    }
+
+    public void init() {
+  
+    
+        // Load from both formats for backward compatibility
+    StartEntry.loadStartItems(); // Original .startItemEntries
+    loadFromStartMenuEntries(); // New .startMenuEntries
+        
+        mStartItemEntriesConfig = mTermuxActivity.findViewById(com.termux.x11.R.id.LConfigStartItems);
+        mLaunchButton = mTermuxActivity.findViewById(com.termux.x11.R.id.BLaunch_item);
+        mLaunchButton.setVisibility(View.GONE); // Hide but keep code
+        mSelectConfigButton = mTermuxActivity.findViewById(com.termux.x11.R.id.BAdd_item);
+        mAddConfigButton = mTermuxActivity.findViewById(com.termux.x11.R.id.BConfig_item);
+        mRemoveConfigButton = mTermuxActivity.findViewById(com.termux.x11.R.id.BRemove_item);
+        mLaunchItemSpinner = mTermuxActivity.findViewById(com.termux.x11.R.id.SLaunchItemList);
+     //   mLaunchButton.setVisibility(View.VISIBLE);
+        setupToolboxPopup();
+     
+    // Initialize Toolbox button (reusing MenuEntryClient's functionality)
+    Button btnToolbox = mTermuxActivity.findViewById(com.termux.x11.R.id.toggle_tool_box2);
+btnToolbox.setOnClickListener(v -> {
+    // First create/update the popup contents
+    refreshToolboxItems();
+    
+    // Then show the popup
+int x = 0;
+    int y = 120;
+    if (mTermuxActivity.getExtraKeysView().getVisibility() == View.VISIBLE) {
+        y += mTermuxActivity.getExtraKeysView().getHeight();
+    }
+    mToolboxPopup.showAtLocation(
+        mTermuxActivity.findViewById(R.id.left_drawer),
+        Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, x, y);
+});
+
+    // ===== End of new section =====
+        
+        mStartItemEntriesConfig.setVisibility(View.GONE);
+        mCurrentCommand = StartEntry.getCurrentStartItemIdx();
+        mEntries = StartEntry.getStartItemList();
+        if (mCurrentCommand < StartEntry.getStartItemList().size()) {
+            mLaunchButton.setText(StartEntry.getStartItemList().get(mCurrentCommand).getFileName());
+        }
+
+
+mToolboxPopup.setOnDismissListener(() -> {
+       // StartEntry.saveStartItems();
+       saveToStartMenuEntries();
+        refreshToolboxItems();
+    });
+
+
+
+
+        mAdapter = new StartEntryArrayAdapter(mTermuxActivity, StartEntry.getStartItemList());
+        mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mLaunchItemSpinner.setAdapter(mAdapter);
+        mLaunchItemSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mLaunchButton.setText(mAdapter.getItem(position).getFileName());
+                mCurrentCommand = position;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                mLaunchButton.setText(mTermuxActivity.getResources().getString(com.termux.x11.R.string.launch_button_text));
+            }
+        });
+
+        mLaunchButton.setOnClickListener((v) -> {
+            if(StartEntry.getStartItemList().isEmpty()){
+                Toast.makeText(mTermuxActivity, mTermuxActivity.getResources().getString(R.string.select_command_first), Toast.LENGTH_SHORT).show();
+                mLaunchButton.setVisibility(View.GONE);
+                mStartItemEntriesConfig.setVisibility(View.VISIBLE);
+                return;
+            }
+            if (mCurrentCommand >= StartEntry.getStartItemList().size()) {
+                Toast.makeText(mTermuxActivity, mTermuxActivity.getResources().getString(R.string.no_such_file) + ": " + "empty command", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            File file = new File(StartEntry.getStartItemList().get(mCurrentCommand).getPath());
+            if (!file.exists()) {
+                Toast.makeText(mTermuxActivity, mTermuxActivity.getResources().getString(R.string.no_such_file) + ": " + StartEntry.getStartItemList().get(mCurrentCommand).getFileName(), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (!file.canExecute()) {
+                Toast.makeText(mTermuxActivity, mTermuxActivity.getResources().getString(R.string.not_executable) + ": " + StartEntry.getStartItemList().get(mCurrentCommand).getFileName(), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            String command = "^c";
+            if (StartEntry.getStartItemList().get(mCurrentCommand).getPath().contains(TERMUX_BIN_PREFIX_DIR_PATH)) {
+                command = StartEntry.getStartItemList().get(mCurrentCommand).getFileName() + "\n";
+            } else {
+                command = StartEntry.getStartItemList().get(mCurrentCommand).getPath() + "\n";
+            }
+
+            mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write(command);
+        });
+        mLaunchButton.setOnLongClickListener(l -> {
+            mLaunchButton.setVisibility(View.GONE);
+            mStartItemEntriesConfig.setVisibility(View.VISIBLE);
+            return true;
+        });
+        mSelectConfigButton.setOnClickListener((v) -> {
+            if (mLaunchButton.getVisibility() == View.VISIBLE) {
+                mLaunchButton.setVisibility(View.GONE);
+                mStartItemEntriesConfig.setVisibility(View.VISIBLE);
+            } else {
+              //  mLaunchButton.setVisibility(View.VISIBLE);
+                mStartItemEntriesConfig.setVisibility(View.GONE);
+                StartEntry.setCurrentStartItemIdx(mCurrentCommand);
+                StartEntry.saveStartItems();
+            }
+        });
+
+        mFileBrowser = new FileBrowser(mTermuxActivity, this);
+        mFileBrowser.init();
+        mAddConfigButton.setOnClickListener(v -> {
+            mFileBrowser.showFileBrowser(mStartItemEntriesConfig);
+        });
+        mRemoveConfigButton.setOnClickListener(v -> {
+            if(StartEntry.getStartItemList().isEmpty()){
+                return;
+            }
+            StartEntry.deleteStartEntry(StartEntry.getStartItemList().get(mCurrentCommand));
+            mAdapter.notifyDataSetChanged();
+            StartEntry.saveStartItems();
+        });
+    }
+
+
+///////////////////
+
+private void launchWineFilePicker() {
+    // Use same simple file picker as restore
+    Intent intent = new Intent(Intent.ACTION_GET_CONTENT)
+        .setType("*/*")
+        .addCategory(Intent.CATEGORY_OPENABLE);
+    mTermuxActivity.startActivityForResult(intent, TermuxActivity.FILE_REQUEST_WINE_CODE);
+}
+
+public void handleWineFile(Uri uri) {
+    try {
+        if (mSelectedWineCommand == null) {
+            throw new Exception("No Wine environment selected");
+        }
+
+        // Get direct path using restore's method
+        String path = FilePathUtils.getPath(mTermuxActivity, uri);
+        if (path == null) {
+            throw new Exception("Could not resolve file path");
+        }
+
+        // Validate file extension
+        String ext = path.substring(path.lastIndexOf(".")).toLowerCase();
+     //   if (!ext.equals(".exe")) {
+       //     throw new Exception("Only .exe files are supported");
+      //  }
+
+        // Build and execute command
+        String command = mSelectedWineCommand + " \"" + path + "\"\n";
+        mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write(command);
+        mToolboxPopup.dismiss();
+
+    } catch (Exception e) {
+        Toast.makeText(mTermuxActivity, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+    }
+}
+
+// Update 
+
+
+private void launchRestoreFilePicker() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT)
+            .setType("*/*")
+            .addCategory(Intent.CATEGORY_OPENABLE);
+        mTermuxActivity.startActivityForResult(intent, TermuxActivity.FILE_REQUEST_BACKUP_CODE);
+    }
+
+
+private void setupToolboxPopup() {
+    // 1. Create main popup window
+    mToolboxPopup = new PopupWindow(mTermuxActivity);
+    mToolboxPopup.setBackgroundDrawable(mTermuxActivity.getDrawable(R.drawable.tool_box_background));
+    // 2. Create grid for items
+    mToolboxGrid = new GridLayout(mTermuxActivity);
+    mToolboxGrid.setColumnCount(4);
+    int padding = (int) (ScreenUtils.getScreenWidth(mTermuxActivity) * 0.05f);
+    mToolboxGrid.setPadding(padding, padding/2, padding, padding/2);
+    // 3. Create container layout
+    ScrollView scrollView = new ScrollView(mTermuxActivity);
+    LinearLayout mainContainer = new LinearLayout(mTermuxActivity);
+    mainContainer.setOrientation(LinearLayout.VERTICAL);
+    
+    // 4. Add close button
+    ImageButton closeBtn = new ImageButton(mTermuxActivity);
+    closeBtn.setImageResource(R.drawable.ic_close);
+   // closeBtn.setOnClickListener(v -> mToolboxPopup.dismiss());
+    
+   closeBtn.setOnClickListener(v -> {
+   
+   refreshToolboxItems();
+   mToolboxPopup.dismiss();
+
+   });
+    // 5. Assemble components
+    mainContainer.addView(closeBtn);
+    scrollView.addView(mToolboxGrid);
+    mainContainer.addView(scrollView);
+    mToolboxPopup.setContentView(mainContainer);
+    
+    // Set dimensions
+int width = ScreenUtils.getScreenWidth(mTermuxActivity);
+    mToolboxPopup.setWidth(width);
+    mToolboxPopup.setHeight(width * 3/3);
+    
+        // Set dimensions
+    DisplayMetrics metrics = new DisplayMetrics();
+    mTermuxActivity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+mToolboxPopup.setWidth(width);
+    int height = (int)(metrics.heightPixels * 0.7);
+    
+    mToolboxPopup.setWidth(width);
+    mToolboxPopup.setHeight(width); // 
+}
+
+private void refreshToolboxItems() {
+if (mToolboxGrid == null) {
+        setupToolboxPopup(); // Ensure initialization
+        return;
+    }
+    mToolboxGrid.removeAllViews();
+    
+    // Add existing StartEntry items
+for (StartEntry.Entry entry : StartEntry.getStartItemList()) {
+        // Validate entry before use
+        if (entry.getType() == null || entry.getFileName() == null) {
+           // Toast.makeText(mTermuxActivity, "Skipping invalid entry", 
+        // Toast.LENGTH_SHORT).show();
+            continue;
+        }
+        
+        LinearLayout btn = createToolboxButton(entry);
+        
+     // Click to execute
+        btn.setOnClickListener(v -> executeEntry(entry));
+        
+        // Long press to remove
+        btn.setOnLongClickListener(v -> {
+            new AlertDialog.Builder(mTermuxActivity)
+                .setTitle("Remove Shortcut")
+                .setMessage("Delete " + entry.getFileName() + "?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                StartEntry.deleteStartEntry(entry);
+                 // Save to both formats after deletion
+            StartEntry.saveStartItems();
+            saveToStartMenuEntries();
+
+                    //StartEntry.saveStartItems();
+                    refreshToolboxItems(); // Refresh grid
+                    mAdapter.notifyDataSetChanged(); // Refresh spinner
+                })
+                .setNegativeButton("No", null)
+                .show();
+            return true;
+        });
+        
+        mToolboxGrid.addView(btn);
+    }    
+    ////////////////////////////
+    // Add system buttons after user entries
+    addSystemButtons();
+}
+
+private void addSystemButtons() {
+    if (mToolboxGrid == null) {
+        setupToolboxPopup(); // Reinitialize if needed
+    }
+     
+// Xodos Button
+// addCommandButton
+
+// Xodos Button
+LinearLayout xodosBtn = createToolboxButton("xodos", mTermuxActivity.getString(R.string.toolbox_xodos));
+xodosBtn.setOnClickListener(v -> {
+    showBlockingView();
+    mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write("/data/data/com.termux/files/usr/bin/xodos\n");
+    mToolboxPopup.dismiss();
+    mHandler.postDelayed(() -> hideBlockingView(), 4000);
+});
+mToolboxGrid.addView(xodosBtn);
+
+// Proot Button
+LinearLayout prootBtn = createToolboxButton("proot", mTermuxActivity.getString(R.string.toolbox_proot));
+prootBtn.setOnClickListener(v -> {
+    showBlockingView();
+    mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write("/data/data/com.termux/files/usr/bin/xodxd\n");
+    mToolboxPopup.dismiss();
+    mHandler.postDelayed(() -> hideBlockingView(), 4000);
+});
+mToolboxGrid.addView(prootBtn);
+
+// Kali Button 
+LinearLayout kaliBtn = createToolboxButton("kali", mTermuxActivity.getString(R.string.toolbox_kali));
+kaliBtn.setOnClickListener(v -> {
+    showBlockingView();
+    mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write("/data/data/com.termux/files/usr/bin/xkali\n");
+    mToolboxPopup.dismiss();
+    mHandler.postDelayed(() -> hideBlockingView(), 4000);
+});
+mToolboxGrid.addView(kaliBtn);
+
+// Xgl Button (Wine Glibc) - FIXED
+LinearLayout xglBtn = createToolboxButton("xgl", mTermuxActivity.getString(R.string.toolbox_wine_glibc));
+xglBtn.setOnClickListener(v -> {
+    File glibcPath = new File("/data/data/com.termux/files/usr/glibc");
+    if (!glibcPath.exists()) {
+        new AlertDialog.Builder(mTermuxActivity)
+            .setMessage(R.string.wine_glibc_missing)
+            .setPositiveButton(android.R.string.ok, null)
+            .show();
+        return;
+    }
+    showBlockingView();
+    mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write("/data/data/com.termux/files/usr/bin/xodxx\n");
+    mToolboxPopup.dismiss();
+    mHandler.postDelayed(() -> hideBlockingView(), 4000);
+}); // Removed duplicate code block
+mToolboxGrid.addView(xglBtn);
+
+// Xbio Button (Wine Bionic) - FIXED
+LinearLayout xbioBtn = createToolboxButton("xbio", mTermuxActivity.getString(R.string.toolbox_wine_bionic));
+xbioBtn.setOnClickListener(v -> {
+    File bionicPath = new File("/data/data/com.termux/files/usr/opt/wine");
+    if (!bionicPath.exists()) {
+        new AlertDialog.Builder(mTermuxActivity)
+            .setMessage(R.string.wine_bionic_missing)
+            .setPositiveButton(android.R.string.ok, null)
+            .show();
+        return;
+    }
+    showBlockingView();
+    mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write("/data/data/com.termux/files/usr/bin/xodxx2\n");
+    mToolboxPopup.dismiss();
+    mHandler.postDelayed(() -> hideBlockingView(), 4000);
+}); // Removed duplicate code block
+mToolboxGrid.addView(xbioBtn);
+
+// Wine Button (from error log)
+// Wine Button - FIXED
+LinearLayout wineBtn = createToolboxButton("wine", mTermuxActivity.getString(R.string.toolbox_wine));
+wineBtn.setOnClickListener(v -> {
+    new AlertDialog.Builder(mTermuxActivity)
+        .setTitle(mTermuxActivity.getString(R.string.choose_wine_env))
+        .setItems(new CharSequence[]{
+                mTermuxActivity.getString(R.string.wine_glibc),
+                mTermuxActivity.getString(R.string.wine_bionic)
+            }, (dialog, which) -> {
+                String pathToCheck = (which == 0) ? 
+                    "/data/data/com.termux/files/usr/glibc" :
+                    "/data/data/com.termux/files/usr/opt/wine";
+                    
+                File wineDir = new File(pathToCheck);
+                
+                if (!wineDir.exists()) {
+                    int messageRes = (which == 0) ? 
+                        R.string.wine_glibc_missing : 
+                        R.string.wine_bionic_missing;
+                        
+                    new AlertDialog.Builder(mTermuxActivity)
+                        .setMessage(messageRes)
+                        .setPositiveButton(android.R.string.ok, null)
+                        .show();
+                    return;
+                }
+                
+                showBlockingView();
+                mSelectedWineCommand = wineCommands[which];
+                launchWineFilePicker();
+                mHandler.postDelayed(() -> hideBlockingView(), 4000);
+            })
+        .setNegativeButton(android.R.string.cancel, null)
+        .show();
+});
+mToolboxGrid.addView(wineBtn);
+
+
+// With proper implementations:
+// Xbox Button
+LinearLayout xboxBtn = createToolboxButton("xbox", mTermuxActivity.getString(R.string.toolbox_xbox));
+xboxBtn.setOnClickListener(v -> {
+    showBlockingView();
+    mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write("/data/data/com.termux/files/usr/bin/xbox-z\n");
+    mToolboxPopup.dismiss();
+    mHandler.postDelayed(() -> hideBlockingView(), 2000);
+});
+mToolboxGrid.addView(xboxBtn);
+
+// Settings (Xset) Button
+LinearLayout settingsBtn = createToolboxButton("xset", mTermuxActivity.getString(R.string.toolbox_settings));
+settingsBtn.setOnClickListener(v -> {
+    showBlockingView();
+    mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write("/data/data/com.termux/files/usr/bin/xmnu2\n");
+    mToolboxPopup.dismiss();
+    mHandler.postDelayed(() -> hideBlockingView(), 4000);
+});
+mToolboxGrid.addView(settingsBtn);
+
+// Ai Button
+addCommandButton("ai", mTermuxActivity.getString(R.string.toolbox_ai), "/data/data/com.termux/files/usr/bin/xodai");
+
+// Restore Button
+LinearLayout restoreBtn = createToolboxButton("restore", mTermuxActivity.getString(R.string.toolbox_restore));
+restoreBtn.setOnClickListener(v -> {
+    showBlockingView();
+    launchRestoreFilePicker();
+    mToolboxPopup.dismiss();
+    mHandler.postDelayed(() -> hideBlockingView(), 5000);
+});
+mToolboxGrid.addView(restoreBtn);
+
+// Backup Button
+LinearLayout backupBtn = createToolboxButton("backup", mTermuxActivity.getString(R.string.toolbox_backup));
+backupBtn.setOnClickListener(v -> {
+    showBlockingView();
+    mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write("tar -Jcf /sdcard/xodos-backup.tar.xz -C /data/data/com.termux/files ./home ./usr\n");
+    mToolboxPopup.dismiss();
+    mHandler.postDelayed(() -> hideBlockingView(), 3000);
+});
+mToolboxGrid.addView(backupBtn);
+
+// Switch Button
+LinearLayout switchBtn = createToolboxButton("switch", mTermuxActivity.getString(R.string.toolbox_switch));
+switchBtn.setOnClickListener(v -> {
+    showBlockingView();
+    mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write("/data/data/com.termux/files/usr/bin/switch\n");
+    mToolboxPopup.dismiss();
+    mHandler.postDelayed(() -> hideBlockingView(), 6000);
+});
+mToolboxGrid.addView(switchBtn);
+    
+    // Add Button (special case)
+    LinearLayout addBtn = createToolboxButton("add", "Add");
+    addBtn.setOnClickListener(v -> {
+        mFileBrowser.showFileBrowser(mToolboxGrid);
+        // Don't dismiss popup - keep open for selection
+    });
+    mToolboxGrid.addView(addBtn);
+  
+      // Help Button
+LinearLayout helpBtn = createToolboxButton("help", mTermuxActivity.getString(R.string.toolbox_help));
+helpBtn.setOnClickListener(v -> {
+   // mToolboxPopup.dismiss();
+    startTutorial();
+});
+mToolboxGrid.addView(helpBtn);
+}
+////////////////
+    
+
+private void executeEntry(StartEntry.Entry entry) {
+    // Reuse existing launch logic from mLaunchButton's onClickListener
+    String command = entry.getPath() + "\n";
+    mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write(command);
+    mToolboxPopup.dismiss();
+}
+
+private void executeBackupCommand() {
+    String command = "tar -Jcf /sdcard/xodos-backup.tar.xz -C /data/data/com.termux/files ./home ./usr \n";
+    File storageDir = new File(mTermuxActivity.getFilesDir(), "home/storage");
+    if (!storageDir.exists()) {
+        command = "termux-setup-storage; sleep 5; " + command;
+    }
+    mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write(command);
+}
+
+///////////
+
+    public void addStartEntry(FileInfo fileInfo) {
+        StartEntry.Entry entry = new StartEntry.Entry();
+           // Set the type based on file extension (example logic)
+               // Ensure type is never null
+    String type = determineFileType(fileInfo); // Your existing logic
+    entry.setType(type != null ? type : "file"); // Fallback
+    
+    
+    
+          
+          ////
+   
+        entry.setIconPath("default");
+        entry.setFileName(fileInfo.getName());
+        entry.setPath(fileInfo.getPath());
+     
+        boolean added = StartEntry.addStartEntry(entry);
+        StartEntry.setCurrentStartItemIdx(mCurrentCommand);
+        
+
+        if (added) {
+            mAdapter.notifyDataSetChanged();
+            StartEntry.saveStartItems();  // Original format
+        saveToStartMenuEntries();    // New format
+            refreshToolboxItems(); //
+            mLaunchItemSpinner.setSelection(mAdapter.getCount() - 1);
+        }
+    }
+
+    @Override
+    public void onFileSelected(FileInfo fileInfo) {
+        addStartEntry(fileInfo);
+        mFileBrowser.hideFileBrowser();
+            // Keep toolbox popup open after selection
+    refreshToolboxItems();
+    mToolboxPopup.showAtLocation(
+        mTermuxActivity.findViewById(R.id.left_drawer),
+        Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, 120
+    );
+    }
+}
+
+
+
+//error building logs
+
+

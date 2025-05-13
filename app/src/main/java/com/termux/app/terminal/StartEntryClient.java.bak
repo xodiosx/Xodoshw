@@ -10,7 +10,18 @@ import android.widget.ScrollView;
 import com.termux.app.terminal.utils.ScreenUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.termux.app.terminal.utils.FilePathUtils; // 
+import com.termux.app.terminal.utils.FilePathUtils; ///////
+import android.os.Handler;
+import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+// Add with other imports
+import android.view.Window;
+import android.view.WindowManager;
+import android.content.DialogInterface;
+import android.graphics.drawable.ColorDrawable;
+
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -51,9 +62,13 @@ import java.util.ArrayList;
 
 ///
 public class StartEntryClient implements FileBrowser.FileSlectedAdapter{
-// Add these at the top with other members
-    // Add with other class members
+
+// Add these class members
+private View mBlockingView;
+private final Handler mHandler = new Handler();
 public static final int FILE_REQUEST_WINE_CODE = 1002;
+private int mTutorialStep = 0;
+private AlertDialog mTutorialDialog;
 
 private PopupWindow mToolboxPopup;
 private GridLayout mToolboxGrid;
@@ -74,6 +89,140 @@ private View mConfigPopupContent;
 
     //// helper ////////
 // Add this method any
+private void startTutorial() {
+    mTutorialStep = 0;
+    showTutorialStep();
+}
+
+private void showTutorialStep() {
+    String[] steps = mTermuxActivity.getResources().getStringArray(R.array.tutorial_steps);
+    if (mTutorialStep >= steps.length) {
+        mToolboxPopup.setFocusable(true);
+        return;
+    }
+
+    // Clear previous highlights
+    for(int i=0; i<mToolboxGrid.getChildCount(); i++) {
+        mToolboxGrid.getChildAt(i).setBackgroundResource(R.drawable.tool_box_background);
+    }
+
+    AlertDialog.Builder builder = new AlertDialog.Builder(mTermuxActivity);
+builder.setMessage(steps[mTutorialStep])
+       .setCancelable(false)
+       .setPositiveButton(mTutorialStep < steps.length-1 ? 
+           R.string.next : R.string.finish_tutorial, (dialog, which) -> {
+           mTutorialStep++;
+           if(mTutorialStep >= steps.length) {
+               // Final step - dismiss both dialog and toolbox
+               mToolboxPopup.dismiss();
+           } else {
+               // Continue to next step
+               showTutorialStep();
+           }
+       });
+
+    AlertDialog dialog = builder.create();
+    
+    // Semi-transparent background instead of full transparent
+    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.argb(200, 30, 30, 30))); // Dark gray
+    // Position dialog at bottom
+    Window window = dialog.getWindow();
+    if (window != null) {
+        window.setGravity(Gravity.BOTTOM);
+        WindowManager.LayoutParams params = window.getAttributes();
+        params.width = WindowManager.LayoutParams.MATCH_PARENT;
+        params.horizontalMargin = 32;
+        params.verticalMargin = 16;
+        window.setAttributes(params);
+    }
+    dialog.show();
+
+
+    // Custom text styling (from previous answer)
+    TextView messageText = dialog.findViewById(android.R.id.message);
+    if (messageText != null) {
+        messageText.setGravity(Gravity.CENTER);
+        messageText.setTextColor(Color.WHITE);
+        messageText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        messageText.setPadding(32, 32, 32, 32);
+    }
+
+    // Custom button styling
+    Button positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+    if (positiveButton != null) {
+        positiveButton.setTextColor(Color.parseColor("#BB86FC"));
+        positiveButton.setBackgroundResource(R.drawable.tutorial_button_bg);
+        positiveButton.setAllCaps(false);
+        positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+    }
+
+
+
+    // Highlight current button 
+    int[] highlightOrder = {0,1,2,3,4,5,6,7,8,9,10,11,12}; // Match your grid order
+    if(mTutorialStep < highlightOrder.length) {
+        View targetButton = mToolboxGrid.getChildAt(highlightOrder[mTutorialStep]);
+        targetButton.setBackgroundColor(Color.argb(150, 255, 165, 0)); // Orange overlay
+    }
+    
+}
+
+
+
+
+private void showBlockingView() {
+    // Create root container
+    RelativeLayout blockingLayout = new RelativeLayout(mTermuxActivity);
+    blockingLayout.setLayoutParams(new ViewGroup.LayoutParams(
+        ViewGroup.LayoutParams.MATCH_PARENT,
+        ViewGroup.LayoutParams.MATCH_PARENT
+    ));
+    blockingLayout.setBackgroundColor(Color.parseColor("#80000000")); // Semi-transparent dark
+    
+    // Create loading container
+    LinearLayout loadingContainer = new LinearLayout(mTermuxActivity);
+    loadingContainer.setOrientation(LinearLayout.VERTICAL);
+    loadingContainer.setGravity(Gravity.CENTER);
+    
+    // Create progress spinner
+    ProgressBar progress = new ProgressBar(mTermuxActivity, null, android.R.attr.progressBarStyleLarge);
+    progress.setIndeterminate(true);
+    
+    // Create loading text
+    TextView text = new TextView(mTermuxActivity);
+    text.setText("Loading...");
+    text.setTextColor(Color.WHITE);
+    text.setTextSize(18);
+    text.setPadding(0, 16, 0, 0);
+    
+    // Add views
+    loadingContainer.addView(progress);
+    loadingContainer.addView(text);
+    blockingLayout.addView(loadingContainer, new RelativeLayout.LayoutParams(
+        ViewGroup.LayoutParams.WRAP_CONTENT,
+        ViewGroup.LayoutParams.WRAP_CONTENT
+    ) {
+        {
+            addRule(RelativeLayout.CENTER_IN_PARENT);
+        }
+    });
+    
+    // Add to window
+    ViewGroup rootView = (ViewGroup) mTermuxActivity.getWindow().getDecorView();
+    rootView.addView(blockingLayout);
+    
+    mBlockingView = blockingLayout;
+}
+
+private void hideBlockingView() {
+    if (mBlockingView != null) {
+        ViewGroup rootView = (ViewGroup) mBlockingView.getParent();
+        if (rootView != null) {
+            rootView.removeView(mBlockingView);
+        }
+        mBlockingView = null;
+    }
+}
 
 
 public static String getRealPath(Context context, Uri uri) {
@@ -192,7 +341,15 @@ private LinearLayout createToolboxButton(String type, String title) {
     layout.setLayoutParams(param);
     layout.setOrientation(LinearLayout.VERTICAL);
     layout.setGravity(Gravity.CENTER);
-    layout.setBackgroundResource(R.drawable.tool_box_background); // Add background
+  //  layout.setBackgroundResource(R.drawable.tool_box_background); // Add background
+layout.setBackgroundResource(R.drawable.button_press_effect);
+    
+    // Add for better interaction:
+    layout.setClickable(true);
+    layout.setFocusable(true);
+    layout.setForeground(mTermuxActivity.getResources()
+        .getDrawable(R.drawable.button_press_effect));
+
 
     ImageView iv = new ImageView(mTermuxActivity);
     // Set image based on type
@@ -209,6 +366,9 @@ private LinearLayout createToolboxButton(String type, String title) {
 iv.setScaleType(ImageView.ScaleType.FIT_CENTER); // Add this for proper scaling
   
       switch(type) {
+      case "help":
+    iv.setImageResource(R.drawable.ihelp); //
+    break;
     case "switch":
     iv.setImageResource(R.drawable.iswitch); // 
     break;
@@ -269,15 +429,25 @@ case "restore":
     
    TextView tv = new TextView(mTermuxActivity);
     // Match original text styling
-    tv.setLayoutParams(new LinearLayout.LayoutParams(   
-        size, 
+        tv.setLayoutParams(new LinearLayout.LayoutParams(
+        ViewGroup.LayoutParams.MATCH_PARENT,
         ViewGroup.LayoutParams.WRAP_CONTENT
     ));
     
     tv.setText(title);
     tv.setGravity(Gravity.CENTER);
     tv.setTextColor(Color.WHITE);
-    tv.setTextSize(10);
+    tv.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
+    tv.setAutoSizeTextTypeUniformWithConfiguration(
+        8, // Minimum text size (sp)
+        14, // Maximum text size (sp)
+        1, // Step size (sp)
+        TypedValue.COMPLEX_UNIT_SP
+    );
+
+    // Ensure text wraps if needed
+    tv.setMaxLines(2);
+    tv.setEllipsize(TextUtils.TruncateAt.END);
     tv.setPadding(0, 8, 0, 0);
     tv.setEllipsize(TextUtils.TruncateAt.END);
    
@@ -327,6 +497,15 @@ private LinearLayout createToolboxButton(StartEntry.Entry entry) {
 btnToolbox.setOnClickListener(v -> {
     // First create/update the popup contents
     refreshToolboxItems();
+    
+    // recalculate popup width/height for current orientation
+int width = ScreenUtils.getScreenWidth(mTermuxActivity);
+DisplayMetrics metrics = new DisplayMetrics();
+mTermuxActivity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+int height = (int)(metrics.heightPixels * 0.7);
+
+mToolboxPopup.setWidth(width);
+mToolboxPopup.setHeight(height);
     
     // Then show the popup
     int y = 120;
@@ -479,10 +658,15 @@ public void handleWineFile(Uri uri) {
 
 
 private void launchRestoreFilePicker() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT)
-            .setType("*/*")
-            .addCategory(Intent.CATEGORY_OPENABLE);
-        mTermuxActivity.startActivityForResult(intent, TermuxActivity.FILE_REQUEST_BACKUP_CODE);
+Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT)            // <-- use OPEN_DOCUMENT
+    .setType("*/*")
+    .addCategory(Intent.CATEGORY_OPENABLE)
+    // grant temporary read (and write) permission...
+    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+    // ...and ask Android to let us persist that grant across reboots
+    .addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+
+mTermuxActivity.startActivityForResult(intent, TermuxActivity.FILE_REQUEST_BACKUP_CODE);
     }
 
 
@@ -569,8 +753,8 @@ for (StartEntry.Entry entry : StartEntry.getStartItemList()) {
         });
         
         mToolboxGrid.addView(btn);
-    }
-    
+    }    
+    ////////////////////////////
     // Add system buttons after user entries
     addSystemButtons();
 }
@@ -579,58 +763,168 @@ private void addSystemButtons() {
     if (mToolboxGrid == null) {
         setupToolboxPopup(); // Reinitialize if needed
     }
-     // Ai Button
-addCommandButton("ai", mTermuxActivity.getString(R.string.toolbox_ai), "/data/data/com.termux/files/usr/bin/xodai");
+     
+// Xodos Button
+// addCommandButton
 
 // Xodos Button
-addCommandButton("xodos", mTermuxActivity.getString(R.string.toolbox_xodos), "/data/data/com.termux/files/usr/bin/xodos");
+LinearLayout xodosBtn = createToolboxButton("xodos", mTermuxActivity.getString(R.string.toolbox_xodos));
+xodosBtn.setOnClickListener(v -> {
+    showBlockingView();
+    mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write("/data/data/com.termux/files/usr/bin/xodos\n");
+    mToolboxPopup.dismiss();
+    mHandler.postDelayed(() -> hideBlockingView(), 4000);
+});
+mToolboxGrid.addView(xodosBtn);
 
-// Proot Button 
-addCommandButton("proot", mTermuxActivity.getString(R.string.toolbox_proot), "/data/data/com.termux/files/usr/bin/xodxd");
+// Proot Button
+LinearLayout prootBtn = createToolboxButton("proot", mTermuxActivity.getString(R.string.toolbox_proot));
+prootBtn.setOnClickListener(v -> {
+    showBlockingView();
+    mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write("/data/data/com.termux/files/usr/bin/xodxd\n");
+    mToolboxPopup.dismiss();
+    mHandler.postDelayed(() -> hideBlockingView(), 4000);
+});
+mToolboxGrid.addView(prootBtn);
 
-// Kali Button
-addCommandButton("kali", mTermuxActivity.getString(R.string.toolbox_kali), "/data/data/com.termux/files/usr/bin/xkali");
+// Kali Button 
+LinearLayout kaliBtn = createToolboxButton("kali", mTermuxActivity.getString(R.string.toolbox_kali));
+kaliBtn.setOnClickListener(v -> {
+    showBlockingView();
+    mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write("/data/data/com.termux/files/usr/bin/xkali\n");
+    mToolboxPopup.dismiss();
+    mHandler.postDelayed(() -> hideBlockingView(), 4000);
+});
+mToolboxGrid.addView(kaliBtn);
 
-// Switch Button
-addCommandButton("switch", mTermuxActivity.getString(R.string.toolbox_switch), "/data/data/com.termux/files/usr/bin/switch");
+// Xgl Button (Wine Glibc) - FIXED
+LinearLayout xglBtn = createToolboxButton("xgl", mTermuxActivity.getString(R.string.toolbox_wine_glibc));
+xglBtn.setOnClickListener(v -> {
+    File glibcPath = new File("/data/data/com.termux/files/usr/glibc");
+    if (!glibcPath.exists()) {
+        new AlertDialog.Builder(mTermuxActivity)
+            .setMessage(R.string.wine_glibc_missing)
+            .setPositiveButton(android.R.string.ok, null)
+            .show();
+        return;
+    }
+    showBlockingView();
+    mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write("/data/data/com.termux/files/usr/bin/xodxx\n");
+    mToolboxPopup.dismiss();
+    mHandler.postDelayed(() -> hideBlockingView(), 4000);
+}); // Removed duplicate code block
+mToolboxGrid.addView(xglBtn);
 
-// Xset Button (Settings)
-addCommandButton("xset", mTermuxActivity.getString(R.string.toolbox_settings), "/data/data/com.termux/files/usr/bin/xmnu2");
+// Xbio Button (Wine Bionic) - FIXED
+LinearLayout xbioBtn = createToolboxButton("xbio", mTermuxActivity.getString(R.string.toolbox_wine_bionic));
+xbioBtn.setOnClickListener(v -> {
+    File bionicPath = new File("/data/data/com.termux/files/usr/opt/wine");
+    if (!bionicPath.exists()) {
+        new AlertDialog.Builder(mTermuxActivity)
+            .setMessage(R.string.wine_bionic_missing)
+            .setPositiveButton(android.R.string.ok, null)
+            .show();
+        return;
+    }
+    showBlockingView();
+    mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write("/data/data/com.termux/files/usr/bin/xodxx2\n");
+    mToolboxPopup.dismiss();
+    mHandler.postDelayed(() -> hideBlockingView(), 4000);
+}); // Removed duplicate code block
+mToolboxGrid.addView(xbioBtn);
 
-// Xgl Button
-addCommandButton("xgl", mTermuxActivity.getString(R.string.toolbox_wine_glibc), "/data/data/com.termux/files/usr/bin/xodxx");
+// Wine Button (from error log)
+// Wine Button - FIXED
+LinearLayout wineBtn = createToolboxButton("wine", mTermuxActivity.getString(R.string.toolbox_wine));
+wineBtn.setOnClickListener(v -> {
+    new AlertDialog.Builder(mTermuxActivity)
+        .setTitle(mTermuxActivity.getString(R.string.choose_wine_env))
+        .setItems(new CharSequence[]{
+                mTermuxActivity.getString(R.string.wine_glibc),
+                mTermuxActivity.getString(R.string.wine_bionic)
+            }, (dialog, which) -> {
+                String pathToCheck = (which == 0) ? 
+                    "/data/data/com.termux/files/usr/glibc" :
+                    "/data/data/com.termux/files/usr/opt/wine";
+                    
+                File wineDir = new File(pathToCheck);
+                
+                if (!wineDir.exists()) {
+                    int messageRes = (which == 0) ? 
+                        R.string.wine_glibc_missing : 
+                        R.string.wine_bionic_missing;
+                        
+                    new AlertDialog.Builder(mTermuxActivity)
+                        .setMessage(messageRes)
+                        .setPositiveButton(android.R.string.ok, null)
+                        .show();
+                    return;
+                }
+                
+                showBlockingView();
+                mSelectedWineCommand = wineCommands[which];
+                launchWineFilePicker();
+                mHandler.postDelayed(() -> hideBlockingView(), 4000);
+            })
+        .setNegativeButton(android.R.string.cancel, null)
+        .show();
+});
+mToolboxGrid.addView(wineBtn);
 
-// Xbio Button
-addCommandButton("xbio", mTermuxActivity.getString(R.string.toolbox_wine_bionic), "/data/data/com.termux/files/usr/bin/xodxx2");
 
+// With proper implementations:
 // Xbox Button
-addCommandButton("xbox", mTermuxActivity.getString(R.string.toolbox_xbox), "/data/data/com.termux/files/usr/bin/xbox-z");
+LinearLayout xboxBtn = createToolboxButton("xbox", mTermuxActivity.getString(R.string.toolbox_xbox));
+xboxBtn.setOnClickListener(v -> {
+    showBlockingView();
+    mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write("/data/data/com.termux/files/usr/bin/xbox-z\n");
+    mToolboxPopup.dismiss();
+    mHandler.postDelayed(() -> hideBlockingView(), 2000);
+});
+mToolboxGrid.addView(xboxBtn);
 
-// Backup Button
-addCommandButton("backup", mTermuxActivity.getString(R.string.toolbox_backup), "tar -Jcf /sdcard/xodos-backup.tar.xz -C /data/data/com.termux/files ./home ./usr");
+// Settings (Xset) Button
+LinearLayout settingsBtn = createToolboxButton("xset", mTermuxActivity.getString(R.string.toolbox_settings));
+settingsBtn.setOnClickListener(v -> {
+    showBlockingView();
+    mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write("/data/data/com.termux/files/usr/bin/xmnu2\n");
+    mToolboxPopup.dismiss();
+    mHandler.postDelayed(() -> hideBlockingView(), 4000);
+});
+mToolboxGrid.addView(settingsBtn);
+
+// Ai Button
+addCommandButton("ai", mTermuxActivity.getString(R.string.toolbox_ai), "/data/data/com.termux/files/usr/bin/xodai");
 
 // Restore Button
 LinearLayout restoreBtn = createToolboxButton("restore", mTermuxActivity.getString(R.string.toolbox_restore));
+restoreBtn.setOnClickListener(v -> {
+    showBlockingView();
+    launchRestoreFilePicker();
+    mToolboxPopup.dismiss();
+    mHandler.postDelayed(() -> hideBlockingView(), 10000);
+});
+mToolboxGrid.addView(restoreBtn);
 
-// Wine Button (from error log)
-LinearLayout wineBtn = createToolboxButton("wine", mTermuxActivity.getString(R.string.toolbox_wine));
-    restoreBtn.setOnClickListener(v -> {
-        launchRestoreFilePicker();
-        mToolboxPopup.dismiss();
-    });
-    mToolboxGrid.addView(restoreBtn);
-    
-    wineBtn.setOnClickListener(v -> {
-        new AlertDialog.Builder(mTermuxActivity)
-            .setTitle("Choose Wine Environment")
-            .setItems(new CharSequence[]{"Wine Glibc", "Wine Bionic"}, (dialog, which) -> {
-                mSelectedWineCommand = wineCommands[which];
-                launchWineFilePicker();
-            })
-            .setNegativeButton("Cancel", null)
-            .show();
-    });
-    mToolboxGrid.addView(wineBtn);
+// Backup Button
+LinearLayout backupBtn = createToolboxButton("backup", mTermuxActivity.getString(R.string.toolbox_backup));
+backupBtn.setOnClickListener(v -> {
+    showBlockingView();
+    mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write("tar -Jcf /sdcard/xodos-backup.tar.xz -C /data/data/com.termux/files ./home ./usr\n");
+    mToolboxPopup.dismiss();
+    mHandler.postDelayed(() -> hideBlockingView(), 3000);
+});
+mToolboxGrid.addView(backupBtn);
+
+// Switch Button
+LinearLayout switchBtn = createToolboxButton("switch", mTermuxActivity.getString(R.string.toolbox_switch));
+switchBtn.setOnClickListener(v -> {
+    showBlockingView();
+    mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write("/data/data/com.termux/files/usr/bin/switch\n");
+    mToolboxPopup.dismiss();
+    mHandler.postDelayed(() -> hideBlockingView(), 6000);
+});
+mToolboxGrid.addView(switchBtn);
     
     // Add Button (special case)
     LinearLayout addBtn = createToolboxButton("add", "Add");
@@ -639,6 +933,14 @@ LinearLayout wineBtn = createToolboxButton("wine", mTermuxActivity.getString(R.s
         // Don't dismiss popup - keep open for selection
     });
     mToolboxGrid.addView(addBtn);
+  
+      // Help Button
+LinearLayout helpBtn = createToolboxButton("help", mTermuxActivity.getString(R.string.toolbox_help));
+helpBtn.setOnClickListener(v -> {
+   // mToolboxPopup.dismiss();
+    startTutorial();
+});
+mToolboxGrid.addView(helpBtn);
 }
 ////////////////
     

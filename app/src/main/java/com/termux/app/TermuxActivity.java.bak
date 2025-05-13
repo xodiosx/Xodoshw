@@ -4,6 +4,9 @@ import android.Manifest;
 import androidx.core.content.ContextCompat;
 import androidx.core.app.ActivityCompat;
 import android.content.pm.PackageManager;
+// Add 
+import java.io.InputStream;
+import java.io.FileOutputStream;
 // ======== Imports ========
 
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
@@ -370,6 +373,7 @@ public static final int FILE_REQUEST_WINE_CODE = 1002;
     mStartEntryClient = new StartEntryClient(this, mTermuxTerminalSessionActivityClient);
     mStartEntryClient.init();
     
+
         registerForContextMenu(mTerminalView);
 
         FileReceiverActivity.updateFileReceiverActivityComponentsState(this);
@@ -427,7 +431,7 @@ public static final int FILE_REQUEST_WINE_CODE = 1002;
             public void reInstallX11StartScript(Activity activity) {
                 activity.runOnUiThread(() -> {
                     FileUtils.copyAssetsFile2Phone(activity, "install");
-                    FileUtils.copyAssetsFile2Phone(activity, "xodosu.tar.xz");
+                    FileUtils.copyAssetsFile2Phone(activity, "xodos.tar.xz");
                     FileUtils.copyAssetsFile2Phone(activity, "setup");
                     FileUtils.copyAssetsFile2Phone(activity, "installproot");
 FileUtils.copyAssetsFile2Phone(activity, "installkali");
@@ -809,7 +813,7 @@ private boolean hasStoragePermissions() {
             }
         });
       //  StartEntryClient startEntryClient = new StartEntryClient(this, mTermuxTerminalSessionActivityClient);
-        mstartEntryClient.init();
+        mStartEntryClient.init();
     }
 
     private void startX11Display() {
@@ -819,13 +823,16 @@ private boolean hasStoragePermissions() {
     }
 
     private void setRecoverView() {
-        findViewById(R.id.recover_button).setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-            intent.setType("*/*");
-            intent.addCategory(Intent.CATEGORY_OPENABLE);
-            startActivityForResult(intent, FILE_REQUEST_BACKUP_CODE);
-        });
-    }
+    findViewById(R.id.recover_button).setOnClickListener(v -> {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.setType("*/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION |
+                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION |
+                        Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+        startActivityForResult(intent, FILE_REQUEST_BACKUP_CODE);
+    });
+}
 
     private void setBackupView() {
         findViewById(R.id.backup_button).setOnClickListener(new View.OnClickListener() {
@@ -1206,33 +1213,47 @@ private boolean hasStoragePermissions() {
     }
 
     private void onRequestLoadBackFile(int requestCode, int resultCode, @Nullable Intent data) {
-        if (resultCode == RESULT_OK) {
-            Uri uri = data.getData();
-            String realPath = FilePathUtils.getPath(this, uri);
-//            Log.d(LOG_TAG,realPath);
-//            ArrayList<String> args = new ArrayList<>();
-//            args.add("-zxf");
-//            args.add(realPath);
-//            args.add("-C");
-//            args.add(TERMUX_FILES_DIR_PATH);
-//            args.add("--recursive-unlink");
-//            args.add("--preserve-permissions");
-//            CommandUtils.exec(this, "tar", args);
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    File file = new File(getFilesDir().getAbsolutePath() + File.separator + "home" + File.separator + "storage");
-                    String command = "termux-setup-storage;sleep 5s;tar -xvf " + realPath + " -C " + TERMUX_FILES_DIR_PATH + " --preserve-permissions && fix && exit \n";
-                    if (file.exists()) {
-                        command = "tar -xvf " + realPath + " -C " + TERMUX_FILES_DIR_PATH + " --preserve-permissions && fix && exit \n";
-                    }
-                    mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write(command);
-                }
-            });
-            mMainContentView.setTerminalViewSwitchSlider(true);
-        }
-    }
+    if (resultCode == RESULT_OK && data != null) {
+        Uri uri = data.getData();
+        if (uri == null) return;
+          // ▶︎ FIX: only pass the *allowed* read/write flags when persisting
+        final int takeFlags = data.getFlags()
+            & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        getContentResolver().takePersistableUriPermission(uri, takeFlags);
+ 
+  
+        // Universal handling for ALL storage locations:
+        new Thread(() -> {
+    try (InputStream in = getContentResolver().openInputStream(uri)) {
+        File tempFile = File.createTempFile("restore_", ".tar.xz", getCacheDir());
 
+        try (FileOutputStream out = new FileOutputStream(tempFile)) {
+            byte[] buffer = new byte[8192];
+            int read;
+            while ((read = in.read(buffer)) != -1) {
+                out.write(buffer, 0, read);
+            }
+        }
+
+        String command = commandPrefix + 
+    "tar -xvf " + tempFile.getAbsolutePath() + 
+    " -C " + TERMUX_FILES_DIR_PATH + 
+    " --preserve-permissions ; rm -f " + tempFile.getAbsolutePath() + "; fix && exit\n";
+
+        runOnUiThread(() -> {
+        Toast.makeText(this, "please wait: " + getString(R.string.toolbox_restore) , Toast.LENGTH_LONG).show();
+            mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write(command);
+            mMainContentView.setTerminalViewSwitchSlider(true);
+        });
+
+    } catch (Exception e) {
+        runOnUiThread(() -> {
+            Toast.makeText(this, "Restore failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        });
+    }
+}).start();
+}
+        }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

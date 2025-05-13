@@ -253,12 +253,51 @@
 <string name="toolbox_xodos">Xodos</string>
 <string name="toolbox_proot">Proot</string>
 <string name="toolbox_kali">Kali</string>
+<string name="toolbox_help">Help</string>
 <string name="toolbox_switch">switch-User</string>
 <string name="toolbox_settings">Settings</string>
 <string name="toolbox_wine_glibc">Wine-Glibc</string>
 <string name="toolbox_wine_bionic">Wine-Bionic</string>
 <string name="toolbox_xbox">Xbox</string>
 <string name="toolbox_backup">Backup</string>
-<string name="toolbox_restore">Restore</string>
+<string name="toolbox_restore">Install/Restore</string>
 <string name="toolbox_wine">Wine</string>
+<string name="choose_wine_env">Choose Wine Environment</string>
+<string name="wine_glibc">Wine Glibc</string>
+<string name="wine_bionic">Wine Bionic</string>
+<string name="wine_glibc_missing">Please install Wine Glibc first!</string>
+<string name="wine_bionic_missing">Please install Wine Bionic first!</string>
+<string-array name="tutorial_steps">
+    <item>XoDos: is a fast Native Linux desktop for Android</item>
+    <item>Proot: Run full Linux distributions with root access and more app support</item>
+    <item>Kali Linux: Complete penetration testing toolkit with 100+ security tools</item>
+    <item>Wine Glibc: Windows emulation that has support for most android devices (if not snapdragon Use VirGl)</item>
+    <item>Wine Glibc: Windows emulation with native driver wrapping (if not snapdragon Use wrapper)</item>
+    <item>Wine:Here you can Run EXE files from any folder on your device</item>
+    <item>Xbox Emulator: Play original Xbox games using Xemu</item>
+      <item>Settings: Configure Wine/DXVK/Box versions and system drivers</item> 
+    <item>AI Chat: Local private AI supporting DeepSeek, Llama, and 100+ models</item>
+    <item>Restore: Install XoDos system updates and more systems like Kali/Proot</item>
+   <item>Backup: One-click full system snapshot for transfer/share/restore</item>
+     <item>Switch: Toggle between different user containers</item>
+    <item>Add Button: Create shortcuts for scripts/apps/python</item>
+</string-array>
+
+<string name="next">Next</string>
+<string name="finish_tutorial">Finish</string>
+<string-array name="float_tutorial_steps">
+    <item>Welcome to XoDos Float!\nTap the eye for quick actions</item>
+    <item>Terminal Button:\nShow/hide terminal view</item>
+    <item>Stop Desktop:\nKill and close the current desktop</item>
+    <item>Gamepad:\nToggle and change controller overlay</item>
+    <item>Lock slider:\nLock/unlock sliders or layout</item>
+    <item>Keyboard:\nToggle soft keyboard automatically press once and press back button and press again to stop it</item>
+    <item>Task Manager:\nView running processes and Control them</item>
+    <item>Settings:\nAccess X11 preferences</item>
+    <item>Long-press ball:\nDrag to any reposition</item>
+</string-array>
+
+
+<string name="got_it">Start Using</string>
+
 </resources>
