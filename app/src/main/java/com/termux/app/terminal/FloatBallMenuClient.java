@@ -1,22 +1,5 @@
 package com.termux.app.terminal;
 
-//////////
-import android.os.Handler;
-import android.view.Gravity;
-import android.view.Window;
-import android.view.WindowManager;
-import android.app.AlertDialog;
-import android.graphics.drawable.ColorDrawable;
-import android.view.View;
-import com.termux.R;
-import android.app.Dialog;
-import android.widget.TextView;
-import android.widget.Button;
-import android.graphics.Color;
-import com.termux.floatball.menu.MenuLayout;
-import android.view.ViewGroup;
-
-
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
@@ -40,11 +23,6 @@ import com.termux.floatball.utils.DensityUtil;
 import com.termux.floatball.widget.FloatBallCfg;
 
 public class FloatBallMenuClient {
-///////
-private SharedPreferences prefs;
-private static final String PREFS_NAME = "FloatBallPrefs";
-private static final String PREF_TUTORIAL_SHOWN = "tutorialShown";
-
     private FloatBallManager mFloatballManager;
     private FloatPermissionManager mFloatPermissionManager;
     private ActivityLifeCycleListener mActivityLifeCycleListener = new ActivityLifeCycleListener();
@@ -56,10 +34,6 @@ private static final String PREF_TUTORIAL_SHOWN = "tutorialShown";
     private boolean mShowTerminal = false;
     private boolean mShowPreference = false;
 
-private boolean isActivityValid() {
-    return mTermuxActivity != null && !mTermuxActivity.isFinishing() && !mTermuxActivity.isDestroyed();
-}
-
     private FloatBallMenuClient() {
     }
 
@@ -68,20 +42,8 @@ private boolean isActivityValid() {
     }
 
     public void onCreate() {
-        // Add these lines FIRST
-    SharedPreferences prefs = mTermuxActivity.getSharedPreferences("FloatBallPrefs", Context.MODE_PRIVATE);
-boolean tutorialShown = prefs.getBoolean("tutorialShown", false);
-
         init();
         mFloatballManager.show();
-    // Add this after initializing mFloatballManager
-    if (!tutorialShown) {
-    new Handler().postDelayed(() -> {
-    if (isActivityValid()) {
-        startFloatMenuTutorial();
-    }
-}, 1000);
-}
         //5 set float ball click handler
         if (mFloatballManager.getMenuItemSize() == 0) {
             toast(mTermuxActivity.getString(R.string.add_menu_item));
@@ -227,9 +189,6 @@ boolean tutorialShown = prefs.getBoolean("tutorialShown", false);
         MenuItem terminalItem = new MenuItem(mTermuxActivity.getDrawable(R.drawable.icon_menu_start_terminal_shape)) {
             @Override
             public void action() {
-            mTermuxActivity.runOnUiThread(() -> {
-            
-             }); 
                 boolean preState = mShowTerminal;
                 mShowTerminal = !mShowTerminal;
                 if (!preState) {
@@ -344,122 +303,11 @@ boolean tutorialShown = prefs.getBoolean("tutorialShown", false);
 
     public void onDestroy() {
         onDetachedFromWindow();
-        new Handler().removeCallbacksAndMessages(null);
         //unregister ActivityLifeCycle listener once register it, in case of memory leak
         mTermuxActivity.getApplication().unregisterActivityLifecycleCallbacks(mActivityLifeCycleListener);
     }
 
     public boolean isGlobalFloatBallMenu() {
         return mFloatballManager.isFloatBallOverOtherApp();
-    }                    
- ////////
- private void startFloatMenuTutorial() {
- if (isActivityValid()) {
- mFloatballManager.getFloatMenu().setKeepOpen(true);
-    mFloatballManager.keepMenuOpenDuringTutorial();
- mFloatballManager.onFloatBallClick();
-}
- 
-
- //   String[] steps = mTermuxActivity.getResources().getStringArray(R.array.float_tutorial_steps);
-//   int[] itemPositions = {0, 1, 2, 3, 4, 5, 6, 7};
-  // With:
-   
-
-//    final int[] step = {0};
-
-
-  
-        final Dialog dialog = new Dialog(mTermuxActivity);
-dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-dialog.setCancelable(false);
-dialog.setContentView(R.layout.tutorial_dialog);
-
-// Access views inside the dialog
-TextView text = dialog.findViewById(R.id.tutorial_text);
-Button next = dialog.findViewById(R.id.tutorial_next);
-
-String[] steps = mTermuxActivity.getResources().getStringArray(R.array.float_tutorial_steps);
-int[] itemPositions = {0, 1, 2, 3, 4, 5, 6}; // Match your actual button count
-
-final int[] step = {0};
-
-// Prevent float menu from closing
-mFloatballManager.getFloatMenu().setKeepOpen(true);
-mFloatballManager.onFloatBallClick(); // Force open the menu
-
-// Setup click handler
-next.setOnClickListener(v -> {
-    step[0]++;
-    if (step[0] < steps.length) {
-        text.setText(steps[step[0]]);
-        highlightMenuItem(itemPositions[step[0]]);
-
-        if (step[0] == steps.length - 1) {
-            next.setText(R.string.got_it);
-        }
-    } else {
-        mFloatballManager.getFloatMenu().setKeepOpen(false);
-        mFloatballManager.closeMenu();
-        dialog.dismiss();
-
-        mTermuxActivity.getSharedPreferences("FloatBallPrefs", Context.MODE_PRIVATE)
-            .edit()
-            .putBoolean("tutorialShown", true)
-            .apply();
     }
-});
-
-// --- Set window properties to prevent stealing focus ---
-Window window = dialog.getWindow();
-if (window != null) {
-    window.setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
-
-    window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-    WindowManager.LayoutParams params = window.getAttributes();
-    params.gravity = Gravity.TOP;
-    params.y = 150;
-    window.setAttributes(params);
-}
-
-// --- Show dialog and highlight first button ---
-new Handler().postDelayed(() -> {
-    if (mTermuxActivity != null && !mTermuxActivity.isFinishing() && !mTermuxActivity.isDestroyed()) {
-        dialog.show();
-        highlightMenuItem(itemPositions[0]);
-    }
-}, 300); // slight delay to ensure float menu is ready
-   
-}
-          private void highlightMenuItem(int position) {
-    try {
-        if (mFloatballManager == null || 
-            mFloatballManager.getFloatMenu() == null ||
-            mFloatballManager.getFloatMenu().getMenuLayout() == null) return;
-            
-        ViewGroup menuLayout = mFloatballManager.getFloatMenu().getMenuLayout();
-        
-        if (position >= 0 && position < menuLayout.getChildCount()) {
-            View item = menuLayout.getChildAt(position);
-            item.animate()
-                .scaleX(1.3f)
-                .scaleY(1.3f)
-                .setDuration(300)
-                .withEndAction(() -> {
-                    if (item != null) {
-                        item.animate()
-                            .scaleX(1f)
-                            .scaleY(1f)
-                            .setDuration(300)
-                            .start();
-                    }
-                })
-                .start();
-        }
-    } catch (Exception e) {
-        Toast.makeText(mTermuxActivity, "Tutorial config pointer error", Toast.LENGTH_SHORT).show();
-    }
-}                             
 }
