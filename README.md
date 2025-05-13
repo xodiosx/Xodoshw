@@ -117,10 +117,10 @@ XoDos V5 glibc/bionic (soon)
 <!-- ROADMAP -->
 ## To-do
 
-- [ ] support More drivers for more devices like, some Mali GPUs, and adreno 710 , adreno 720, adreno 730 , adreno elite,
+- [ ] support More drivers for more devices like, some Mali GPUs, and adreno 7xx, adreno elite , adreno elite, some other devices
 - [✓] More languages
-- [✓] easier installation with progress percentage
-
+- [✓] easier User friendly UX & UI
+- [ ] Fix Google Pixel phones won't open the app
 
 
 <!-- CONTRIBUTING -->
