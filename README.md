@@ -126,13 +126,15 @@ XoDos V5 glibc/bionic (soon)
 <!-- CONTRIBUTING -->
 
 ## ❤️ Support XoDos
-## ❤️ Support XoDos Project GROWING
+<a id="support"></a> <!-- Anchor for funding button -->
+## ❤️ Support This Project To grow
 
 **USDT (Polygon Network Only):**  
 ```0x046ac894C15fcC88D492835445938291c00DD0a7```
 
-[Verify on Polygonscan](https://polygonscan.com/address/0x046ac894C15fcC88D492835445938291c00DD0a7)  
-*⚠️ Do NOT send via other networks - funds will be lost*
+[Verify Address](https://polygonscan.com/address/0x046ac894C15fcC88D492835445938291c00DD0a7)  
+*⚠️ Only send via Polygon network*
+
 <!-- LICENSE -->
 
 ## License
