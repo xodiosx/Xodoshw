@@ -125,9 +125,16 @@ XoDos V5 glibc/bionic (soon)
 
 <!-- CONTRIBUTING -->
 
+## ❤️ Support XoDos
+## ❤️ Support XoDos Project GROWING
 
+**USDT (Polygon Network Only):**  
+```0x046ac894C15fcC88D492835445938291c00DD0a7```
 
+[Verify on Polygonscan](https://polygonscan.com/address/0x046ac894C15fcC88D492835445938291c00DD0a7)  
+*⚠️ Do NOT send via other networks - funds will be lost*
 <!-- LICENSE -->
+
 ## License
 Released under the [GPLv3 license](https://www.gnu.org/licenses/gpl-3.0.html).
  See `LICENSE.md` for more information.
