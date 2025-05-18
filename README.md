@@ -148,8 +148,8 @@ Released under the [GPLv3 license](https://www.gnu.org/licenses/gpl-3.0.html).
 <!-- CONTACT -->
 
 ## Contact
-
-xodios - [@XAleiwi](https://x.com/XAleiwi)
+xodi - [Instagram].(https://www.instagram.com/xodiosx.aleiwi)
+xodios X - [@XAleiwi](https://x.com/XAleiwi)
 [YouTube channel:](https://www.youtube.com/@xodmods5082)
  [Telegram Group:](https://t.me/xodemulatorr)
 
