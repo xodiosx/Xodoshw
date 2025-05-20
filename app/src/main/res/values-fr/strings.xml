@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources [
+    <!ENTITY TERMUX_PACKAGE_NAME "com.termux">
+    <!ENTITY TERMUX_APP_NAME "XoDos">
+    <!ENTITY TERMUX_API_APP_NAME "Termux:API">
+    <!ENTITY TERMUX_BOOT_APP_NAME "Termux:Boot">
+    <!ENTITY TERMUX_FLOAT_APP_NAME "Termux:Float">
+    <!ENTITY TERMUX_STYLING_APP_NAME "Termux:Styling">
+    <!ENTITY TERMUX_TASKER_APP_NAME "Termux:Tasker">
+    <!ENTITY TERMUX_WIDGET_APP_NAME "Termux:Widget">
+]>
+
+<resources>
+    <!-- Application Basics -->
+    <string name="application_name">&TERMUX_APP_NAME;</string>
+    <string name="shared_user_label">Utilisateur &TERMUX_APP_NAME;</string>
+
+    <!-- Permissions -->
+    <string name="permission_run_command_label">Exécuter des commandes dans l\'environnement &TERMUX_APP_NAME;</string>
+    <string name="permission_run_command_description">Permet à &TERMUX_APP_NAME; d\'exécuter des commandes arbitraires et d\'accéder aux fichiers</string>
+
+    <!-- Bootstrap Messages -->
+    <string name="bootstrap_error_body">&TERMUX_APP_NAME; n\'a pas pu installer les paquets bootstrap.</string>
+    <string name="bootstrap_error_abort">Abandonner</string>
+    <string name="bootstrap_error_try_again">Réessayer</string>
+    <string name="bootstrap_error_not_primary_user_message">&TERMUX_APP_NAME; ne peut fonctionner qu\'en tant qu\'utilisateur principal. Les binaires bootstrap compilés ont un chemin $PREFIX figé et ne peuvent être installés ailleurs qu\'à :%1$s.</string>
+    <string name="bootstrap_error_installed_on_portable_sd">&TERMUX_APP_NAME; ne peut être installé sur une carte SD externe/amovible. Les binaires bootstrap doivent être installés à :%1$s.</string>
+
+    <!-- Terminal Interface -->
+    <string name="action_new_session">Nouvelle session</string>
+    <string name="action_new_session_failsafe">Mode sans échec</string>
+    <string name="title_max_terminals_reached">Nombre maximal de terminaux atteint</string>
+    <string name="msg_max_terminals_reached">Fermez les sessions existantes avant d\'en créer de nouvelles.</string>
+
+    <string name="title_rename_session">Nommer la session</string>
+    <string name="action_rename_session_confirm">Confirmer</string>
+    <string name="title_create_named_session">Nouvelle session nommée</string>
+    <string name="action_create_named_session_confirm">Créer</string>
+
+    <string name="action_toggle_soft_keyboard">Clavier</string>
+    <string name="action_toggle_tool_box">Boîte à outils</string>
+
+    <string name="msg_enabling_terminal_toolbar">Activation de la barre d\'outils</string>
+    <string name="msg_disabling_terminal_toolbar">Désactivation de la barre d\'outils</string>
+
+    <!-- Terminal Popup -->
+    <string name="action_select_url">Sélectionner URL</string>
+    <string name="title_select_url_dialog">Cliquez pour copier ou appuyez longuement pour ouvrir</string>
+    <string name="title_select_url_none_found">Aucune URL trouvée</string>
+    <string name="msg_select_url_copied_to_clipboard">URL copiée dans le presse-papiers</string>
+
+    <string name="action_share_transcript">Partager l\'historique</string>
+    <string name="title_share_transcript">Historique du terminal</string>
+    <string name="title_share_transcript_with">Envoyer l\'historique à :</string>
+
+    <string name="action_share_selected_text">Partager le texte sélectionné</string>
+    <string name="title_share_selected_text">Texte du terminal</string>
+    <string name="title_share_selected_text_with">Envoyer le texte à :</string>
+
+    <string name="action_autofill_password">Remplissage automatique</string>
+    <string name="action_reset_terminal">Réinitialiser</string>
+    <string name="msg_terminal_reset">Terminal réinitialisé</string>
+
+    <string name="action_kill_process">Terminer le processus (%d)</string>
+    <string name="title_confirm_kill_process">Confirmer la fin de session?</string>
+
+    <string name="action_style_terminal">Style</string>
+    <string name="action_toggle_keep_screen_on">Maintenir l\'écran allumé</string>
+    <string name="action_open_help">Aide</string>
+    <string name="action_open_settings">Paramètres</string>
+    <string name="action_recover_storage">Récupération</string>
+    <string name="action_backup_storage">Sauvegarde</string>
+
+    <string name="action_report_issue">Signaler un problème</string>
+    <string name="msg_generating_report">Génération du rapport</string>
+    <string name="msg_add_termux_debug_info">Ajouter les informations de débogage?</string>
+
+    <string name="error_styling_not_installed">L\'application &TERMUX_STYLING_APP_NAME; n\'est pas installée.</string>
+    <string name="action_styling_install">Installer</string>
+
+    <!-- Notifications -->
+    <string name="notification_action_exit">Quitter</string>
+    <string name="notification_action_wake_lock">Activer veille</string>
+    <string name="notification_action_wake_unlock">Désactiver veille</string>
+
+    <!-- Service Errors -->
+    <string name="error_display_over_other_apps_permission_not_granted_to_start_terminal">&TERMUX_APP_NAME; nécessite la permission \"Afficher au-dessus des autres apps\" pour démarrer des sessions en arrière-plan sur Android >= 10. Activez-la dans Paramètres → Apps → &TERMUX_APP_NAME; → Avancé</string>
+    <string name="error_termux_service_invalid_execution_command_runner">Exécuteur de commande invalide : `%1$s`</string>
+    <string name="error_termux_service_unsupported_execution_command_runner">Exécuteur non supporté : `%1$s`</string>
+    <string name="error_termux_service_unsupported_execution_command_shell_create_mode">Mode de création de shell non supporté : `%1$s`</string>
+    <string name="error_termux_service_execution_command_shell_name_unset">Nom du shell manquant pour le mode `%1$s`</string>
+
+    <!-- RunCommand Service -->
+    <string name="error_run_command_service_invalid_intent_action">Action d\'intent invalide : `%1$s`</string>
+    <string name="error_run_command_service_invalid_execution_command_runner">Exécuteur de commande invalide : `%1$s`</string>
+    <string name="error_run_command_service_mandatory_extra_missing">Paramètre obligatoire manquant : \"%1$s\"</string>
+    <string name="error_run_command_service_api_help">Visitez %1$s pour l\'utilisation de RUN_COMMAND.</string>
+
+    <!-- File Handling -->
+    <string name="title_file_received">Enregistrer dans ~/downloads/</string>
+    <string name="action_file_received_edit">Éditer</string>
+    <string name="action_file_received_open_directory">Ouvrir le dossier</string>
+
+    <!-- Miscellaneous Errors -->
+    <string name="error_termux_service_start_failed_general">Échec du démarrage du service. Voir logcat pour détails.</string>
+    <string name="error_termux_service_start_failed_bg">Démarrage en arrière-plan bloqué par Android.</string>
+
+    <!-- Settings -->
+    <string name="title_activity_termux_settings">Paramètres &TERMUX_APP_NAME;</string>
+    <string name="termux_preferences_title">Préférences &TERMUX_APP_NAME;</string>
+    <string name="termux_preferences_summary">Préférences de l\'application</string>
+
+    <!-- Debugging Section -->
+    <string name="termux_debugging_preferences_title">Débogage</string>
+    <string name="termux_debugging_preferences_summary">Paramètres de débogage</string>
+    <string name="termux_logging_header">Journalisation</string>
+    <string name="termux_log_level_title">Niveau de journalisation</string>
+    <string name="termux_terminal_view_key_logging_enabled_title">Journalisation des touches</string>
+    <string name="termux_terminal_view_key_logging_enabled_off">Désactive la journalisation des touches (par défaut)</string>
+    <string name="termux_terminal_view_key_logging_enabled_on">Active la journalisation verbose des touches</string>
+    <string name="termux_plugin_error_notifications_enabled_title">Notifications d\'erreur</string>
+    <string name="termux_plugin_error_notifications_enabled_off">Désactive les notifications d\'erreur</string>
+    <string name="termux_plugin_error_notifications_enabled_on">Active les notifications d\'erreur (par défaut)</string>
+    <string name="termux_crash_report_notifications_enabled_title">Rapports de plantage</string>
+    <string name="termux_crash_report_notifications_enabled_off">Désactive les rapports de plantage</string>
+    <string name="termux_crash_report_notifications_enabled_on">Active les rapports de plantage (par défaut)</string>
+
+    <!-- Terminal I/O -->
+    <string name="termux_terminal_io_preferences_title">Entrée/Sortie</string>
+    <string name="termux_terminal_io_preferences_summary">Paramètres E/S du terminal</string>
+    <string name="termux_keyboard_header">Clavier</string>
+    <string name="termux_soft_keyboard_enabled_title">Clavier logiciel</string>
+    <string name="termux_soft_keyboard_enabled_off">Désactive le clavier logiciel</string>
+    <string name="termux_soft_keyboard_enabled_on">Active le clavier logiciel (par défaut)</string>
+    <string name="termux_soft_keyboard_enabled_only_if_no_hardware_title">Clavier logiciel conditionnel</string>
+    <string name="termux_soft_keyboard_enabled_only_if_no_hardware_off">Toujours activé (par défaut)</string>
+    <string name="termux_soft_keyboard_enabled_only_if_no_hardware_on">Seulement sans clavier physique</string>
+
+    <!-- Terminal View -->
+    <string name="termux_terminal_view_preferences_title">Affichage terminal</string>
+    <string name="termux_terminal_view_preferences_summary">Paramètres d\'affichage</string>
+    <string name="termux_terminal_view_view_header">Affichage</string>
+    <string name="termux_terminal_view_terminal_margin_adjustment_title">Ajustement des marges</string>
+    <string name="termux_terminal_view_terminal_margin_adjustment_off">Désactive l\'ajustement des marges</string>
+    <string name="termux_terminal_view_terminal_margin_adjustment_on">Active l\'ajustement des marges (par défaut)</string>
+
+    <!-- Plugin Settings -->
+    <string name="termux_api_preferences_title">Préférences &TERMUX_API_APP_NAME;</string>
+    <string name="termux_api_preferences_summary">Paramètres de l\'API</string>
+    <string name="termux_float_preferences_title">Préférences &TERMUX_FLOAT_APP_NAME;</string>
+    <string name="termux_float_preferences_summary">Paramètres flottants</string>
+    <string name="termux_tasker_preferences_title">Préférences &TERMUX_TASKER_APP_NAME;</string>
+    <string name="termux_tasker_preferences_summary">Intégration Tasker</string>
+    <string name="termux_widget_preferences_title">Préférences &TERMUX_WIDGET_APP_NAME;</string>
+    <string name="termux_widget_preferences_summary">Paramètres du widget</string>
+
+    <!-- Miscellaneous -->
+    <string name="about_preference_title">À propos</string>
+    <string name="donate_preference_title">Donation</string>
+    <string name="hello_blank_fragment">Fragment vide</string>
+    <string name="file_cpy_success">Fichier copié</string>
+    <string name="file_cpy_override">Fichier écrasé</string>
+    <string name="file_cpy_fail">Échec de copie</string>
+    <string name="exit_toast_text">Appuyez à nouveau pour quitter</string>
+    <string name="no_such_file">Fichier introuvable</string>
+    <string name="not_executable">Non exécutable</string>
+    <string name="select_command_first">Sélectionnez un fichier de démarrage</string>
+    <string name="apply_display_over_other_app_permission">Autorisation requise</string>
+    <string name="open_terminal">Ouvrir terminal</string>
+    <string name="terminate_current_process">Arrêter le processus</string>
+    <string name="unlock_layout">Déverrouiller l\'interface</string>
+    <string name="raise_termux_app">Ouvrir &TERMUX_APP_NAME;</string>
+    <string name="add_menu_item">Ajouter au menu</string>
+    <string name="hide_terminal">Masquer terminal</string>
+    <string name="set_dinput">dinput</string>
+    <string name="set_xinput">xinput</string>
+    <string name="select_gamepad_input_mode">Type de manette</string>
+    <string name="ready_set_mobox_env">Installation de XoDos en cours... Cela peut prendre du temps. Ne fermez pas l\'app avant la fin. En cas de blocage >5min, consultez les logs. Des autorisations seront demandées - veuillez les accepter. Par XOD M.aleiwi</string>
+    <string name="yes">Oui</string>
+    <string name="cancel">Annuler</string>
+    <string name="executable_file">Fichier exécutable</string>
+    <string name="remove_shortcut">Supprimer ce raccourci?</string>
+    <string name="remove">Supprimer</string>
+    <string name="invalid_config">Configuration invalide</string>
+    <string name="bootstrap_initializing">Initialisation de l\'environnement...</string>
+    <string name="bootstrap_installer_title">Installation de Termux</string>
+    <string name="bootstrap_installer_body">Initialisation en cours...</string>
+    <string name="bootstrap_error_title">Erreur d\'installation</string>
+    <string name="storage_permission_title">Accès stockage requis</string>
+    <string name="storage_permission_message">Autorisations nécessaires pour l\'installation</string>
+    <string name="error_permission_denied">Permission refusée</string>
+    <string name="error_storage_permission_required">Accès au stockage requis</string>
+    <string name="action_grant">Autoriser</string>
+    <string name="action_exit">Quitter</string>
+    <string name="action_retry">Réessayer</string>
+    <string name="action_toggle_tool_box2">DÉMARRER</string>
+
+    <!-- Toolbox -->
+    <string name="toolbox_ai">IA</string>
+    <string name="toolbox_xodos">Xodos</string>
+    <string name="toolbox_proot">Proot</string>
+    <string name="toolbox_kali">Kali</string>
+    <string name="toolbox_help">Aide</string>
+    <string name="toolbox_switch">Changer utilisateur</string>
+    <string name="toolbox_settings">Paramètres</string>
+    <string name="toolbox_wine_glibc">Wine-Glibc</string>
+    <string name="toolbox_wine_bionic">Wine-Bionic</string>
+    <string name="toolbox_xbox">Xbox</string>
+    <string name="toolbox_backup">Sauvegarde</string>
+    <string name="toolbox_restore">Installer/Restaurer</string>
+    <string name="toolbox_wine">Wine</string>
+    <string name="choose_wine_env">Environnement Wine</string>
+    <string name="wine_glibc">Wine Glibc</string>
+    <string name="wine_bionic">Wine Bionic</string>
+    <string name="wine_glibc_missing">Installez Wine Glibc d\'abord!</string>
+    <string name="wine_bionic_missing">Installez Wine Bionic d\'abord!</string>
+    <string name="toolbox_wizard">Configuration rapide</string>
+
+    <!-- Tutorial -->
+    <string-array name="tutorial_steps">
+        <item>XoDos🖥️ : Bureau Linux rapide pour Android</item>
+        <item>Proot🐧 : Distributions Linux complètes avec accès root</item>
+        <item>Kali🐉Linux : Suite de sécurité avec 100+ outils</item>
+        <item>Wine🍷Glibc : Émulation Windows (Snapdragon: VirGl)</item>
+        <item>Wine🍷Bionic : Émulation avec pilotes natifs</item>
+        <item>Wine🍷 : Exécutez des EXE depuis n\'importe où</item>
+        <item>Émulateur Xbox🎮 : Jeux Xbox via Xemu</item>
+        <item>Paramètres⚙️ : Configurez Wine/DXVK/Box</item>
+        <item>IA🤖Chat : IA locale (DeepSeek, Llama)</item>
+        <item>Restaurer♻️ : Mises à jour XoDos/Kali</item>
+        <item>Sauvegarde📥 : Instantané système</item>
+        <item>Config rapide🪄 : Aide nouvelle installation</item>
+        <item>Changer👥 : Conteneurs utilisateurs</item>
+        <item>Raccourci➕ : Créer raccourcis</item>
+        <item>Supprimer❌Wine🍷 : Désinstaller complètement</item>
+    </string-array>
+
+    <string name="next">Suivant</string>
+    <string name="finish_tutorial">Terminer</string>
+
+    <!-- Wizard -->
+    <string name="modern_android_title">⚠️Android Moderne Détecté</string>
+    <string name="cpu_title">Type de CPU</string>
+    <string name="wine_title">Type Wine🍷</string>
+    <string name="dxvk_title">Wrapper DirectX</string>
+    <string name="driver_title">Pilote</string>
+    <string name="cores_title">Cœurs CPU</string>
+    <string name="wizard_complete_title">Configuration😁👌Terminée✅</string>
+    <string name="error_title">Erreur</string>
+
+    <string name="modern_android_message">⚠️Android 11+ détecté.\n\nDésactivez🛑Phantom Process Killer:\n\n%s</string>
+    <string name="cpu_message">Type de CPU?</string>
+    <string name="wine_message">Version Wine🍷:</string>
+    <string name="error_no_dxvk">Aucun❌DXVK dans %s</string>
+    <string name="error_no_driver">Aucun❌pilote dans %s</string>
+    <string name="wizard_complete_message">♻️xodwine.cfg créé:\n%s\n\nLancer Windows✅</string>
+    <string name="error_save_config">⚠️Échec sauvegarde:\n%s</string>
+
+    <!-- Buttons -->
+    <string name="ok">OK</string>
+    <string name="snapdragon">Snapdragon</string>
+    <string name="other">Autre</string>
+    <string name="glibc">🍷glibc</string>
+    <string name="bionic">🍷bionic</string>
+
+    <!-- Core Options -->
+    <string-array name="core_options">
+        <item>1 cœur</item>
+        <item>2 cœurs</item>
+        <item>3 cœurs</item>
+        <item>4 cœurs</item>
+        <item>5 cœurs</item>
+        <item>6 cœurs</item>
+        <item>7 cœurs</item>
+        <item>8 cœurs</item>
+    </string-array>
+
+    <!-- Wine Cleaner -->
+    <string name="clean_wine_title">Sélectionnez Wine à supprimer</string>
+    <string name="clean_wine_warning">Attention ⚠️ Suppression définitive de Wine❌. Libère de l\'espace. Continuer?</string>
+    <string name="delete_glibc">🗑️Supprimer Glibc❌</string>
+    <string name="delete_bionic">🗑️Supprimer Bionic❌</string>
+    <string name="toolbox_clean_wine">❌Nettoyer Wine</string>
+    <string name="cleanup_completed">Nettoyage terminé✅</string>
+    <string name="cleanup_error">Erreur : %s</string>
+</resources>

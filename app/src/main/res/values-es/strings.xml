@@ -238,26 +238,75 @@
 <string name="toolbox_backup">Copia de seguridad</string>
 <string name="toolbox_restore">Instalar/Restaurar </string>
 <string name="toolbox_wine">Wine </string>
-<string name="choose_wine_env">Elegir entorno Wine 🌐</string>
-<string name="wine_glibc">Wine Glibc 📚</string>
-<string name="wine_bionic">Wine Bionic ⚡</string>
+<string name="choose_wine_env">Elegir entorno Wine</string>
+<string name="wine_glibc">Wine Glibc</string>
+<string name="wine_bionic">Wine Bionic</string>
 <string name="wine_glibc_missing">¡Instala Wine Glibc primero! ⚠️</string>
 <string name="wine_bionic_missing">¡Instala Wine Bionic primero! ⚠️</string>
+<string name="toolbox_wizard">Configuración rápida</string>
 <string-array name="tutorial_steps">
-    <item>🐧 XoDos: Escritorio Linux nativo ultrarrápido para Android</item>
-    <item>🧰 Proot: Ejecuta distribuciones Linux completas con acceso root</item>
-    <item>🔓 Kali Linux: Kit de pruebas de penetración con 100+ herramientas</item>
-    <item>🖥️ Wine Glibc: Emulación Windows compatible con la mayoría de dispositivos</item>
-    <item>⚙️ Wine Glibc: Emulación con envoltura de controladores nativos</item>
-    <item>📂 Wine: Ejecuta archivos EXE desde cualquier carpeta</item>
-    <item>🎮 Emulador Xbox: Juegos originales de Xbox usando Xemu</item>
-    <item>⚙️ Ajustes: Configura versiones de Wine/DXVK/Box y drivers</item>
-    <item>🤖 Chat AI: IA local privada con soporte para DeepSeek y 100+ modelos</item>
-    <item>🔄 Restaurar: Instala actualizaciones de XoDos y sistemas como Kali</item>
-    <item>💾 Copia de seguridad: Captura completa del sistema en un clic</item>
-    <item>🔄 Cambiar: Alterna entre contenedores de usuario</item>
-    <item>➕ Añadir botón: Crea accesos directos para scripts/apps/Python</item>
+    <item>XoDos🖥️: es un escritorio Linux nativo rápido para Android</item>
+    <item>Proot🐧: Ejecuta distribuciones Linux completas con acceso root</item>
+    <item>Kali🐉Linux: Kit de pruebas con más de 100 herramientas</item>
+    <item>Wine🍷Glibc: Emulación de Windows para la mayoría (si no es Snapdragon, usa VirGl)</item>
+    <item>Wine🍷Bionic: Emulación con controladores nativos (usa wrapper si no es Snapdragon)</item>
+    <item>Wine🍷: Ejecuta archivos EXE desde cualquier carpeta</item>
+    <item>Xbox🎮Emulador: Juega juegos de Xbox originales con Xemu</item>
+    <item>Configuración⚙️: Configura versiones de Wine/DXVK y drivers</item>
+    <item>AI🤖Chat: IA local privada compatible con DeepSeek, Llama, etc.</item>
+    <item>Restaurar♻️: Instala actualizaciones y sistemas como Kali/Proot</item>
+    <item>Respaldo📥: Copia total del sistema para compartir/restaurar</item>
+    <item>Configuración rápida🪄: Facilita Wine para nuevos usuarios</item>
+    <item>Cambiar👥: Cambia entre contenedores de usuarios</item>
+    <item>Agregar botón➕: Accesos directos a scripts/apps/python</item>
+<item>eliminar❌Wine🍷: borrar wine/windows completamente⚠️para más almacenamiento.</item>
 </string-array>
 <string name="next">Siguiente ▶️</string>
 <string name="finish_tutorial">Finalizar 🏁</string>
+<!-- Base Strings -->
+<!-- Wizard Dialog Titles -->
+<string name="modern_android_title">⚠️Android Moderno Detectado</string>
+<string name="cpu_title">Tipo de CPU</string>
+<string name="wine_title">Tipo de Wine🍷</string>
+<string name="dxvk_title">Seleccionar wrapper de DirectX</string>
+<string name="driver_title">Seleccionar controlador</string>
+<string name="cores_title">Asignación de núcleos CPU</string>
+<string name="wizard_complete_title">Asistente😁👌completado✅</string>
+<string name="error_title">Error</string>
+
+<!-- Wizard Messages -->
+<string name="modern_android_message">⚠️Tu sistema es Android 11 o superior.\n\nPara evitar la terminación de la app, desactiva🛑Phantom Process Killer:\n\n%s</string>
+<string name="cpu_message">¿Qué CPU tienes?</string>
+<string name="wine_message">Elige versión de Wine🍷:</string>
+<string name="error_no_dxvk">No❌archivos DXVK en %s</string>
+<string name="error_no_driver">No❌archivos de controlador en %s</string>
+<string name="wizard_complete_message">♻️xodwine.cfg guardado en:\n%s\n\nEjecuta Windows ahora ✅.</string>
+<string name="error_save_config">⚠️Error al guardar la configuración:\n%s</string>
+
+<!-- Buttons -->
+<string name="ok">OK</string>
+<string name="snapdragon">Snapdragon</string>
+<string name="other">Otro</string>
+<string name="glibc">🍷glibc</string>
+<string name="bionic">🍷bionic</string>
+
+<!-- Core Options -->
+<string-array name="core_options">
+    <item>1 núcleo</item>
+    <item>2 núcleos</item>
+    <item>3 núcleos</item>
+    <item>4 núcleos</item>
+    <item>5 núcleos</item>
+    <item>6 núcleos</item>
+    <item>7 núcleos</item>
+    <item>8 núcleos</item>
+</string-array>
+<!-- Wine Cleaner -->
+<string name="clean_wine_title">Seleccione Wine para eliminar</string>
+<string name="clean_wine_warning">Advertencia ⚠️ Esto eliminará❌Wine y sus archivos de la App sin posibilidad de recuperación.⚠️Pero liberará espacio. ¿Continuar?</string>
+<string name="delete_glibc">🗑️Eliminar Glibc❌</string>
+<string name="delete_bionic">🗑️Eliminar Bionic❌</string>
+<string name="toolbox_clean_wine">❌Limpiar Wine</string>
+<string name="cleanup_completed">Limpieza completada✅</string>
+<string name="cleanup_error">Error: %s</string>
 </resources>

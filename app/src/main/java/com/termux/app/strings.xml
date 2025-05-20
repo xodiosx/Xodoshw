@@ -262,58 +262,57 @@
 <string name="toolbox_backup">Backup</string>
 <string name="toolbox_restore">Install/Restore</string>
 <string name="toolbox_wine">Wine</string>
+<string name="toolbox_wizard">Quick settings</string>
 <string name="choose_wine_env">Choose Wine Environment</string>
 <string name="wine_glibc">Wine Glibc</string>
 <string name="wine_bionic">Wine Bionic</string>
 <string name="wine_glibc_missing">Please install Wine Glibc first!</string>
 <string name="wine_bionic_missing">Please install Wine Bionic first!</string>
-<string name="toolbox_wizard">Quick settings</string>
 <string-array name="tutorial_steps">
-    <item>XoDos🖥️: is a fast Native Linux desktop for Android</item>
-    <item>Proot🐧: Run full Linux distributions with root access and more app support</item>
-    <item>Kali🐉Linux: Complete penetration testing toolkit with 100+ security tools</item>
-    <item>Wine🍷Glibc: Windows emulation that has support for most android devices (if not snapdragon Use VirGl)</item>
-    <item>Wine🍷Bionic: Windows emulation with native driver wrapping (if not snapdragon Use wrapper)</item>
-    <item>Wine🍷:Here you can Run EXE files from any folder on your device</item>
-    <item>Xbox🎮Emulator: Play original Xbox games using Xemu</item>
-      <item>Settings⚙️: Configure Wine/DXVK/Box versions and system drivers</item> 
-    <item>AI🤖Chat: Local private AI supporting DeepSeek, Llama, and 100+ models</item>
-    <item>Restore♻️: Install XoDos system updates and more systems like Kali/Proot</item>
-   <item>Backup📥: One-click full system snapshot for transfer/share/restore</item>
-   <item>Quick settings🪄: helps configure Wine/windows for New Users fast and easy like drivers/DXVk/wineD3D</item>
-       <item>Switch👥: Toggle between different user containers</item>
-    <item>Add shortcut➕: Create shortcuts for scripts/apps/python</item>    
-<item>delete❌Wine🍷: removing the wine/windows from the app entirely⚠️for more storage.</item>    
+    <item>XoDos: is a fast Native Linux desktop for Android</item>
+    <item>Proot: Run full Linux distributions with root access and more app support</item>
+    <item>Kali Linux: Complete penetration testing toolkit with 100+ security tools</item>
+    <item>Wine Glibc: Windows emulation that has support for most android devices (if not snapdragon Use VirGl)</item>
+    <item>Wine Glibc: Windows emulation with native driver wrapping (if not snapdragon Use wrapper)</item>
+    <item>Wine:Here you can Run EXE files from any folder on your device</item>
+    <item>Xbox Emulator: Play original Xbox games using Xemu</item>
+      <item>Settings: Configure Wine/DXVK/Box versions and system drivers</item> 
+    <item>AI Chat: Local private AI supporting DeepSeek, Llama, and 100+ models</item>
+    <item>Restore: Install XoDos system updates and more systems like Kali/Proot</item>
+   <item>Backup: One-click full system snapshot for transfer/share/restore</item>
+   <item>Quick settings: helps configure Wine/windows for New Users fast and easy like drivers/DXVk/wineD3D</item>
+       <item>Switch: Toggle between different user containers</item>
+    <item>Add Button: Create shortcuts for scripts/apps/python</item>    
 </string-array>
 
 <string name="next">Next</string>
 <string name="finish_tutorial">Finish</string>
     <!-- Base Strings -->
     <!-- Wizard Dialog Titles -->
-    <string name="modern_android_title">⚠️Modern Android Detected</string>
+    <string name="modern_android_title">Modern Android Detected</string>
     <string name="cpu_title">CPU Type</string>
-    <string name="wine_title">Wine🍷Type</string>
-    <string name="dxvk_title">Select DirectX wrapper</string>
+    <string name="wine_title">Wine Type</string>
+    <string name="dxvk_title">Select DirectXK wrapper</string>
     <string name="driver_title">Select Driver</string>
     <string name="cores_title">CPU Core Allocation</string>
-    <string name="wizard_complete_title">Wizard😁👌Complete✅</string>
+    <string name="wizard_complete_title">Wizard Complete</string>
     <string name="error_title">Error</string>
 
     <!-- Wizard Messages -->
-    <string name="modern_android_message">⚠️Your system is Android 11 or above.\n\nTo prevent app termination, please disable🛑Phantom Process Killer:\n\n%s</string>
+    <string name="modern_android_message">Your system is Android 11 or above.\n\nTo prevent app termination, please disable Phantom Process Killer:\n\n%s</string>
     <string name="cpu_message">What is your CPU?</string>
-    <string name="wine_message">Choose Wine🍷 version:</string>
-    <string name="error_no_dxvk">No❌DXVK files in %s</string>
-    <string name="error_no_driver">No❌driver files in %s</string>
-    <string name="wizard_complete_message">♻️xodwine.cfg written to:\n%s\n\nRun windows now ✅.</string>
-    <string name="error_save_config">⚠️Failed to save config:\n%s</string>
+    <string name="wine_message">Choose Wine version:</string>
+    <string name="error_no_dxvk">No DXVK files in %s</string>
+    <string name="error_no_driver">No driver files in %s</string>
+    <string name="wizard_complete_message">xodwine.cfg written to:\n%s\n\nRun your existing bash script to apply.</string>
+    <string name="error_save_config">Failed to save config:\n%s</string>
 
     <!-- Buttons -->
     <string name="ok">OK</string>
     <string name="snapdragon">Snapdragon</string>
     <string name="other">Other</string>
-    <string name="glibc">🍷glibc</string>
-    <string name="bionic">🍷bionic</string>
+    <string name="glibc">glibc</string>
+    <string name="bionic">bionic</string>
 
     <!-- Core Options -->
     <string-array name="core_options">
@@ -327,12 +326,4 @@
         <item>8 Cores</item>
     </string-array>
 
-<!-- Wine Cleaner -->
-<string name="clean_wine_title">Please select Wine to delete</string>
-<string name="clean_wine_warning">Warning ⚠️ This will remove❌the Wine with its files from the App and won\'t be recovered.⚠️But will free some storage space. Continue?</string>
-<string name="delete_glibc">🗑️Delete Glibc❌</string>
-<string name="delete_bionic">🗑️Delete Bionic❌</string>
-<string name="toolbox_clean_wine">❌Clean Wine</string>
-<string name="cleanup_completed">Cleanup completed✅</string>
-<string name="cleanup_error">Error: %s</string>
 </resources>

@@ -7,10 +7,10 @@
 			<Space android:layout_width="fill_parent" android:layout_height="wrap_content" android:minHeight="2.0dip" />
 			<TextView android:textSize="10.0sp" android:textColor="#ff8100ff" android:gravity="center" android:id="@+id/textView" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="By XOD M.Aleiwi" />
 			<Space android:layout_width="fill_parent" android:layout_height="wrap_content" android:minHeight="10.0dip" />
-			<Button android:id="@+id/preferences_button" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/preferences_button_text" />
+			<Button android:id="@+id/preferences_button" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#0035FF" android:text="@string/preferences_button_text" />
 			<Space android:layout_width="fill_parent" android:layout_height="wrap_content" android:minHeight="10.0dip" />
 			<include layout="@layout/binding_launch_item" />
-			<Button android:id="@+id/exit_button" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/exit_button_exit_app" />
+			<Button android:id="@+id/exit_button" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#D20003" android:text="@string/exit_button_exit_app" />
 		</LinearLayout>
 	</FrameLayout>
 	<LinearLayout android:id="@+id/mouse_helper_visibility" android:layout_width="wrap_content" android:layout_height="wrap_content" android:translationX="0.0px" android:translationY="0.0px">

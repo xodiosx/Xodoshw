@@ -242,26 +242,68 @@
 <string name="toolbox_backup">Резервная копия</string>
 <string name="toolbox_restore">Установить/Восстановить </string>
 <string name="toolbox_wine">Wine </string>
-<string name="choose_wine_env">Выбрать окружение Wine 🌐</string>
-<string name="wine_glibc">Wine Glibc 📚</string>
-<string name="wine_bionic">Wine Bionic ⚡</string>
+<string name="choose_wine_env">Выбрать окружение Wine</string>
+<string name="wine_glibc">Wine Glibc</string>
+<string name="wine_bionic">Wine Bionic</string>
 <string name="wine_glibc_missing">Сначала установите Wine Glibc! ⚠️</string>
 <string name="wine_bionic_missing">Сначала установите Wine Bionic! ⚠️</string>
-<string-array name="tutorial_steps">
-    <item>🐧 XoDos: Быстрый нативный Linux-десктоп для Android</item>
-    <item>🧰 Proot: Запуск полных Linux-дистрибутивов с root-доступом</item>
-    <item>🔓 Kali Linux: Комплект для тестирования безопасности с 100+ инструментами</item>
-    <item>🖥️ Wine Glibc: Эмуляция Windows для большинства устройств</item>
-    <item>⚙️ Wine Glibc: Эмуляция с нативной обёрткой драйверов</item>
-    <item>📂 Wine: Запускайте EXE-файлы из любой папки</item>
-    <item>🎮 Эмулятор Xbox: Играйте в оригинальные игры Xbox через Xemu</item>
-    <item>⚙️ Настройки: Конфигурация версий Wine/DXVK/Box и драйверов</item>
-    <item>🤖 AI-чат: Локальный ИИ с поддержкой DeepSeek и 100+ моделей</item>
-    <item>🔄 Восстановление: Установите обновления XoDos и системы Kali/Proot</item>
-    <item>💾 Резервная копия: Полный снимок системы в один клик</item>
-    <item>🔄 Переключение: Переход между контейнерами пользователей</item>
-    <item>➕ Добавить кнопку: Создавайте ярлыки для скриптов/приложений</item>
-</string-array>
 <string name="next">Далее ▶️</string>
 <string name="finish_tutorial">Завершить 🏁</string>
+<string name="toolbox_wizard">Быстрые настройки</string>
+<string-array name="tutorial_steps">
+    <item>XoDos🖥️: это быстрый нативный Linux-десктоп для Android</item>
+    <item>Proot🐧: Запуск полноценных дистрибутивов Linux с root-доступом и поддержкой приложений</item>
+    <item>Kali🐉Linux: Полный комплект для тестирования на проникновение с 100+ инструментами безопасности</item>
+    <item>Wine🍷Glibc: Эмуляция Windows с поддержкой большинства Android-устройств (если не Snapdragon — используйте VirGl)</item>
+    <item>Wine🍷Bionic: Эмуляция Windows с обёрткой драйвера (если не Snapdragon — используйте wrapper)</item>
+    <item>Wine🍷: Здесь вы можете запускать EXE-файлы из любой папки</item>
+    <item>Xbox🎮Эмулятор: Играйте в оригинальные игры Xbox с помощью Xemu</item>
+    <item>Настройки⚙️: Настройка версий Wine/DXVK/Box и системных драйверов</item>
+    <item>AI🤖Чат: Локальный приватный ИИ с поддержкой DeepSeek, Llama и 100+ моделей</item>
+    <item>Восстановить♻️: Установите обновления XoDos и другие системы, такие как Kali/Proot</item>
+    <item>Резервная копия📥: Полная моментальная копия системы для передачи/восстановления</item>
+    <item>Быстрые настройки🪄: помогают новичкам быстро настроить Wine/Windows (драйверы, DXVK, wineD3D)</item>
+    <item>Переключить👥: Переключение между контейнерами пользователей</item>
+    <item>Добавить кнопку➕: Создание ярлыков для скриптов/приложений/python</item>
+<item>удалить❌Wine🍷: полное удаление wine/windows из приложения⚠️для освобождения места.</item>
+</string-array>
+<string name="modern_android_title">⚠️Обнаружен современный Android</string>
+<string name="cpu_title">Тип CPU</string>
+<string name="wine_title">Тип Wine🍷</string>
+<string name="dxvk_title">Выбор обёртки DirectX</string>
+<string name="driver_title">Выбор драйвера</string>
+<string name="cores_title">Выделение ядер CPU</string>
+<string name="wizard_complete_title">Мастер завершён😁👌✅</string>
+<string name="error_title">Ошибка</string>
+<string name="modern_android_message">⚠️Ваша система — Android 11 или новее.\n\nЧтобы предотвратить завершение приложения, отключите🛑Phantom Process Killer:\n\n%s</string>
+<string name="cpu_message">Какой у вас процессор?</string>
+<string name="wine_message">Выберите версию Wine🍷:</string>
+<string name="error_no_dxvk">Нет❌файлов DXVK в %s</string>
+<string name="error_no_driver">Нет❌драйверов в %s</string>
+<string name="wizard_complete_message">♻️xodwine.cfg записан в:\n%s\n\nТеперь можно запускать Windows ✅.</string>
+<string name="error_save_config">⚠️Не удалось сохранить конфигурацию:\n%s</string>
+<string name="ok">ОК</string>
+<string name="snapdragon">Snapdragon</string>
+<string name="other">Другое</string>
+<string name="glibc">🍷glibc</string>
+<string name="bionic">🍷bionic</string>
+<string-array name="core_options">
+    <item>1 без ядер</item>
+    <item>2 ядра</item>
+    <item>3 ядра</item>
+    <item>4 ядра</item>
+    <item>5 ядер</item>
+    <item>6 ядер</item>
+    <item>7 ядер</item>
+    <item>8 ядер</item>
+</string-array>
+
+<!-- Wine Cleaner -->
+<string name="clean_wine_title">Выберите Wine для удаления</string>
+<string name="clean_wine_warning">Внимание ⚠️ Это навсегда удалит❌Wine и его файлы из приложения без возможности восстановления.⚠️Но освободит место. Продолжить?</string>
+<string name="delete_glibc">🗑️Удалить Glibc❌</string>
+<string name="delete_bionic">🗑️Удалить Bionic❌</string>
+<string name="toolbox_clean_wine">❌Очистить Wine</string>
+<string name="cleanup_completed">Очистка завершена✅</string>
+<string name="cleanup_error">Ошибка: %s</string>
 </resources>

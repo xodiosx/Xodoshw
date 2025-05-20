@@ -1,0 +1,318 @@
+#!/bin/bash
+export GREEN='\033[0;32m'
+export WHITE='\033[0;37m' 
+export RED='\033[0;31m'
+cd
+mkdir -p /sdcard/Android/data/com.termux/files/Download
+#mkdir -p /sdcard/gamingtrace
+kill -9 $(pgrep -f "termux.x11") &>/dev/null
+. $PREFIX/glibc/opt/scripts/configs
+load_configs
+
+function stop-all {
+	pkill -f "app_process / com.termux.x11"
+	rm -rf $PREFIX/tmp/pulse-*
+	pulseaudio -k &>/dev/null
+	unset PULSE_SERVER
+	pkill pulseaudio
+	rm -rf $PREFIX/tmp/.virgl_test &>/dev/null
+	pkill virgl
+	rm -rf $PREFIX/tmp/.virgl_test &>/dev/null
+
+}
+stop-all
+##############
+
+CFG="$HOME/xodwine.cfg"
+
+# Make sure config exists
+if [ ! -f "$CFG" ]; then
+    echo "Error: Config file not found at $CFG"
+    exit 1
+fi
+
+# Load values from config
+source "$CFG"
+
+# If glibc, source extra configs
+if [ "$SOURCE_CONFIG" = "1" ] && [ -f "$CONFIG_SCRIPT" ]; then
+    source "$CONFIG_SCRIPT"
+fi
+echo "Android Version: $ANDROID_VERSION"
+echo "CPU Type: $CPU_TYPE"
+echo "Wine Type: $WINE_TYPE"
+echo "DXVK File: $DXVK_FILE"
+echo "Driver File: $DRIVER_FILE"
+echo "Cores: $PRIMARY_CORES"
+echo "WINEPREFIX: $WINEPREFIX"
+
+# Set primary cores
+if [ "$PRIMARY_CORES" == "" ]; then
+export PRIMARY_CORES=0-1
+    echo "export PRIMARY_CORES=$PRIMARY_CORES" > "$PREFIX/cores"
+    else
+    export PRIMARY_CORES=$PRIMARY_CORES
+    echo "export PRIMARY_CORES=$PRIMARY_CORES" > "$PREFIX/cores"
+fi
+#
+export WINEPREFIX=$WINEPREFIX
+export CPU_TYPE=$CPU_TYPE
+
+if [ $CPU_TYPE == "" ]; then
+touch $PREFIX/glibc/opt/virgl/virgl-enabled 
+else 
+echo $CPU_TYPE
+fi
+
+
+
+
+
+if [ -e $PREFIX/glibc/opt/virgl/virgl-enabled ]; then
+	chmod +x $PREFIX/glibc/opt/virgl/libvirgl_test_server.so
+	TMPDIR=$PREFIX/tmp $PREFIX/glibc/opt/virgl/libvirgl_test_server.so &>/dev/null &
+fi
+pulseaudio --start --load="module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1" --exit-idle-time=-1
+termux-x11 :0 &>/dev/null &
+sleep 1
+if [ -e $PREFIX/glibc/opt/virgl/virgl-enabled ]; then
+	chmod 777 $PREFIX/tmp/.virgl_test
+fi
+export RESOLUTION=1280x1024
+if [ "$STARTUP_COMPATIBILITY_MODE" = "1" ]; then
+	autores=""
+else
+	autores=$(DISPLAY=:0 xrandr | grep current | awk '{print $8$9$10}' | tr -d ,)
+fi
+if [ ! "$autores" = "1280x1024" ] && [ ! "$autores" = "" ]; then
+	export RESOLUTION=$autores
+	echo "$autores">$PREFIX/glibc/opt/last-resolution.conf
+elif [ -e $PREFIX/glibc/opt/last-resolution.conf ]; then
+	export RESOLUTION=$(cat $PREFIX/glibc/opt/last-resolution.conf)
+fi
+
+chmod +x $PREFIX/glibc/bin/box64
+chmod +x $WINE_PATH/bin/{wine,wineserver}
+patchelf --force-rpath --set-rpath $PREFIX/glibc/lib --set-interpreter $PREFIX/glibc/lib/ld-linux-aarch64.so.1 $PREFIX/glibc/bin/box64
+rm -rf $PREFIX/glibc/bin/{wine,wineserver}
+ln -sf $WINE_PATH/bin/wine $PREFIX/glibc/bin/wine
+ln -sf $WINE_PATH/bin/wineserver $PREFIX/glibc/bin/wineserver
+
+export GLIBC_BIN=$PREFIX/glibc/bin
+unset LD_PRELOAD
+
+if [ ! -e $WINEPREFIX/.update-timestamp ]; then
+	echo "installing $WINEPREFIX. please wait,,пожалуйста, подождите,,请稍等,, お待ちください,, कृपया प्रतीक्षा करें,, ،،رﺎﻈﺘﻧﻻﺍ ﻰﺟﺮﻳ "
+	rm -rf $WINEPREFIX
+	unset BOX64_DYNAREC_BIGBLOCK
+	unset WINEESYNC
+	unset WINEESYNC_TERMUX
+	unset BOX64_DYNAREC_CALLRET
+	if [ -e $WINE_PATH/lib/wine/i386-windows/shell32-bak.dll ] || [ -e $WINE_PATH/lib64/wine/x86_64-windows/shell32-bak.dll ]; then
+		mv $WINE_PATH/lib/wine/i386-windows/shell32-bak.dll $WINE_PATH/lib/wine/i386-windows/shell32.dll &>/dev/null
+		mv $WINE_PATH/lib/wine/x86_64-windows/shell32-bak.dll $WINE_PATH/lib/wine/x86_64-windows/shell32.dll &>/dev/null
+		mv $WINE_PATH/lib64/wine/x86_64-windows/shell32-bak.dll $WINE_PATH/lib64/wine/x86_64-windows/shell32.dll &>/dev/null
+		mv $WINE_PATH/lib64/wine/i386-windows/shell32-bak.dll $WINE_PATH/lib64/wine/i386-windows/shell32.dll &>/dev/null
+	fi
+
+	WINEDLLOVERRIDES="winegstreamer=disabled,mscoree=disabled" taskset -c $PRIMARY_CORES $GLIBC_BIN/box64 $GLIBC_BIN/wine wineboot -u >${LOG_PATH}_wineboot.txt 2>&1
+	## DISPLAY=:0 $GLIBC_BIN/box64 $GLIBC_BIN/wine explorer /desktop=shell,$RESOLUTION winecfg
+	if [ ! -e $WINEPREFIX/.update-timestamp ]; then
+		echo -e "${RED}Cannot configure. See ${LOG_PATH}_wineboot.txt${WHITE}"
+		$GLIBC_BIN/box64 $GLIBC_BIN/wineserver -k &>/dev/null
+		export LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so
+		rm -rf $PREFIX/tmp/pulse-*
+		pulseaudio -k &>/dev/null
+		pkill -f pulseaudio
+		pkill -f "app_process / com.termux.x11"
+		sleep 5
+		exit
+	fi
+
+	echo "disable">$WINEPREFIX/.update-timestamp
+	7z x $PREFIX/glibc/opt/prefix/drive_c.7z -o$WINEPREFIX/drive_c -y &>/dev/null
+	echo "Installing DirectX"
+	7z x $PREFIX/glibc/opt/prefix/directx.7z -o$WINEPREFIX/drive_c -y &>/dev/null
+	echo "Installing Start Menu shortcuts"
+	cp -r $PREFIX/glibc/opt/prefix/start/* "$WINEPREFIX/drive_c/ProgramData/Microsoft/Windows/Start Menu"
+	rm -rf "$WINEPREFIX/dosdevices/z:"
+	ln -sf /data/data/com.termux/files "$WINEPREFIX/dosdevices/z:"
+	ln -sf /sdcard/Download "$WINEPREFIX/dosdevices/d:"
+	ln -sf /sdcard/Android/data/com.termux/files/Download "$WINEPREFIX/dosdevices/e:"
+	echo "Installing registry tweaks"
+	cp $PREFIX/glibc/opt/prefix/marlett.ttf $WINEPREFIX/drive_c/windows/Fonts
+	taskset -c $PRIMARY_CORES $GLIBC_BIN/box64 $GLIBC_BIN/wine regedit $PREFIX/glibc/opt/prefix/user.reg &>/dev/null
+	taskset -c $PRIMARY_CORES $GLIBC_BIN/box64 $GLIBC_BIN/wine regedit $PREFIX/glibc/opt/prefix/system.reg &>/dev/null
+	mkdir -p "$WINEPREFIX/xodosmeta"
+	taskset -c $PRIMARY_CORES $GLIBC_BIN/box64 $GLIBC_BIN/wine regedit $PREFIX/glibc/opt/prefix/fix-services.reg &>/dev/null
+	touch $WINEPREFIX/xodosmeta/services-fix-applied
+	tar -xf $PREFIX/glibc/opt/prefix/fix-fonts.tar.xz -C $WINEPREFIX/drive_c/windows
+	touch $WINEPREFIX/xodosmeta/fonts-fix-applied
+	touch $WINEPREFIX/xodosmeta/dxdlls-fix-applied
+
+	if [ ! "$STARTUP_COMPATIBILITY_MODE" = "1" ]; then
+		echo "Installing PhysX 9.10, 7-Zip, Visual C++ Redistributable"
+		DISPLAY=:0 taskset -c $PRIMARY_CORES $GLIBC_BIN/box64 $GLIBC_BIN/wine explorer /desktop=shell,640x480 cmd /c "start Z:\\usr\\glibc\\opt\\apps\\install.bat" >${LOG_PATH}_redist.txt 2>&1
+		if [ ! -e $PREFIX/glibc/opt/virgl/virgl-enabled ]; then
+			sleep 1
+			echo "Installing dxvk-async-1.10.3"
+		#DISPLAY=:0 taskset -c $PRIMARY_CORES $GLIBC_BIN/box64 $GLIBC_BIN/wine explorer /desktop=shell,640x480 cmd /c "cd Z:\\usr\\glibc\\opt\\prefix\\d3d && start Z:\\usr\\glibc\\opt\\prefix\\d3d\\dxvk-async-1.10.3.bat" &>/dev/null
+			sleep 1
+			echo "Installing turnip"
+			#DISPLAY=:0 taskset -c $PRIMARY_CORES $GLIBC_BIN/box64 $GLIBC_BIN/wine explorer /desktop=shell,640x480 cmd /c "cd Z:\\usr\\glibc\\opt\\prefix\\mesa && start Z:\\usr\\glibc\\opt\\prefix\\mesa\\turnip-v24.3.0.r5.bat" &>/dev/null
+		# Set WINEPREFIX
+export WINEPREFIX="$WINEPREFIX"
+mkdir -p "$WINEPREFIX"
+
+
+# Extract DXVK
+echo "Extracting DXVK..."
+mkdir -p "$DXVK_EXTRACT_PATH"
+7z x "$DXVK_SRC" -o"$DXVK_EXTRACT_PATH" || { echo "Failed to extract DXVK"; exit 1; }
+
+# Extract Driver
+echo "Extracting GPU driver..."
+mkdir -p "$DRIVER_EXTRACT_PATH"
+7z x "$DRIVER_SRC" -o"$DRIVER_EXTRACT_PATH" || { echo "Failed to extract driver"; exit 1; }
+
+echo "Setup complete."
+		
+		else
+			sleep 1
+			echo "Installing wined3d"
+			#DISPLAY=:0 taskset -c $PRIMARY_CORES $GLIBC_BIN/box64 $GLIBC_BIN/wine explorer /desktop=shell,640x480 cmd /c "cd Z:\\usr\\glibc\\opt\\prefix\\d3d && start Z:\\usr\\glibc\\opt\\prefix\\d3d\\wined3d-8.0.2.bat" &>/dev/null
+		# Set WINEPREFIX
+export WINEPREFIX="$WINEPREFIX"
+mkdir -p "$WINEPREFIX"
+
+# Extract DXVK
+echo "Extracting DXVK..."
+mkdir -p "$DXVK_EXTRACT_PATH"
+7z x "$DXVK_SRC" -o"$DXVK_EXTRACT_PATH" || { echo "Failed to extract DXVK"; exit 1; }
+
+# Extract Driver
+echo "Extracting GPU driver..."
+mkdir -p "$DRIVER_EXTRACT_PATH"
+7z x "$DRIVER_SRC" -o"$DRIVER_EXTRACT_PATH" || { echo "Failed to extract driver"; exit 1; }
+
+echo "Setup complete."
+
+		fi
+	fi
+	sleep 3
+	
+	if [ -e $WINE_PATH/lib/wine/i386-unix/libwine.so.1 ] || [ -e $WINE_PATH/lib64/wine/x86_64-unix/libwine.so.1 ]; then
+		mv $WINE_PATH/lib/wine/i386-windows/shell32.dll $WINE_PATH/lib/wine/i386-windows/shell32-bak.dll &>/dev/null
+		mv $WINE_PATH/lib/wine/x86_64-windows/shell32.dll $WINE_PATH/lib/wine/x86_64-windows/shell32-bak.dll &>/dev/null
+		mv $WINE_PATH/lib64/wine/x86_64-windows/shell32.dll $WINE_PATH/lib64/wine/x86_64-windows/shell32-bak.dll &>/dev/null
+		mv $WINE_PATH/lib64/wine/i386-windows/shell32.dll $WINE_PATH/lib64/wine/i386-windows/shell32-bak.dll &>/dev/null
+	else
+		rm -rf $WINE_PATH/lib/wine/i386-unix/shell32.dll.so &>/dev/null
+		rm -rf $WINE_PATH/lib/wine/x86_64-unix/shell32.dll.so &>/dev/null
+		rm -rf $WINE_PATH/lib64/wine/x86_64-unix/shell32.dll.so &>/dev/null
+		rm -rf $WINE_PATH/lib64/wine/i386-unix/shell32.dll.so &>/dev/null
+	fi
+	$GLIBC_BIN/box64 $GLIBC_BIN/wineserver -k &>/dev/null
+fi
+
+if ! ls $PREFIX/glibc/opt/prefix/start/Registry/2.* &>/dev/null; then
+	cp -r $PREFIX/glibc/opt/prefix/start/Registry/2.* $WINEPREFIX/drive_c/ProgramData/Microsoft/Windows/Start\ Menu/Registry
+fi
+
+rm -rf "$WINEPREFIX/drive_c/ProgramData/Microsoft/Windows/Start Menu/Install/media foundation (for RE)"
+
+if [ ! -e "$WINEPREFIX/drive_c/ProgramData/Microsoft/Windows/Start Menu/Install/media foundation (for RE).lnk" ]; then
+	cp "$PREFIX/glibc/opt/prefix/start/Install/media foundation (for RE).lnk" "$WINEPREFIX/drive_c/ProgramData/Microsoft/Windows/Start Menu/Install"
+fi
+
+rm -rf $PREFIX/glibc/opt/prefix/start-default
+
+rm -d $PREFIX/glibc/opt/prefix/start/Install/1.* &>/dev/null
+rm -d $PREFIX/glibc/opt/prefix/start/Install/2.* &>/dev/null
+rm -d $WINEPREFIX/drive_c/ProgramData/Microsoft/Windows/Start\ Menu/Install/1.* &>/dev/null
+rm -d $WINEPREFIX/drive_c/ProgramData/Microsoft/Windows/Start\ Menu/Install/2.* &>/dev/null
+
+if ls $PREFIX/glibc/opt/prefix/start/Install/1.* &>/dev/null && ls $WINEPREFIX/drive_c/ProgramData/Microsoft/Windows/Start\ Menu/Install/1.* &>/dev/null; then
+	rm -rf $WINEPREFIX/drive_c/ProgramData/Microsoft/Windows/Start\ Menu/Install/1.*/* &>/dev/null
+	cp $PREFIX/glibc/opt/prefix/start/Install/1.*/* $WINEPREFIX/drive_c/ProgramData/Microsoft/Windows/Start\ Menu/Install/1.* &>/dev/null
+fi
+
+if ls $PREFIX/glibc/opt/prefix/start/Install/2.* &>/dev/null && ls $WINEPREFIX/drive_c/ProgramData/Microsoft/Windows/Start\ Menu/Install/2.* &>/dev/null; then
+	rm -rf $WINEPREFIX/drive_c/ProgramData/Microsoft/Windows/Start\ Menu/Install/2.*/* &>/dev/null
+	cp $PREFIX/glibc/opt/prefix/start/Install/2.*/* $WINEPREFIX/drive_c/ProgramData/Microsoft/Windows/Start\ Menu/Install/2.* &>/dev/null
+fi
+
+mkdir -p $WINEPREFIX/xodosmeta
+if [ ! -f $WINEPREFIX/xodosmeta/services-fix-applied ]; then
+	echo "Applying services fix"
+	taskset -c $PRIMARY_CORES $GLIBC_BIN/box64 $GLIBC_BIN/wine regedit $PREFIX/glibc/opt/prefix/fix-services.reg &>/dev/null
+	sleep 5
+	$GLIBC_BIN/box64 $GLIBC_BIN/wineserver -k &>/dev/null
+	touch $WINEPREFIX/xodosmeta/services-fix-applied
+fi
+if [ ! -f $WINEPREFIX/xodosmeta/fonts-fix-applied ]; then
+	echo "Applying fonts fix"
+	tar -xf $PREFIX/glibc/opt/prefix/fix-fonts.tar.xz -C $WINEPREFIX/drive_c/windows
+	touch $WINEPREFIX/xodosmeta/fonts-fix-applied
+fi
+if [ ! -f $WINEPREFIX/xodosmeta/dxdlls-fix-applied ]; then
+	echo "Applying dlls fix"
+	7z x $PREFIX/glibc/opt/prefix/directx.7z -o$WINEPREFIX/drive_c -y &>/dev/null
+	taskset -c $PRIMARY_CORES $GLIBC_BIN/box64 $GLIBC_BIN/wine regedit $PREFIX/glibc/opt/prefix/user.reg &>/dev/null
+	sleep 5
+	$GLIBC_BIN/box64 $GLIBC_BIN/wineserver -k &>/dev/null
+	touch $WINEPREFIX/xodosmeta/dxdlls-fix-applied
+fi
+xusb
+#load_configs
+. $PREFIX/usr/cores
+export PULSE_SERVER=127.0.0.1
+ln -sf $(df -H | grep -o "/storage/....-....") "$WINEPREFIX/dosdevices/f:" &>/dev/null
+DISPLAY=:0 LC_ALL=$(cat $PREFIX/glibc/opt/locale.conf) taskset -c $PRIMARY_CORES $GLIBC_BIN/box64 $GLIBC_BIN/wine explorer /desktop=shell,$RESOLUTION $PREFIX/glibc/opt/apps/winhandler.exe $PREFIX/glibc/opt/apps/wfm.exe >$LOG_PATH 2>&1 &
+DISPLAY=:0 taskset -c $SECONDARY_CORES $GLIBC_BIN/box64 $GLIBC_BIN/wine explorer /desktop=shell,$RESOLUTION start /min /unix $PREFIX/glibc/bin/ib.exe &>/dev/null &
+DISPLAY=:0 taskset -c $SECONDARY_CORES $GLIBC_BIN/box64 $GLIBC_BIN/wine explorer /desktop=shell,$RESOLUTION $PREFIX/glibc/opt/apps/f5taskmgr.exe &>/dev/null &
+
+sleep 2
+if [ "$STARTUP_WINEDEVICE_MODE" = "0" ]; then
+	$GLIBC_BIN/box64 $GLIBC_BIN/wine taskkill /f /im services.exe &>/dev/null &
+fi
+am start --user 0 -n com.termux.HomeActivity >/dev/null 2>&1 & 
+sleep 1
+echo "for more settings write xmnu"
+echo "Enter xx to stop"
+REBOOT=0
+while true; do
+if [ -e $PREFIX/glibc/opt/shutdown ]; then
+	rm -rf $PREFIX/glibc/opt/shutdown
+	$GLIBC_BIN/box64 $GLIBC_BIN/wineserver -k &>/dev/null
+kill -9 $(pgrep -f "termux.x11") &>/dev/null
+	break
+fi
+if [ -e $PREFIX/glibc/opt/setup ]; then
+	rm -rf $PREFIX/glibc/opt/setup
+export gameing=1
+xmnu
+	#break
+fi
+if [ -e $PREFIX/glibc/opt/reboot ]; then
+	rm -rf $PREFIX/glibc/opt/reboot
+	$GLIBC_BIN/box64 $GLIBC_BIN/wineserver -k &>/dev/null
+	REBOOT=1
+	break
+fi
+read -t 3 i
+case "$i" in
+xx)
+	$GLIBC_BIN/box64 $GLIBC_BIN/wineserver -k &>/dev/null
+kill -9 $(pgrep -f "termux.x11") &>/dev/null
+	break
+;;
+esac
+done
+
+export LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so
+stop-all
+
+if [ "$REBOOT" = "1" ]; then
+	exec $0
+fi

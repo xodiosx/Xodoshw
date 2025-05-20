@@ -6,7 +6,8 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <Button
+   
+ <Button
         android:id="@+id/BLaunch_item"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
@@ -16,7 +17,7 @@
         android:maxLines="1"
         android:textColor="@color/colorWhite"
         android:visibility="gone" />
-
+        
 <Button
     android:id="@+id/toggle_tool_box2"
     android:layout_width="wrap_content"
@@ -25,7 +26,7 @@
         android:padding="0dp"
         android:text="@string/toolbox_button_text2"
         android:maxLines="1"
-        android:textColor="@color/colorWhite"
+        android:textColor="#00FF56"
         android:visibility="visible" />
 
     <LinearLayout

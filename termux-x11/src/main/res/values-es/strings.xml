@@ -324,4 +324,5 @@
     <string name="enable_touch_screen">pantalla táctil</string>
     <string name="command">comando</string>
     <string name="title">título</string>
+      <string name="toolbox_button_text2">COMENZAR</string>
 </resources>

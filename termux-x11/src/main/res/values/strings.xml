@@ -329,4 +329,5 @@
     <string name="enable_touch_screen">touch screen</string>
     <string name="command">command</string>
     <string name="title">title</string>
+    <string name="toolbox_button_text2">START</string>
 </resources>

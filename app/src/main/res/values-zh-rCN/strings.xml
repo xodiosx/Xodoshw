@@ -145,26 +145,75 @@
 <string name="toolbox_backup">备份</string>
 <string name="toolbox_restore">安装/恢复 </string>
 <string name="toolbox_wine">Wine </string>
-<string name="choose_wine_env">选择Wine环境 🌐</string>
-<string name="wine_glibc">Wine Glibc 📚</string>
-<string name="wine_bionic">Wine Bionic ⚡</string>
+<string name="choose_wine_env">选择Wine环境</string>
+<string name="wine_glibc">Wine Glibc</string>
+<string name="wine_bionic">Wine Bionic</string>
 <string name="wine_glibc_missing">请先安装Wine Glibc! ⚠️</string>
 <string name="wine_bionic_missing">请先安装Wine Bionic! ⚠️</string>
+<string name="toolbox_wizard">快速设置</string>
 <string-array name="tutorial_steps">
-    <item>🐧 XoDos: 安卓设备上的极速原生Linux桌面</item>
-    <item>🧰 Proot: 以root权限运行完整Linux发行版</item>
-    <item>🔓 Kali Linux: 包含100+安全工具的渗透测试套件</item>
-    <item>🖥️ Wine Glibc: 支持大多数安卓设备的Windows模拟（非骁龙芯片请用VirGl）</item>
-    <item>⚙️ Wine Glibc: 原生驱动封装（非骁龙芯片请用Wrapper）</item>
-    <item>📂 Wine: 在此运行设备任意文件夹的EXE文件</item>
-    <item>🎮 Xbox模拟器: 使用Xemu玩原版Xbox游戏</item>
-    <item>⚙️ 设置: 配置Wine/DXVK/Box版本和系统驱动</item>
-    <item>🤖 AI聊天: 支持DeepSeek、Llama等100+模型的本地私有AI</item>
-    <item>🔄 恢复: 安装XoDos系统更新和Kali/Proot等系统</item>
-    <item>💾 备份: 一键全系统快照，方便传输/共享/恢复</item>
-    <item>🔄 切换: 在不同用户容器间切换</item>
-    <item>➕ 添加按钮: 为脚本/应用/Python创建快捷方式</item>
+    <item>XoDos🖥️：适用于 Android 的快速本地 Linux 桌面</item>
+    <item>Proot🐧：运行完整 Linux 系统，支持 root 权限</item>
+    <item>Kali🐉Linux：包含 100+ 安全工具的渗透测试套件</item>
+    <item>Wine🍷Glibc：支持大多数安卓设备的 Windows 模拟器（非 Snapdragon 使用 VirGl）</item>
+    <item>Wine🍷Bionic：使用原生驱动包装器的模拟器（非 Snapdragon 使用 wrapper）</item>
+    <item>Wine🍷：可从任意文件夹运行 EXE 文件</item>
+    <item>Xbox🎮模拟器：使用 Xemu 玩原版 Xbox 游戏</item>
+    <item>设置⚙️：配置 Wine/DXVK/Box 和系统驱动</item>
+    <item>AI🤖聊天：本地私有 AI 支持 DeepSeek、Llama 等</item>
+    <item>恢复♻️：安装 XoDos 更新和 Kali/Proot 等系统</item>
+    <item>备份📥：一键备份系统用于转移/恢复</item>
+    <item>快速设置🪄：帮助新手快速配置 Wine/Windows</item>
+    <item>切换👥：切换不同用户容器</item>
+    <item>添加按钮➕：创建脚本/应用/python 的快捷方式</item>
+<item>删除❌Wine🍷：彻底移除应用中的wine/windows⚠️以释放存储空间。</item>
 </string-array>
 <string name="next">下一步 ▶️</string>
 <string name="finish_tutorial">完成 🏁</string>
+<!-- Base Strings -->
+<!-- Wizard Dialog Titles -->
+<string name="modern_android_title">⚠️检测到现代Android系统</string>
+<string name="cpu_title">CPU类型</string>
+<string name="wine_title">Wine🍷类型</string>
+<string name="dxvk_title">选择DirectX封装器</string>
+<string name="driver_title">选择驱动程序</string>
+<string name="cores_title">CPU核心分配</string>
+<string name="wizard_complete_title">向导😁👌完成✅</string>
+<string name="error_title">错误</string>
+
+<!-- Wizard Messages -->
+<string name="modern_android_message">⚠️您的系统是Android 11或更高版本。\n\n为防止应用终止，请禁用🛑Phantom Process Killer：\n\n%s</string>
+<string name="cpu_message">您的CPU是什么？</string>
+<string name="wine_message">选择Wine🍷版本：</string>
+<string name="error_no_dxvk">%s中没有❌DXVK文件</string>
+<string name="error_no_driver">%s中没有❌驱动程序文件</string>
+<string name="wizard_complete_message">♻️xodwine.cfg已写入：\n%s\n\n现在运行Windows✅。</string>
+<string name="error_save_config">⚠️保存配置失败：\n%s</string>
+
+<!-- Buttons -->
+<string name="ok">OK</string>
+<string name="snapdragon">Snapdragon</string>
+<string name="other">其他</string>
+<string name="glibc">🍷glibc</string>
+<string name="bionic">🍷bionic</string>
+
+<!-- Core Options -->
+<string-array name="core_options">
+    <item>1核</item>
+    <item>2核</item>
+    <item>3核</item>
+    <item>4核</item>
+    <item>5核</item>
+    <item>6核</item>
+    <item>7核</item>
+    <item>8核</item>
+</string-array>
+<!-- Wine Cleaner -->
+<string name="clean_wine_title">请选择要删除的Wine</string>
+<string name="clean_wine_warning">警告 ⚠️ 这将永久删除❌Wine及其文件且无法恢复⚠️但会释放存储空间。继续吗？</string>
+<string name="delete_glibc">🗑️删除Glibc❌</string>
+<string name="delete_bionic">🗑️删除Bionic❌</string>
+<string name="toolbox_clean_wine">❌清理Wine</string>
+<string name="cleanup_completed">清理完成✅</string>
+<string name="cleanup_error">错误：%s</string>
 </resources>

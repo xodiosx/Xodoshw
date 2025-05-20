@@ -246,8 +246,6 @@ extractionProgressDialog.show();
 
 
 
-
-
     // Inside the try block after bootstrap installation:
 // --------------------------------------------
 // --------------------------------------------

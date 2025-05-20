@@ -17,6 +17,16 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 // Add with other imports
+// Add these imports at the top
+import static com.termux.shared.termux.TermuxConstants.TERMUX_FILES_DIR_PATH;
+import java.util.HashMap;
+import java.util.Map;
+
+
+import android.app.ProgressDialog;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
 import android.view.Window;
 import android.view.WindowManager;
 import android.content.DialogInterface;
@@ -39,6 +49,8 @@ import android.util.TypedValue;
 import android.text.TextUtils;
 import android.graphics.Typeface;
 //////////
+import android.os.Handler;
+import com.termux.app.XoDosWizard;
 
 import static com.termux.shared.termux.TermuxConstants.TERMUX_HOME_DIR_PATH;
 import org.json.JSONException;
@@ -69,6 +81,10 @@ private final Handler mHandler = new Handler();
 public static final int FILE_REQUEST_WINE_CODE = 1002;
 private int mTutorialStep = 0;
 private AlertDialog mTutorialDialog;
+// Add with other class members
+private ProgressDialog mRestoreProgressDialog;
+private boolean mRestoreInProgress = false;
+
 
 private PopupWindow mToolboxPopup;
 private GridLayout mToolboxGrid;
@@ -89,10 +105,169 @@ private View mConfigPopupContent;
 
     //// helper ////////
 // Add this method any
+private void showRestoreProgressDialog() {
+    mRestoreProgressDialog = new ProgressDialog(mTermuxActivity);
+    mRestoreProgressDialog.setTitle(" Installing,,,");
+    mRestoreProgressDialog.setMessage("Preparing...");
+    mRestoreProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+    mRestoreProgressDialog.setMax(100);
+    mRestoreProgressDialog.setCancelable(false);
+    mRestoreProgressDialog.show();
+    mRestoreInProgress = true;
+}
+
+
+// Add this method in the class
+private void handleRestoreError(Exception e) {
+    mTermuxActivity.runOnUiThread(() -> {
+        new AlertDialog.Builder(mTermuxActivity)
+            .setTitle("🚫 Error")
+            .setMessage(e.getMessage())
+            .setPositiveButton(android.R.string.ok, null)
+            .show();
+    });
+}
+
+
+private void dismissRestoreProgress() {
+    mTermuxActivity.runOnUiThread(() -> {
+        if(mRestoreProgressDialog != null && mRestoreProgressDialog.isShowing()) {
+            mRestoreProgressDialog.dismiss();
+        }
+        mRestoreInProgress = false;
+    });
+}
+
+public void handleRestoreBackup(Uri backupUri) {
+    new Thread(() -> {
+        File tempBackupFile = null;
+        try {
+            // Phase 1: Copy selected backup file with progress (0-50%)
+            updateRestoreProgress(0, "Loading archive file...");
+            tempBackupFile = copyBackupToTemp(backupUri);
+
+                 // Phase 2: Extract (50-100%)
+            updateRestoreProgress(50, "installing files...");
+            extractBackupFile(tempBackupFile);
+
+            // Show completion message for 2 seconds before closing
+            updateRestoreProgress(100, "✅complete!");
+            mTermuxActivity.runOnUiThread(() -> {
+                new Handler().postDelayed(() -> {
+                    if (mRestoreProgressDialog != null && mRestoreProgressDialog.isShowing()) {
+                    //// Exit the app completely
+                mTermuxActivity.finishAffinity();
+                System.exit(0);
+                
+                        mRestoreProgressDialog.dismiss();
+                    }
+                }, 3000); // 
+            });
+
+            
+        } catch (Exception e) {
+            handleRestoreError(e);
+        } finally {
+            if (tempBackupFile != null) tempBackupFile.delete();
+        }
+    }).start();
+}
+
+private File copyBackupToTemp(Uri backupUri) throws IOException {
+    File tempFile = new File(mTermuxActivity.getFilesDir(), "restore_temp.tar.xz");
+    
+    try (InputStream in = mTermuxActivity.getContentResolver().openInputStream(backupUri);
+         FileOutputStream out = new FileOutputStream(tempFile)) {
+        
+        // Same buffer size as installer (128KB)
+        byte[] buffer = new byte[1024 * 128];
+        long totalBytes = mTermuxActivity.getContentResolver()
+            .openAssetFileDescriptor(backupUri, "r").getLength();
+        long copiedBytes = 0;
+        
+        int bytesRead;
+        while ((bytesRead = in.read(buffer)) != -1) {
+            out.write(buffer, 0, bytesRead);
+            copiedBytes += bytesRead;
+            int progress = (int) ((copiedBytes * 50) / totalBytes);
+            updateRestoreProgress(progress, "📲Copying backup...");
+        }
+    }
+    return tempFile;
+}
+
+private void extractBackupFile(File backupFile) throws Exception {
+    // Same checkpoint calculation as original installer
+    long totalBytes = backupFile.length();
+    int bytesPerRecord = 512;
+    long totalRecords = (totalBytes + bytesPerRecord - 1) / bytesPerRecord;
+    int targetCheckpoints = 200;
+    int recordsPerCheckpoint = Math.max(1, (int) (totalRecords / targetCheckpoints));
+
+    // Identical environment setup
+    Map<String, String> env = new HashMap<>();
+    env.put("PATH", TERMUX_BIN_PREFIX_DIR_PATH + ":/system/bin");
+    env.put("LD_LIBRARY_PATH", TERMUX_BIN_PREFIX_DIR_PATH.replace("bin", "lib"));
+
+    // Mirror original installer's tar command
+ProcessBuilder processBuilder = new ProcessBuilder()
+    .command(
+        "sh", "-c",
+        TERMUX_BIN_PREFIX_DIR_PATH + "/tar -xf " + backupFile.getAbsolutePath() +
+        " -C " + TERMUX_FILES_DIR_PATH +
+        " --preserve-permissions" +
+        " --warning=no-file-ignored" +
+        " --checkpoint=" + recordsPerCheckpoint +
+        " --checkpoint-action=echo=CHECKPOINT" +
+        " --totals" +
+        " 2>&1"
+    )
+    .redirectErrorStream(true);
+
+// Set environment variables first
+processBuilder.environment().putAll(env);
+
+// Then start the process
+Process process = processBuilder.start();
+    // Same progress tracking logic
+    BufferedReader reader = new BufferedReader(
+        new InputStreamReader(process.getInputStream()));
+    
+    int checkpointCount = 0;
+    String line;
+    while ((line = reader.readLine()) != null) {
+        if (line.contains("CHECKPOINT")) {
+            checkpointCount++;
+            int progress = 50 + (int) ((checkpointCount * 50.0) / 50);
+            progress = Math.min(progress, 99);
+            updateRestoreProgress(progress, "Extracting: " + progress + "%");
+        }
+    }
+
+    int exitCode = process.waitFor();
+    if (exitCode != 0) {
+        throw new IOException("Restore failed (code " + exitCode + "). Possible causes:\n" +
+            "1. Corrupted backup file\n" +
+            "2. Insufficient storage\n" +
+            "3. Invalid file permissions");
+    }
+}
+
+// Progress update helper (keep UI thread safe)
+private void updateRestoreProgress(int progress, String message) {
+    mTermuxActivity.runOnUiThread(() -> {
+        if (mRestoreProgressDialog != null && mRestoreProgressDialog.isShowing()) {
+            mRestoreProgressDialog.setProgress(progress);
+            mRestoreProgressDialog.setMessage(message);
+        }
+    });
+}
+
 private void startTutorial() {
     mTutorialStep = 0;
     showTutorialStep();
 }
+
 
 private void showTutorialStep() {
     String[] steps = mTermuxActivity.getResources().getStringArray(R.array.tutorial_steps);
@@ -159,7 +334,9 @@ builder.setMessage(steps[mTutorialStep])
 
 
     // Highlight current button 
-    int[] highlightOrder = {0,1,2,3,4,5,6,7,8,9,10,11,12}; // Match your grid order
+    // Update highlightOrder
+int[] highlightOrder = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16}; 
+// 
     if(mTutorialStep < highlightOrder.length) {
         View targetButton = mToolboxGrid.getChildAt(highlightOrder[mTutorialStep]);
         targetButton.setBackgroundColor(Color.argb(150, 255, 165, 0)); // Orange overlay
@@ -366,6 +543,12 @@ layout.setBackgroundResource(R.drawable.button_press_effect);
 iv.setScaleType(ImageView.ScaleType.FIT_CENTER); // Add this for proper scaling
   
       switch(type) {
+      case "clean":
+    iv.setImageResource(R.drawable.idel); 
+    break;
+       case "wizard":
+    iv.setImageResource(R.drawable.iwiz); 
+    break;
       case "help":
     iv.setImageResource(R.drawable.ihelp); //
     break;
@@ -764,36 +947,63 @@ private void addSystemButtons() {
         setupToolboxPopup(); // Reinitialize if needed
     }
      
-// Xodos Button
-// addCommandButton
 
 // Xodos Button
+// Modified XoDos button with wizard launch
 LinearLayout xodosBtn = createToolboxButton("xodos", mTermuxActivity.getString(R.string.toolbox_xodos));
 xodosBtn.setOnClickListener(v -> {
+    // Immediate feedback
     showBlockingView();
-    mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write("/data/data/com.termux/files/usr/bin/xodos\n");
     mToolboxPopup.dismiss();
-    mHandler.postDelayed(() -> hideBlockingView(), 4000);
+        mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write("/data/data/com.termux/files/usr/bin/xodos\n");
+        // Start configuration wizard
+    // Delay before showing wizard
+    mHandler.postDelayed(() -> {
+        hideBlockingView();
+
+       // new XoDosWizard(mTermuxActivity).start();
+    }, 3000); // 2-second delay
 });
 mToolboxGrid.addView(xodosBtn);
 
 // Proot Button
 LinearLayout prootBtn = createToolboxButton("proot", mTermuxActivity.getString(R.string.toolbox_proot));
 prootBtn.setOnClickListener(v -> {
-    showBlockingView();
-    mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write("/data/data/com.termux/files/usr/bin/xodxd\n");
-    mToolboxPopup.dismiss();
-    mHandler.postDelayed(() -> hideBlockingView(), 4000);
+    new AlertDialog.Builder(mTermuxActivity)
+        .setTitle("Proot Options")
+        .setItems(new CharSequence[]{"With Root", "Without Root"}, (dialog, which) -> {
+            String command = (which == 0) 
+                ? "/data/data/com.termux/files/usr/bin/xodxd\n" 
+                : "/data/data/com.termux/files/usr/bin/xodxdu\n";
+            showBlockingView();
+            mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write(command);
+            mToolboxPopup.dismiss();
+            mHandler.postDelayed(() -> hideBlockingView(), 3000);
+        })
+        .setNegativeButton("Cancel", null)
+        .show();
 });
 mToolboxGrid.addView(prootBtn);
 
-// Kali Button 
+
+
+
+// Kali Button
 LinearLayout kaliBtn = createToolboxButton("kali", mTermuxActivity.getString(R.string.toolbox_kali));
 kaliBtn.setOnClickListener(v -> {
-    showBlockingView();
-    mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write("/data/data/com.termux/files/usr/bin/xkali\n");
-    mToolboxPopup.dismiss();
-    mHandler.postDelayed(() -> hideBlockingView(), 4000);
+    new AlertDialog.Builder(mTermuxActivity)
+        .setTitle("Kali Options")
+        .setItems(new CharSequence[]{"With Root", "Without Root"}, (dialog, which) -> {
+            String command = (which == 0) 
+                ? "/data/data/com.termux/files/usr/bin/kalir\n" 
+                : "/data/data/com.termux/files/usr/bin/kaliu\n";
+            showBlockingView();
+            mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write(command);
+            mToolboxPopup.dismiss();
+            mHandler.postDelayed(() -> hideBlockingView(), 4000);
+        })
+        .setNegativeButton("Cancel", null)
+        .show();
 });
 mToolboxGrid.addView(kaliBtn);
 
@@ -879,7 +1089,7 @@ xboxBtn.setOnClickListener(v -> {
     showBlockingView();
     mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write("/data/data/com.termux/files/usr/bin/xbox-z\n");
     mToolboxPopup.dismiss();
-    mHandler.postDelayed(() -> hideBlockingView(), 2000);
+    mHandler.postDelayed(() -> hideBlockingView(), 3000);
 });
 mToolboxGrid.addView(xboxBtn);
 
@@ -897,12 +1107,17 @@ mToolboxGrid.addView(settingsBtn);
 addCommandButton("ai", mTermuxActivity.getString(R.string.toolbox_ai), "/data/data/com.termux/files/usr/bin/xodai");
 
 // Restore Button
+// Update the restore button onClickListener in addSystemButtons()
 LinearLayout restoreBtn = createToolboxButton("restore", mTermuxActivity.getString(R.string.toolbox_restore));
 restoreBtn.setOnClickListener(v -> {
-    showBlockingView();
+    if(mRestoreInProgress) {
+        Toast.makeText(mTermuxActivity, " already in progress", Toast.LENGTH_SHORT).show();
+        return;
+    }
+    
+    showRestoreProgressDialog();
     launchRestoreFilePicker();
     mToolboxPopup.dismiss();
-    mHandler.postDelayed(() -> hideBlockingView(), 6000);
 });
 mToolboxGrid.addView(restoreBtn);
 
@@ -910,11 +1125,31 @@ mToolboxGrid.addView(restoreBtn);
 LinearLayout backupBtn = createToolboxButton("backup", mTermuxActivity.getString(R.string.toolbox_backup));
 backupBtn.setOnClickListener(v -> {
     showBlockingView();
+    Toast.makeText(mTermuxActivity, " backup system to phone,,", Toast.LENGTH_SHORT).show();
     mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write("tar -Jcf /sdcard/xodos-backup.tar.xz -C /data/data/com.termux/files ./home ./usr\n");
     mToolboxPopup.dismiss();
-    mHandler.postDelayed(() -> hideBlockingView(), 3000);
+    mHandler.postDelayed(() -> hideBlockingView(), 5000);
 });
 mToolboxGrid.addView(backupBtn);
+
+// wizard Button
+// addCommandButton
+LinearLayout wizardBtn = createToolboxButton("wizard", mTermuxActivity.getString(R.string.toolbox_wizard));
+wizardBtn.setOnClickListener(v -> {
+    // Immediate feedback
+    showBlockingView();
+    mToolboxPopup.dismiss();
+
+    // Delay before showing wizard
+    mHandler.postDelayed(() -> {
+            new XoDosWizard(mTermuxActivity).start();
+        hideBlockingView();
+     // mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write("/data/data/com.termux/files/usr/bin/xodos\n");
+        // Start configuration wizard
+
+    }, 1000); // 2-second delay
+});
+mToolboxGrid.addView(wizardBtn);
 
 // Switch Button
 LinearLayout switchBtn = createToolboxButton("switch", mTermuxActivity.getString(R.string.toolbox_switch));
@@ -934,6 +1169,11 @@ mToolboxGrid.addView(switchBtn);
     });
     mToolboxGrid.addView(addBtn);
   
+  // Add Clean Wine Button
+    LinearLayout cleanWineBtn = createToolboxButton("clean", mTermuxActivity.getString(R.string.toolbox_clean_wine));
+    cleanWineBtn.setOnClickListener(v -> showWineCleanDialog());
+    mToolboxGrid.addView(cleanWineBtn);
+
       // Help Button
 LinearLayout helpBtn = createToolboxButton("help", mTermuxActivity.getString(R.string.toolbox_help));
 helpBtn.setOnClickListener(v -> {
@@ -944,6 +1184,203 @@ mToolboxGrid.addView(helpBtn);
 }
 ////////////////
     
+private void showWineCleanDialog() {
+mToolboxPopup.dismiss();
+    new AlertDialog.Builder(mTermuxActivity)
+        .setTitle("What to remove?🗑️")
+        .setItems(new String[]{"Wine🍷", "Kali🐉", "Proot🐧"}, (dialog, which) -> {
+            switch(which) {
+                case 0: // Wine
+                    showWineSubOptions();
+                    break;
+                case 1: // Kali
+                    cleanKaliEnvironment();
+                    break;
+                case 2: // Proot
+                    showProotDistroSelection();
+                    break;
+            }
+        })
+        .setNegativeButton(android.R.string.cancel, null)
+        .show();
+}
+
+private void cleanKaliEnvironment() {
+    new Thread(() -> {
+        try {
+            String command = "rm -rf $HOME/chroot\n";
+            mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write(command);
+            
+            mHandler.post(() -> 
+                Toast.makeText(mTermuxActivity,
+                    "Kali chroot directory removed✅",
+                    Toast.LENGTH_SHORT).show()
+            );
+        } catch (Exception e) {
+            mHandler.post(() -> 
+                Toast.makeText(mTermuxActivity,
+                    "Error cleaning Kali❌: " + e.getMessage(),
+                    Toast.LENGTH_LONG).show()
+            );
+        }
+    }).start();
+}
+
+private void showProotDistroSelection() {
+    new Thread(() -> {
+        File prootRoot = new File(TERMUX_FILES_DIR_PATH + "/usr/var/lib/proot-distro/installed-rootfs");
+        final File[] distros = prootRoot.listFiles(File::isDirectory);
+
+        mTermuxActivity.runOnUiThread(() -> {
+            if (distros == null || distros.length == 0) {
+                Toast.makeText(mTermuxActivity, 
+                    "No proot distributions installed", 
+                    Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            String[] distroNames = new String[distros.length];
+            for (int i = 0; i < distros.length; i++) {
+                distroNames[i] = distros[i].getName();
+            }
+
+            new AlertDialog.Builder(mTermuxActivity)
+                .setTitle("Remove🗑️Proot🐧Distribution")
+                .setItems(distroNames, (dialog, which) -> {
+                    deleteProotDistro(distros[which]);
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+        });
+    }).start();
+}
+
+private void deleteProotDistro(File distroDir) {
+    new Thread(() -> {
+        try {
+            String deleteCommand = "rm -rf \"" + distroDir.getAbsolutePath() + "\"\n";
+            mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast().write(deleteCommand);
+
+            mHandler.post(() -> 
+                Toast.makeText(mTermuxActivity,
+                    "Removed✅: " + distroDir.getName(),
+                    Toast.LENGTH_SHORT).show()
+            );
+        } catch (Exception e) {
+            mHandler.post(() -> 
+                Toast.makeText(mTermuxActivity,
+                    "Error removing❌ " + distroDir.getName() + ": " + e.getMessage(),
+                    Toast.LENGTH_LONG).show()
+            );
+        }
+    }).start();
+}
+
+// Keep existing Wine cleanup dialog
+private void showWineSubOptions() {
+    new AlertDialog.Builder(mTermuxActivity)
+        .setTitle(R.string.clean_wine_title)
+        .setMessage(R.string.clean_wine_warning)
+        .setPositiveButton(R.string.delete_glibc, (d, w) -> cleanWineEnvironment(true))
+        .setNegativeButton(R.string.delete_bionic, (d, w) -> cleanWineEnvironment(false))
+        .show();
+}
+
+private void cleanWineEnvironment(boolean isGlibc) {
+    new Thread(() -> {
+        mTermuxActivity.runOnUiThread(() -> showBlockingView()); //
+        try {
+            String[] commands;
+            String prefix = "/data/data/com.termux/files/usr"; // Replace
+
+            if (isGlibc) {
+                // Check if $PREFIX/opt/wine exists
+                String checkWineCmd = "[ -d \"" + prefix + "/opt/wine\" ] && echo exists || echo missing";
+                Process process = Runtime.getRuntime().exec(new String[]{"sh", "-c", checkWineCmd});
+                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                String result = reader.readLine().trim();
+                reader.close();
+
+                if ("exists".equals(result)) {
+                    // Backup and restore Glibc libs
+                    commands = new String[]{
+                         "mkdir -p " + prefix + "/glibc2/opt/libs",
+                         "mkdir -p " + prefix + "/glibc2/opt/prefix",
+                        "mv " + prefix + "/glibc/opt/libs/d3d " + prefix + "/glibc2/opt/libs/d3d",
+                        "mv " + prefix + "/glibc/opt/prefix/d3d " + prefix + "/glibc2/opt/prefix/d3d",                    
+                         "rm -rf " + prefix + "/glibc/*",
+                          "mkdir -p " + prefix + "/glibc/opt/libs",
+                         "mkdir -p " + prefix + "/glibc/opt/prefix",
+                        "mv " + prefix + "/glibc2/opt/libs/d3d " + prefix + "/glibc/opt/libs/d3d",
+                        "mv " + prefix + "/glibc2/opt/prefix/d3d " + prefix + "/glibc/opt/prefix/d3d",                                           
+                        "rm -rf " + prefix + "/glibc2"
+                    };
+                } else {
+                    // Just remove Glibc contents
+                    commands = new String[]{
+                        "rm -rf " + prefix + "/glibc/*"
+                    };
+                }
+
+            } else {
+            // Check if $PREFIX/Glibc/bin exists
+                String checkWineCmd = "[ -d \"" + prefix + "/glibc/bin\" ] && echo exists || echo missing";
+                Process process = Runtime.getRuntime().exec(new String[]{"sh", "-c", checkWineCmd});
+                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                String result = reader.readLine().trim();
+                reader.close();
+
+                if ("exists".equals(result)) {
+                    // Remove wine environment
+                commands = new String[]{
+                    "rm -rf " + prefix + "/opt/wine",
+                    "rm -rf " + prefix + "/drivers/25",
+                    "rm -rf $HOME/.wine"
+                };
+                } else {
+                    // Just remove Glibc contents
+                    // Remove wine environment
+                commands = new String[]{
+                    "rm -rf " + prefix + "/opt/wine",
+                    "rm -rf " + prefix + "/drivers/25",
+                    "rm -rf $HOME/.wine",
+                    "rm -rf " + prefix + "/glibc/*"
+                };
+                }
+                
+            }
+
+            for (String cmd : commands) {
+                mTermuxTerminalSessionActivityClient.getCurrentStoredSessionOrLast()
+                    .write(cmd + "\n");
+                Thread.sleep(500);
+            }
+
+            mHandler.post(() ->
+                Toast.makeText(
+                    mTermuxActivity,
+                    R.string.cleanup_completed,
+                    Toast.LENGTH_SHORT
+                ).show()
+            );
+            mHandler.postDelayed(() -> 
+                mTermuxActivity.runOnUiThread(() -> hideBlockingView()), // Ensure UI update on main thread
+                1000
+            );
+
+        } catch (Exception e) {
+        mTermuxActivity.runOnUiThread(() -> hideBlockingView()); //
+            mHandler.post(() ->
+                Toast.makeText(
+                    mTermuxActivity,
+                    mTermuxActivity.getString(R.string.cleanup_error, e.getMessage()),
+                    Toast.LENGTH_LONG
+                ).show()
+            );
+        }
+    }).start();
+}
+
 
 private void executeEntry(StartEntry.Entry entry) {
     // Reuse existing launch logic from mLaunchButton's onClickListener
@@ -1004,9 +1441,3 @@ private void executeBackupCommand() {
     );
     }
 }
-
-
-
-//error building logs
-
-

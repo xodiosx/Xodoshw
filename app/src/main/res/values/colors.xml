@@ -16,7 +16,7 @@
 <color name="background_material_dark">@color/material_grey_850</color>
 <color name="background_material_light">@color/material_grey_50</color>
 <color name="black">#ff000000</color>
-<color name="blue_link_dark">#ff58a6ff</color>
+<color name="blue_link_dark">#00B2FF</color>
 <color name="blue_link_light">#ff0969da</color>
 <color name="bright_foreground_disabled_material_dark">#80ffffff</color>
 <color name="bright_foreground_disabled_material_light">#80000000</color>
@@ -358,7 +358,8 @@
 <color name="teal_700">#ff018786</color>
 <color name="tooltip_background_dark">#e6616161</color>
 <color name="tooltip_background_light">#ff310236</color>
-<color name="white">#ff6bffeb</color>
+<color name="white">#9458FD</color>
 <color name="window_background_color">#ff310236</color>
 <color name="colorblack">#ff000000</color>
+<color name="textColor">#FFFFFF</color>
 </resources>

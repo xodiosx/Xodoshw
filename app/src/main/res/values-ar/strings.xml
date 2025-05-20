@@ -248,26 +248,75 @@
 <string name="toolbox_backup">نسخة احتياطية</string>
 <string name="toolbox_restore">تثبيت/استعادة </string>
 <string name="toolbox_wine">واين </string>
-<string name="choose_wine_env">اختر بيئة واين 🌐</string>
-<string name="wine_glibc">واين جلِبك 📚</string>
-<string name="wine_bionic">واين بايونيك ⚡</string>
+<string name="choose_wine_env">اختر بيئة واين </string>
+<string name="wine_glibc">واين جلِبك </string>
+<string name="wine_bionic">واين بايونيك</string>
 <string name="wine_glibc_missing">الرجاء تثبيت واين جلِبك أولاً! ⚠️</string>
 <string name="wine_bionic_missing">الرجاء تثبيت واين بايونيك أولاً! ⚠️</string>
+<string name="toolbox_wizard">إعدادات سريعة</string>
 <string-array name="tutorial_steps">
-    <item>🐧 XoDos: سطح مكتب لينكس سريع لأجهزة أندرويد</item>
-    <item>🧰 Proot: تشغيل توزيعات لينكس كاملة مع صلاحيات root</item>
-    <item>🔓 Kali Linux: مجموعة اختبار الاختراق مع 100+ أداة</item>
-    <item>🖥️ Wine Glibc: محاكاة ويندوز لأغلب الأجهزة (استخدم VirGl لغير سنابدراجون)</item>
-    <item>⚙️ Wine Glibc: محاكاة مع تغليف درايفرز أصلية</item>
-    <item>📂 Wine: شغّل ملفات EXE من أي مجلد على جهازك</item>
-    <item>🎮 محاكي Xbox: العب ألعاب Xbox الأصلية باستخدام Xemu</item>
-    <item>⚙️ الإعدادات: اضبط إصدارات Wine/DXVK/Box والدرايفرز</item>
-    <item>🤖 الدردشة الذكية: ذكاء اصطناعي خاص يدعم DeepSeek و100+ نموذج</item>
-    <item>🔄 الاستعادة: ثبّت تحديثات XoDos وأنظمة مثل Kali/Proot</item>
-    <item>💾 النسخ الاحتياطي: لقطة كاملة للنظام بنقرة واحدة</item>
-    <item>🔄 التبديل: انتقل بين حاويات المستخدمين</item>
-    <item>➕ إضافة زر: أنشئ اختصارات للبرامج النصية/التطبيقات</item>
+    <item>XoDos🖥️: سطح مكتب Linux سريع يعمل على Android</item>
+    <item>Proot🐧: تشغيل توزيعات Linux كاملة بحقوق root</item>
+    <item>Kali🐉Linux: أدوات اختبار اختراق مع أكثر من 100 أداة أمان</item>
+    <item>Wine🍷Glibc: محاكي Windows لمعظم أجهزة Android (إن لم يكن Snapdragon استخدم VirGl)</item>
+    <item>Wine🍷Bionic: محاكي Windows مع دعم السواقات الأصلية (إن لم يكن Snapdragon استخدم wrapper)</item>
+    <item>Wine🍷: شغل ملفات EXE من أي مجلد</item>
+    <item>محاكي Xbox🎮: العب ألعاب Xbox الأصلية باستخدام Xemu</item>
+    <item>الإعدادات⚙️: تكوين Wine/DXVK/Box والسواقات</item>
+    <item>دردشة AI🤖: ذكاء اصطناعي محلي خاص يدعم DeepSeek وLlama وأكثر</item>
+    <item>استعادة♻️: تثبيت تحديثات XoDos وأنظمة أخرى مثل Kali/Proot</item>
+    <item>نسخ احتياطي📥: نسخة كاملة للنظام للاستعادة/النقل</item>
+    <item>إعدادات سريعة🪄: تسهّل إعداد Wine/Windows للمبتدئين</item>
+    <item>تبديل👥: التبديل بين حاويات المستخدمين المختلفة</item>
+    <item>إضافة زر➕: إنشاء اختصارات للسكريبتات/التطبيقات/python</item>
+<item>احذف❌Wine🍷: إزالة wine/windows تمامًا من التطبيق⚠️لمساحة تخزين أكبر.</item>
 </string-array>
 <string name="next">التالي ▶️</string>
 <string name="finish_tutorial">إنهاء 🏁</string>
+<!-- Base Strings -->
+<!-- Wizard Dialog Titles -->
+<string name="modern_android_title">⚠️تم الكشف عن أندرويد حديث</string>
+<string name="cpu_title">نوع المعالج</string>
+<string name="wine_title">نوع Wine🍷</string>
+<string name="dxvk_title">اختر غلاف DirectX</string>
+<string name="driver_title">اختر السائق</string>
+<string name="cores_title">تخصيص نوى المعالج</string>
+<string name="wizard_complete_title">اكتمل المعالج😁👌✅</string>
+<string name="error_title">خطأ</string>
+
+<!-- Wizard Messages -->
+<string name="modern_android_message">⚠️نظامك أندرويد 11 أو أحدث.\n\nلتفادي إغلاق التطبيق، عطّل🛑Phantom Process Killer:\n\n%s</string>
+<string name="cpu_message">ما هو معالجك؟</string>
+<string name="wine_message">اختر نسخة Wine🍷:</string>
+<string name="error_no_dxvk">لا توجد❌ملفات DXVK في %s</string>
+<string name="error_no_driver">لا توجد❌ملفات سائق في %s</string>
+<string name="wizard_complete_message">♻️تم كتابة xodwine.cfg في:\n%s\n\nشغّل Windows الآن ✅.</string>
+<string name="error_save_config">⚠️فشل حفظ الإعدادات:\n%s</string>
+
+<!-- Buttons -->
+<string name="ok">موافق</string>
+<string name="snapdragon">Snapdragon</string>
+<string name="other">أخرى</string>
+<string name="glibc">🍷glibc</string>
+<string name="bionic">🍷bionic</string>
+
+<!-- Core Options -->
+<string-array name="core_options">
+    <item>1 نواة</item>
+    <item>2 نواتين</item>
+    <item>3 نوى</item>
+    <item>4 نوى</item>
+    <item>5 نوى</item>
+    <item>6 نوى</item>
+    <item>7 نوى</item>
+    <item>8 نوى</item>
+</string-array>
+<!-- Wine Cleaner -->
+<string name="clean_wine_title">الرجاء تحديد Wine للحذف</string>
+<string name="clean_wine_warning">تحذير ⚠️ سيؤدي هذا إلى إزالة❌Wine وملفاته نهائيًا ولن يتم استعادتها.⚠️لكنه سيحرر مساحة. هل تتابع؟</string>
+<string name="delete_glibc">🗑️احذف Glibc❌</string>
+<string name="delete_bionic">🗑️احذف Bionic❌</string>
+<string name="toolbox_clean_wine">❌تنظيف Wine</string>
+<string name="cleanup_completed">اكتمل التنظيف✅</string>
+<string name="cleanup_error">خطأ: %s</string>
 </resources>

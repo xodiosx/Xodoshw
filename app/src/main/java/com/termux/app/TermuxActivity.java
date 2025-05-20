@@ -1,5 +1,6 @@
 package com.termux.app;
 // ======== Imports ========
+
 import android.Manifest;
 import androidx.core.content.ContextCompat;
 import androidx.core.app.ActivityCompat;
@@ -1190,6 +1191,15 @@ private boolean hasStoragePermissions() {
         mStartEntryClient.handleWineFile(uri);
     }
 }
+
+// In Activity's 
+if (requestCode == FILE_REQUEST_BACKUP_CODE && resultCode == RESULT_OK) {
+    Uri uri = data.getData();
+    mStartEntryClient.handleRestoreBackup(uri);
+}
+
+
+
         if (requestCode == FILE_REQUEST_BACKUP_CODE) {
             onRequestLoadBackFile(requestCode, resultCode, data);
         }
@@ -1253,7 +1263,7 @@ String commandPrefix = new File(getFilesDir(), "home/storage").exists() ?
             Toast.makeText(this, "Restore failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
         });
     }
-}).start();
+});
 }
         }
     @Override

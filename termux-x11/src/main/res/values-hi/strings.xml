@@ -322,4 +322,5 @@
     <string name="enable_touch_screen">टच स्क्रीन</string>
     <string name="command">कमांड</string>
     <string name="title">शीर्षक</string>
+    <string name="toolbox_button_text2">शुरू</string>
 </resources>

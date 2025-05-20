@@ -325,4 +325,5 @@
     <string name="enable_touch_screen">شاشة اللمس</string>
     <string name="command">الأمر</string>
     <string name="title">العنوان</string>
+    <string name="toolbox_button_text2">أبدأ</string>
 </resources>
