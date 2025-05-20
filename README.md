@@ -52,7 +52,16 @@ git clone -b main https://github.com/xodiosx/XoDos && cd XoDos && git submodule 
       <br />
       <br />
       if you like this project you can give it a Star And if you want to modify it clone it and build
-    <a href="https://youtu.be/LcR6FxXrvCQ?si=SVeiMK82GokjjrjQ"><strong> XoDos GitHub</strong></a>
+      if you have android higher than 11 you need to disable phantom process killer first 
+fix phantom process killer or process complete signal 9 error
+command used::
+```
+settings put global settings_enable_monitor_phantom_procs false
+```
+the fixing app link 👇
+https://drive.google.com/file/d/14Z57iKidS0aiwVt2e4edjsMGeeykAJ0W/view?usp=drivesdk
+      <br />
+    <a href="https://youtube.com/shorts/5vOUHn_qvis?si=UkQq6aZV8SVtECwq"><strong>Phantom killer Fix video</strong></a>
       <br />
     <br />
     <a href="https://sites.google.com/view/xodos/home"><strong>showcase & telegram</strong></a>
