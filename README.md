@@ -54,6 +54,7 @@ git clone -b main https://github.com/xodiosx/XoDos && cd XoDos && git submodule 
       if you like this project you can give it a💫Star⚠️And if XoDos crashing⁉️and if you have android higher than 11+👇you need to disable phantom process killer first 
 fix phantom process killer or process complete signal 9 error
 command used::
+      
 ```
 settings put global settings_enable_monitor_phantom_procs false
 ```
