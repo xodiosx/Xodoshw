@@ -51,8 +51,7 @@ git clone -b main https://github.com/xodiosx/XoDos && cd XoDos && git submodule 
     <a href="https://youtu.be/iY-NcRbcofo?si=t2qnuzIf618Of8Zi"><strong>installing XoDos 5 YouTube video</strong></a>
       <br />
       <br />
-      if you like this project you can give it a Star And if you want to modify it clone it and build
-      if you have android higher than 11 you need to disable phantom process killer first 
+      if you like this project you can give it a Star And if XoDos crashing and if you have android higher than 11 you need to disable phantom process killer first 
 fix phantom process killer or process complete signal 9 error
 command used::
 ```
