@@ -87,13 +87,12 @@ Vulkan wrappers
 DXVK
 wineD3D
 box64
-and everything needed to run wherever you want,,
+and everything needed to run whatever & wherever you want,,
 
 below Are the vailable versions,,
 
-XoDos 3.4 glibc ::
-XoDos 4 bionic ::
-XoDos V5 glibc/bionic (soon)
+XoDos 5  ::
+XoDos V5.1.0 glibc/bionic
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
