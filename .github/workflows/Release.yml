@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version_tag:
-        description: 'Version tag (5.3.0)'
+        description: 'Version tag (e.g., 5.1.0.full)'
         required: true
         default: '5.3.0'
 
@@ -14,6 +14,12 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      APK_ID: "15bBGWXjNJ0ZG8FwTq76wzh3ZeGK3pszF"      
+      FILE1: "14EDDKYuuoTftTIKPJY2cy8-GxUXlDrjt"
+      FILE2: "15JS8dyk2CvSXokByMIMokarDJeamtNYS"
+      FILE3: "15-5YM8f541BdxxuWRyYU1CBiAaSzogEs"
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -25,25 +31,40 @@ jobs:
           git tag ${{ github.event.inputs.version_tag }}
           git push origin ${{ github.event.inputs.version_tag }}
 
-      - name: Download Main APK
-        run: |
-          pip install gdown
-          gdown "15bBGWXjNJ0ZG8FwTq76wzh3ZeGK3pszF" -O XoDos-${{ github.event.inputs.version_tag }}-full_arm64-v8a.apk || exit 1
+      - name: Install gdown
+        run: pip install gdown --quiet
 
-      - name: Download Additional File
+      - name: Download Files
         run: |
-          gdown "14EDDKYuuoTftTIKPJY2cy8-GxUXlDrjt" -O XoDos-debian.tar.xz || exit 1
+          mkdir downloads && cd downloads
 
-      - name: Create Release with Both Files
+          # Helper function
+          download_and_log() {
+            echo "Downloading: $1"
+            gdown --fuzzy "https://drive.google.com/uc?id=$1" || exit 1
+          }
+
+          download_and_log "$APK_ID"
+          download_and_log "$FILE1"
+          download_and_log "$FILE2"
+          download_and_log "$FILE3"
+        
+
+          echo "Downloaded files:"
+          ls -lh
+
+          # Rename APK for clarity
+          for file in *.apk; do
+            mv "$file" "XoDos-${{ github.event.inputs.version_tag }}-full_arm64-v8a.apk"
+          done
+
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.event.inputs.version_tag }}
-          name: XoDos ${{ github.event.inputs.version_tag }}
-          files: |
-            XoDos-${{ github.event.inputs.version_tag }}-full_arm64-v8a.apk
-            XoDos-debian.tar.xz
+          files: downloads/*
           body: | 
             New Exodus release for arm64
             What's new?
@@ -51,15 +72,21 @@ jobs:
             - Added More features for easier usage
             - Added information about android device in terminal
             - And More
-            
-            For best experience download the full version APK (1.6 GB) with Bionic and Glibc wine pre-installed
-            
+
+            For best experience download the full version APK (1.6+ GB) with Bionic and Glibc wine pre-installed
+
             **Credits:**
-            Team: @Xodios🇾🇪 & @DevArys🇨🇴 & @Mondo_Lambert🇲🇫 & @Aurora0y🇧🇷 & @Chest1902🇧🇩 & jiaxinchen 🇨🇳 & @Snap888🇷🇺
+            Team: @Xodios🇾🇪 & @DevArys🇨🇴 & @Mondo_Lambert🇲🇫 & @Aurora0y🇧🇷 & @Chest1902🇧🇩 & jiaxinchen 🇨🇳 & @Snap888🇷🇺  
             Logo designer: @xl_v6/ashen🇮🇶
-            
+
             **Support:**
-            Telegram: https://t.me/xodemulatorr
+            Telegram: https://t.me/xodemulatorr  
             Discord: https://discord.gg/d2ChVhPfnF
-            
+
             Thank you for choosing XoDos by xodios M.aleiw
+            
+            
+            
+            error
+            Invalid workflow file
+You have an error in your yaml syntax on line 23
