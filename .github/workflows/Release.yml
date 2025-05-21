@@ -4,12 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       version_tag:
-        description: 'Version tag (v5.3.0)'
+        description: 'Version tag (5.3.0)'
         required: true
-        default: 'v5.3.0'
+        default: '5.3.0'
 
 permissions:
   contents: write
+  workflows: write  # Required for tag operations
 
 jobs:
   build:
@@ -17,6 +18,9 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Required for tag operations
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create Git Tag
         run: |
@@ -47,15 +51,12 @@ jobs:
           body: | 
             New XoDos release for arm64
             What's new?
-            - Changed and fixed UI
-            - Added More features for easier usage
-            - Added information about android device in terminal
-            - And More
+            - 
             
-            For best experience download the full version APK (1.6 GB) with Bionic and Glibc wine pre-installed
+            For best experience download the full version APK (1.7 GB) with Bionic and Glibc wine pre-installed
             
             **Credits:**
-            Team: @Xodios🇾🇪 & @DevArys🇨🇴 & @Mondo_Lambert🇲🇫 & @Aurora0y🇧🇷 & @Chest1902🇧🇩 & jiaxinchen 🇨🇳 & @Snap888🇷🇺
+            Team: @xodiosx🇾🇪 & @DevArys🇨🇴 & @Mondo67244🇲🇫 & @Aurora0y🇧🇷 & @Chest1902🇧🇩 & @jiaxinchen-max 🇨🇳  & @Snap888🇷🇺
             Logo designer: @xl_v6/ashen🇮🇶
             
             **Support:**
