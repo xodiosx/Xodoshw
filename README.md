@@ -21,19 +21,16 @@ it's a fully fledged X server with termux and winlator touch controls together i
 This repo uses submodules. Use 
 
 ```
-~ $ git clone --recurse-submodules https://github.com/xodiosx/XoDos
-```
-or
-```
 ~ $ git clone https://github.com/xodiosx/XoDos
 ~ $ cd XoDos
 ~ $ git submodule update --init --recursive
 ```
 
-or build app
+or build app you can Use any command tools even useing XoDos itself inside proot environmental to build , useing this command 👇
 ```
 git clone -b main https://github.com/xodiosx/XoDos && cd XoDos && git submodule update --init --recursive && ./gradlew syncDebugJarLibs && ./gradlew assembleDebug
 ```
+
   <p align="center">
     windows and Linux emulator for Android it aims to run windows and Linux games and Apps on android with x86_64 and glibc and bionic wine builds and Linux debain proot and Kali operating system installable with pre installed small native Linux xfce4 desktop 
         <br />
