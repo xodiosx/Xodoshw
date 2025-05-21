@@ -32,7 +32,7 @@ jobs:
 
       - name: Download Additional File
         run: |
-          gdown "14EDDKYuuoTftTIKPJY2cy8-GxUXlDrjt" -O XoDos-debian.tar.xz || exit 1
+          gdown "14EDDKYuuoTftTIKPJY2cy8-GxUXlDrjt" -O XoDos-ubuntu.tar.xz || exit 1
 
       - name: Create Release with Both Files
         uses: softprops/action-gh-release@v1
@@ -45,11 +45,14 @@ jobs:
             XoDos-${{ github.event.inputs.version_tag }}-full_arm64-v8a.apk
             XoDos-debian.tar.xz
           body: | 
-            New XoDos Full release for arm64
+            New XoDos release for arm64
             What's new?
+            - Changed and fixed UI
+            - Added More features for easier usage
+            - Added information about android device in terminal
+            - And More
             
-            
-            For best experience download the full version APK (1.7 GB) with Bionic and Glibc wine pre-installed
+            For best experience download the full version APK (1.6 GB) with Bionic and Glibc wine pre-installed
             
             **Credits:**
             Team: @Xodios🇾🇪 & @DevArys🇨🇴 & @Mondo_Lambert🇲🇫 & @Aurora0y🇧🇷 & @Chest1902🇧🇩 & jiaxinchen 🇨🇳 & @Snap888🇷🇺
@@ -59,4 +62,4 @@ jobs:
             Telegram: https://t.me/xodemulatorr
             Discord: https://discord.gg/d2ChVhPfnF
             
-            Thank you for choosing XoDos by xodios M.aleiw￼Enter
+            Thank you for choosing XoDos by xodios M.aleiw
