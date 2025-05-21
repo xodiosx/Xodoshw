@@ -14,13 +14,15 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      APK_ID: "15bBGWXjNJ0ZG8FwTq76wzh3ZeGK3pszF"      
-      FILE1: "14EDDKYuuoTftTIKPJY2cy8-GxUXlDrjt"
-      FILE2: "15JS8dyk2CvSXokByMIMokarDJeamtNYS"
-      FILE3: "15-5YM8f541BdxxuWRyYU1CBiAaSzogEs"
-
     steps:
+      - name: Set environment variables
+        run: echo "Setting vars"
+        env:
+          APK_ID: "15bBGWXjNJ0ZG8FwTq76wzh3ZeGK3pszF"
+          FILE1: "14EDDKYuuoTftTIKPJY2cy8-GxUXlDrjt"
+          FILE2: "15JS8dyk2CvSXokByMIMokarDJeamtNYS"
+          FILE3: "15-5YM8f541BdxxuWRyYU1CBiAaSzogEs"
+
       - name: Checkout Code
         uses: actions/checkout@v4
 
@@ -38,6 +40,12 @@ jobs:
         run: |
           mkdir downloads && cd downloads
 
+          # Define file IDs as bash vars
+          APK_ID="15bBGWXjNJ0ZG8FwTq76wzh3ZeGK3pszF"
+          FILE1="14EDDKYuuoTftTIKPJY2cy8-GxUXlDrjt"
+          FILE2="15JS8dyk2CvSXokByMIMokarDJeamtNYS"
+          FILE3="15-5YM8f541BdxxuWRyYU1CBiAaSzogEs"
+
           # Helper function
           download_and_log() {
             echo "Downloading: $1"
@@ -48,12 +56,11 @@ jobs:
           download_and_log "$FILE1"
           download_and_log "$FILE2"
           download_and_log "$FILE3"
-        
 
           echo "Downloaded files:"
           ls -lh
 
-          # Rename APK for clarity
+          # Rename APK
           for file in *.apk; do
             mv "$file" "XoDos-${{ github.event.inputs.version_tag }}-full_arm64-v8a.apk"
           done
@@ -83,4 +90,4 @@ jobs:
             Telegram: https://t.me/xodemulatorr  
             Discord: https://discord.gg/d2ChVhPfnF
 
-            Thank you for choosing XoDos by xodios M.alei
+            Thank you for choosing XoDos by xodios M.aleiw
