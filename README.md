@@ -130,14 +130,13 @@ XoDos V5.1.0 glibc/bionic
 
 <!-- CONTRIBUTING -->
 
-## ❤️ Support XoDos
+## ☕ buy me a coffee ☕
 <a id="support"></a> <!-- Anchor for funding button -->
-## ❤️ Support This Project To grow
+## ❤️ Support This Project To grow ❤️
 
 **USDT (Polygon Network Only):**  
 ```0x046ac894C15fcC88D492835445938291c00DD0a7```
 
-[Verify Address](https://polygonscan.com/address/0x046ac894C15fcC88D492835445938291c00DD0a7)  
 *⚠️ Only send via Polygon network*
 
 <!-- LICENSE -->
