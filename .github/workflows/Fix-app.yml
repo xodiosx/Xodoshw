@@ -1,1 +1,63 @@
 
+name: Upload XoDos Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_tag:
+        description: 'Version tag (fix-5.3.0)'
+        required: true
+        default: 'fix-5.3.0'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Git Tag
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git tag ${{ github.event.inputs.version_tag }}
+          git push origin ${{ github.event.inputs.version_tag }}
+
+      - name: Download Main APK
+        run: |
+          pip install gdown
+          gdown "17X7CM8kNUow0f_NTb20bX87fbeieFiCr" -O Fix-Phantom-killer.apk || exit 1
+
+      
+      - name: Create Release with Both Files
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.event.inputs.version_tag }}
+          name: XoDos ${{ github.event.inputs.version_tag }}
+          files: |
+            Fix-Phantom-killer.apk
+          body: | 
+            New fix phantom process killer for Android 11+
+            What's new?
+            - easy App to disable phantom process killer 
+            or the error message from termux and XoDos Saying process complete signal 9
+            that close the app randomly after some time
+            
+            **Credits:**
+            Team: @xodiosx🇾🇪 & @DevArys🇨🇴 & @Mondo67244🇲🇫 & @Aurora0y🇧🇷 & @Chest1902🇧🇩 & @jiaxinchen-max 🇨🇳  & @Snap888🇷🇺
+            Logo designer: @xl_v6/ashen🇮🇶
+            phantom-fix idea 💡:vmos-vm🇨🇳 & Rafat🇮🇶
+            
+            **Support:**
+            Telegram: https://t.me/xodemulatorr
+            Discord: https://discord.gg/d2ChVhPfnF
+            
+            Thank you for choosing XoDos by xodios M.aleiw
