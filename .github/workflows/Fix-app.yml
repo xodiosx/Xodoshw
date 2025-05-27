@@ -1,5 +1,5 @@
 
-name: Upload XoDos Release
+name:  XoDos full Release
 
 on:
   workflow_dispatch:
