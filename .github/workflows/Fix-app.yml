@@ -5,9 +5,9 @@ on:
   workflow_dispatch:
     inputs:
       version_tag:
-        description: 'Version tag (5.4.0.r1)'
+        description: 'Version tag (5.4.0)'
         required: true
-        default: '5.4.0.r1'
+        default: '5.4.0'
 
 permissions:
   contents: write
@@ -32,7 +32,7 @@ jobs:
       - name: Download Main APK
         run: |
           pip install gdown
-          gdown "17X7CM8kNUow0f_NTb20bX87fbeieFiCr" -O Fix-Phantom-killer.apk || exit 1
+          gdown "17YNl7AnlPTK727lrhcoZpeYbkJzZxCwu" -O XoDos-${{ github.event.inputs.version_tag }}-full_arm64-v8a.apk || exit 1
 
       
       - name: Create Release with Both Files
@@ -43,18 +43,19 @@ jobs:
           tag_name: ${{ github.event.inputs.version_tag }}
           name: XoDos ${{ github.event.inputs.version_tag }}
           files: |
-            XoDos-5.4.0-full-arm64.apk
+            XoDos-${{ github.event.inputs.version_tag }}-full_arm64-v8a.apk
           body: | 
-           **New XoDos Emulator arm64**
+           **XoDos Emulator arm64**
+           Windows and Linux Emulator
             What's new?
-            - 
+            - loading
             
             **Credits:**
-            Team: @xodiosx🇾🇪 & @DevArys🇨🇴 & @Mondo67244🇲🇫 & @Aurora0y🇧🇷 & @Chest1902🇧🇩 & @jiaxinchen-max 🇨🇳  & @Snap888🇷🇺
+            Team: @xodiosx🇾🇪 & @DevArys🇨🇴 & @Mondo67244🇲🇫 & @Aurora0y🇧🇷 & @Chest1902🇧🇩 & @jiaxinchen-max🇨🇳 & @Snap888🇷🇺
             Logo designer: @xl_v6/ashen🇮🇶
             
             
-            **Support:**
+            **help and support:**
             Telegram: https://t.me/xodemulatorr
             Discord: https://discord.gg/d2ChVhPfnF
             
