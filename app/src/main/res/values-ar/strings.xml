@@ -253,6 +253,8 @@
 <string name="wine_bionic">واين بايونيك</string>
 <string name="wine_glibc_missing">الرجاء تثبيت واين جلِبك أولاً! ⚠️</string>
 <string name="wine_bionic_missing">الرجاء تثبيت واين بايونيك أولاً! ⚠️</string>
+<string name="toolbox_update">تحديث</string>
+<string name="toolbox_clean_wine">❌تنظيف Wine</string>
 <string name="toolbox_wizard">إعدادات سريعة</string>
 <string-array name="tutorial_steps">
     <item>XoDos🖥️: سطح مكتب Linux سريع يعمل على Android</item>
@@ -269,39 +271,34 @@
     <item>إعدادات سريعة🪄: تسهّل إعداد Wine/Windows للمبتدئين</item>
     <item>تبديل👥: التبديل بين حاويات المستخدمين المختلفة</item>
     <item>إضافة زر➕: إنشاء اختصارات للسكريبتات/التطبيقات/python</item>
-<item>احذف❌Wine🍷: إزالة wine/windows تمامًا من التطبيق⚠️لمساحة تخزين أكبر.</item>
-</string-array>
-<string name="next">التالي ▶️</string>
-<string name="finish_tutorial">إنهاء 🏁</string>
-<!-- Base Strings -->
-<!-- Wizard Dialog Titles -->
-<string name="modern_android_title">⚠️تم الكشف عن أندرويد حديث</string>
-<string name="cpu_title">نوع المعالج</string>
-<string name="wine_title">نوع Wine🍷</string>
-<string name="dxvk_title">اختر غلاف DirectX</string>
-<string name="driver_title">اختر السائق</string>
-<string name="cores_title">تخصيص نوى المعالج</string>
-<string name="wizard_complete_title">اكتمل المعالج😁👌✅</string>
-<string name="error_title">خطأ</string>
+    <item>تحديث⏫: تثبيت التحديثات دون فقدان البيانات أو إعادة تثبيت النظام. يساعد على إصلاح الأخطاء</item>
+    <item>حذف❌Wine🍷: إزالة Wine/Windows نهائياً من التطبيق⚠️لتحرير مساحة</item>
+  </string-array>
 
-<!-- Wizard Messages -->
-<string name="modern_android_message">⚠️نظامك أندرويد 11 أو أحدث.\n\nلتفادي إغلاق التطبيق، عطّل🛑Phantom Process Killer:\n\n%s</string>
-<string name="cpu_message">ما هو معالجك؟</string>
-<string name="wine_message">اختر نسخة Wine🍷:</string>
-<string name="error_no_dxvk">لا توجد❌ملفات DXVK في %s</string>
-<string name="error_no_driver">لا توجد❌ملفات سائق في %s</string>
-<string name="wizard_complete_message">♻️تم كتابة xodwine.cfg في:\n%s\n\nشغّل Windows الآن ✅.</string>
-<string name="error_save_config">⚠️فشل حفظ الإعدادات:\n%s</string>
-
-<!-- Buttons -->
-<string name="ok">موافق</string>
-<string name="snapdragon">Snapdragon</string>
-<string name="other">أخرى</string>
-<string name="glibc">🍷glibc</string>
-<string name="bionic">🍷bionic</string>
-
-<!-- Core Options -->
-<string-array name="core_options">
+  <string name="next">التالي</string>
+  <string name="finish_tutorial">إنهاء</string>
+  <string name="modern_android_title">⚠️تم اكتشاف أندرويد حديث</string>
+  <string name="cpu_title">نوع المعالج</string>
+  <string name="wine_title">نوع Wine🍷</string>
+  <string name="dxvk_title">اختر غلاف DirectX</string>
+  <string name="driver_title">اختر برنامج التشغيل</string>
+  <string name="cores_title">تخصيص نوى المعالج</string>
+  <string name="wizard_complete_title">اكتمل😁👌الإعداد✅</string>
+  <string name="error_title">خطأ</string>
+  <string name="modern_android_message">⚠️نظامك أندرويد 11 أو أعلى.\n\nلمنع إغلاق التطبيق، عطِّل🛑Phantom Process Killer:\n\n%s</string>
+  <string name="cpu_message">ما هو نوع معالجك؟</string>
+  <string name="wine_message">اختر إصدار Wine🍷:</string>
+  <string name="error_no_dxvk">لا توجد❌ملفات DXVK في %s</string>
+  <string name="error_no_driver">لا توجد❌ملفات برنامج تشغيل في %s</string>
+  <string name="wizard_complete_message">♻️تم حفظ xodwine.cfg في:\n%s\n\nتشغيل Windows الآن✅.</string>
+  <string name="error_save_config">⚠️فشل حفظ الإعدادات:\n%s</string>
+  <string name="ok">موافق</string>
+  <string name="snapdragon">Snapdragon</string>
+  <string name="other">أخرى</string>
+  <string name="glibc">🍷glibc</string>
+  <string name="bionic">🍷bionic</string>
+  
+  <string-array name="core_options">
     <item>1 نواة</item>
     <item>2 نواتين</item>
     <item>3 نوى</item>
@@ -310,13 +307,25 @@
     <item>6 نوى</item>
     <item>7 نوى</item>
     <item>8 نوى</item>
-</string-array>
-<!-- Wine Cleaner -->
-<string name="clean_wine_title">الرجاء تحديد Wine للحذف</string>
-<string name="clean_wine_warning">تحذير ⚠️ سيؤدي هذا إلى إزالة❌Wine وملفاته نهائيًا ولن يتم استعادتها.⚠️لكنه سيحرر مساحة. هل تتابع؟</string>
-<string name="delete_glibc">🗑️احذف Glibc❌</string>
-<string name="delete_bionic">🗑️احذف Bionic❌</string>
-<string name="toolbox_clean_wine">❌تنظيف Wine</string>
-<string name="cleanup_completed">اكتمل التنظيف✅</string>
-<string name="cleanup_error">خطأ: %s</string>
+  </string-array>
+
+  <string name="clean_wine_title">اختر Wine للحذف</string>
+  <string name="clean_wine_warning">تحذير ⚠️ سيحذف❌Wine وملفاته نهائياً من التطبيق.⚠️سيحرر مساحة. متابعة؟</string>
+  <string name="delete_glibc">🗑️حذف Glibc❌</string>
+  <string name="delete_bionic">🗑️حذف Bionic❌</string>
+  <string name="cleanup_completed">اكتمل التنظيف✅</string>
+  <string name="update_confirmation_title">تحديث/تثبيت النظام</string>
+  <string name="update_confirmation_message">سيتم تحديث النظام. إذا لم يكن XoDos مثبتاً، سيتم تثبيته. متابعة؟</string>
+  <string name="button_proceed">متابعة</string>
+  <string name="install_xodos_title">جاري تثبيت/تحديث XoDos</string>
+  <string name="install_preparing">جارٍ التحضير…</string>
+  <string name="install_progress_message">جارٍ التثبيت… %d%%</string>
+  <string name="install_complete">✅ اكتمل التثبيت!</string>
+  <string name="install_error">خطأ في التثبيت</string>
+  <string name="install_failed">فشل تثبيت XoDos: %s</string>
+  <string name="launch_xodos_command">/data/data/com.termux/files/usr/bin/xodos\n</string>
+  <string name="cleanup_error">خطأ: %s</string>
+  <string name="install_copying">جارٍ نسخ الملفات…</string>
+  <string name="install_extracting">جارٍ تحديث النظام…</string>
+  <string name="install_finalizing">جارٍ الإنهاء…</string>
 </resources>

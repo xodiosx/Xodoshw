@@ -144,6 +144,8 @@
 <string name="toolbox_xbox">Xbox</string>
 <string name="toolbox_backup">备份</string>
 <string name="toolbox_restore">安装/恢复 </string>
+<string name="toolbox_clean_wine">清理Wine</string>
+<string name="toolbox_update">Update</string>
 <string name="toolbox_wine">Wine </string>
 <string name="choose_wine_env">选择Wine环境</string>
 <string name="wine_glibc">Wine Glibc</string>
@@ -166,39 +168,34 @@
     <item>快速设置🪄：帮助新手快速配置 Wine/Windows</item>
     <item>切换👥：切换不同用户容器</item>
     <item>添加按钮➕：创建脚本/应用/python 的快捷方式</item>
-<item>删除❌Wine🍷：彻底移除应用中的wine/windows⚠️以释放存储空间。</item>
-</string-array>
-<string name="next">下一步 ▶️</string>
-<string name="finish_tutorial">完成 🏁</string>
-<!-- Base Strings -->
-<!-- Wizard Dialog Titles -->
-<string name="modern_android_title">⚠️检测到现代Android系统</string>
-<string name="cpu_title">CPU类型</string>
-<string name="wine_title">Wine🍷类型</string>
-<string name="dxvk_title">选择DirectX封装器</string>
-<string name="driver_title">选择驱动程序</string>
-<string name="cores_title">CPU核心分配</string>
-<string name="wizard_complete_title">向导😁👌完成✅</string>
-<string name="error_title">错误</string>
+    <item>更新⏫: 安装新版本更新，不丢失数据或重装系统，有助于修复错误</item>
+    <item>删除❌Wine🍷: 完全移除应用中的wine/windows⚠️以释放存储空间</item>
+  </string-array>
 
-<!-- Wizard Messages -->
-<string name="modern_android_message">⚠️您的系统是Android 11或更高版本。\n\n为防止应用终止，请禁用🛑Phantom Process Killer：\n\n%s</string>
-<string name="cpu_message">您的CPU是什么？</string>
-<string name="wine_message">选择Wine🍷版本：</string>
-<string name="error_no_dxvk">%s中没有❌DXVK文件</string>
-<string name="error_no_driver">%s中没有❌驱动程序文件</string>
-<string name="wizard_complete_message">♻️xodwine.cfg已写入：\n%s\n\n现在运行Windows✅。</string>
-<string name="error_save_config">⚠️保存配置失败：\n%s</string>
-
-<!-- Buttons -->
-<string name="ok">OK</string>
-<string name="snapdragon">Snapdragon</string>
-<string name="other">其他</string>
-<string name="glibc">🍷glibc</string>
-<string name="bionic">🍷bionic</string>
-
-<!-- Core Options -->
-<string-array name="core_options">
+  <string name="next">下一步</string>
+  <string name="finish_tutorial">完成</string>
+  <string name="modern_android_title">⚠️检测到新版Android</string>
+  <string name="cpu_title">CPU类型</string>
+  <string name="wine_title">Wine🍷类型</string>
+  <string name="dxvk_title">选择DirectX封装器</string>
+  <string name="driver_title">选择驱动程序</string>
+  <string name="cores_title">CPU核心分配</string>
+  <string name="wizard_complete_title">向导😁👌完成✅</string>
+  <string name="error_title">错误</string>
+  <string name="modern_android_message">⚠️您的系统是Android 11或更高版本\n\n请禁用🛑Phantom Process Killer防止应用终止:\n\n%s</string>
+  <string name="cpu_message">您的CPU是什么型号？</string>
+  <string name="wine_message">选择Wine🍷版本:</string>
+  <string name="error_no_dxvk">❌在%s中没有DXVK文件</string>
+  <string name="error_no_driver">❌在%s中没有驱动程序文件</string>
+  <string name="wizard_complete_message">♻️xodwine.cfg已写入:\n%s\n\n立即运行Windows✅</string>
+  <string name="error_save_config">⚠️保存配置失败:\n%s</string>
+  <string name="ok">确定</string>
+  <string name="snapdragon">骁龙(Snapdragon)</string>
+  <string name="other">其他</string>
+  <string name="glibc">🍷glibc</string>
+  <string name="bionic">🍷bionic</string>
+  
+  <string-array name="core_options">
     <item>1核</item>
     <item>2核</item>
     <item>3核</item>
@@ -207,13 +204,25 @@
     <item>6核</item>
     <item>7核</item>
     <item>8核</item>
-</string-array>
-<!-- Wine Cleaner -->
-<string name="clean_wine_title">请选择要删除的Wine</string>
-<string name="clean_wine_warning">警告 ⚠️ 这将永久删除❌Wine及其文件且无法恢复⚠️但会释放存储空间。继续吗？</string>
-<string name="delete_glibc">🗑️删除Glibc❌</string>
-<string name="delete_bionic">🗑️删除Bionic❌</string>
-<string name="toolbox_clean_wine">❌清理Wine</string>
-<string name="cleanup_completed">清理完成✅</string>
-<string name="cleanup_error">错误：%s</string>
+  </string-array>
+
+  <string name="clean_wine_title">请选择要删除的Wine</string>
+  <string name="clean_wine_warning">警告⚠️ 这将永久移除❌Wine及其文件⚠️释放存储空间。继续？</string>
+  <string name="delete_glibc">🗑️删除Glibc❌</string>
+  <string name="delete_bionic">🗑️删除Bionic❌</string>
+  <string name="cleanup_completed">清理完成✅</string>
+  <string name="update_confirmation_title">系统更新/安装</string>
+  <string name="update_confirmation_message">系统即将更新。如果未安装XoDos，将会安装。确定继续？</string>
+  <string name="button_proceed">继续</string>
+  <string name="install_xodos_title">正在安装/更新XoDos</string>
+  <string name="install_preparing">准备中…</string>
+  <string name="install_progress_message">安装中…%d%%</string>
+  <string name="install_complete">✅ 安装完成！</string>
+  <string name="install_error">安装错误</string>
+  <string name="install_failed">安装XoDos失败: %s</string>
+  <string name="launch_xodos_command">/data/data/com.termux/files/usr/bin/xodos\n</string>
+  <string name="cleanup_error">错误: %s</string>
+  <string name="install_copying">正在复制系统文件…</string>
+  <string name="install_extracting">正在更新系统…</string>
+  <string name="install_finalizing">正在完成安装…</string>
 </resources>

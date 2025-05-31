@@ -238,6 +238,7 @@
 <string name="toolbox_xbox">Xbox</string>
 <string name="toolbox_backup">बैकअप</string>
 <string name="toolbox_restore">इंस्टॉल/पुनर्स्थापित </string>
+<string name="toolbox_update">Update</string>
 <string name="toolbox_wine">वाइन </string>
 <string name="choose_wine_env">वाइन वातावरण चुनें</string>
 <string name="wine_glibc">वाइन ग्लिबक</string>
@@ -260,39 +261,34 @@
     <item>त्वरित सेटिंग्स🪄: Wine/Windows को नए यूज़र्स के लिए सेट करें</item>
     <item>स्विच करें👥: उपयोगकर्ता कंटेनरों के बीच टॉगल करें</item>
     <item>बटन जोड़ें➕: स्क्रिप्ट/एप्स/python के लिए शॉर्टकट बनाएं</item>
-<item>हटाएं❌Wine🍷: ऐप से wine/windows को पूरी तरह हटाएं⚠️अधिक स्टोरेज के लिए।</item>
-</string-array>
-<string name="next">अगला ▶️</string>
-<string name="finish_tutorial">समाप्त 🏁</string>
-<!-- Base Strings -->
-<!-- Wizard Dialog Titles -->
-<string name="modern_android_title">⚠️आधुनिक Android पाया गया</string>
-<string name="cpu_title">CPU प्रकार</string>
-<string name="wine_title">Wine🍷 प्रकार</string>
-<string name="dxvk_title">DirectX रैपर चुनें</string>
-<string name="driver_title">ड्राइवर चुनें</string>
-<string name="cores_title">CPU कोर आवंटन</string>
-<string name="wizard_complete_title">विज़ार्ड😁👌पूर्ण✅</string>
-<string name="error_title">त्रुटि</string>
+  <item>अपडेट⏫: डेटा खोए बिना या सिस्टम को दोबारा इंस्टॉल किए बिना नए वर्ज़न से अपडेट इंस्टॉल करें, त्रुटियों को ठीक करने में मदद करता है</item>
+    <item>डिलीट❌वाइन🍷: ऐप से वाइन/विंडोज़ को पूरी तरह हटाना⚠️ज्यादा स्टोरेज के लिए</item>
+  </string-array>
 
-<!-- Wizard Messages -->
-<string name="modern_android_message">⚠️आपका सिस्टम Android 11 या उससे ऊपर है।\n\nऐप बंद होने से बचने के लिए, अक्षम करें🛑Phantom Process Killer:\n\n%s</string>
-<string name="cpu_message">आपका CPU क्या है?</string>
-<string name="wine_message">Wine🍷 संस्करण चुनें:</string>
-<string name="error_no_dxvk">%s में कोई❌DXVK फ़ाइलें नहीं</string>
-<string name="error_no_driver">%s में कोई❌ड्राइवर फ़ाइलें नहीं</string>
-<string name="wizard_complete_message">♻️xodwine.cfg इसमें लिखा गया:\n%s\n\nअभी Windows चलाएं ✅।</string>
-<string name="error_save_config">⚠️कॉन्फ़िग सहेजने में विफल:\n%s</string>
-
-<!-- Buttons -->
-<string name="ok">ठीक</string>
-<string name="snapdragon">Snapdragon</string>
-<string name="other">अन्य</string>
-<string name="glibc">🍷glibc</string>
-<string name="bionic">🍷bionic</string>
-
-<!-- Core Options -->
-<string-array name="core_options">
+  <string name="next">अगला</string>
+  <string name="finish_tutorial">समाप्त</string>
+  <string name="modern_android_title">⚠️मॉडर्न एंड्रॉइड डिटेक्टेड</string>
+  <string name="cpu_title">सीपीयू प्रकार</string>
+  <string name="wine_title">वाइन🍷 प्रकार</string>
+  <string name="dxvk_title">DirectX रैपर चुनें</string>
+  <string name="driver_title">ड्राइवर चुनें</string>
+  <string name="cores_title">सीपीयू कोर आवंटन</string>
+  <string name="wizard_complete_title">विज़ार्ड😁👌पूरा✅</string>
+  <string name="error_title">त्रुटि</string>
+  <string name="modern_android_message">⚠️आपका सिस्टम एंड्रॉइड 11 या उससे ऊपर है\n\nऐप बंद होने से रोकने के लिए, कृपया डिसेबल🛑करें फैंटम प्रोसेस किलर:\n\n%s</string>
+  <string name="cpu_message">आपका सीपीयू क्या है?</string>
+  <string name="wine_message">वाइन🍷 वर्ज़न चुनें:</string>
+  <string name="error_no_dxvk">❌%s में कोई DXVK फाइल्स नहीं</string>
+  <string name="error_no_driver">❌%s में कोई ड्राइवर फाइल्स नहीं</string>
+  <string name="wizard_complete_message">♻️xodwine.cfg सहेजा गया:\n%s\n\nअभी विंडोज़ चलाएं✅</string>
+  <string name="error_save_config">⚠️कॉन्फ़िग सेव करने में विफल:\n%s</string>
+  <string name="ok">ठीक</string>
+  <string name="snapdragon">स्नैपड्रैगन</string>
+  <string name="other">अन्य</string>
+  <string name="glibc">🍷glibc</string>
+  <string name="bionic">🍷bionic</string>
+  
+  <string-array name="core_options">
     <item>1 कोर</item>
     <item>2 कोर</item>
     <item>3 कोर</item>
@@ -301,13 +297,25 @@
     <item>6 कोर</item>
     <item>7 कोर</item>
     <item>8 कोर</item>
-</string-array>
-<!-- Wine Cleaner -->
-<string name="clean_wine_title">कृपया हटाने के लिए Wine चुनें</string>
-<string name="clean_wine_warning">चेतावनी ⚠️ यह Wine और उसकी फ़ाइलों को❌स्थायी रूप से हटा देगा, पुनर्प्राप्त नहीं किया जा सकेगा।⚠️लेकिन स्टोरेज जगह खाली होगी। जारी रखें?</string>
-<string name="delete_glibc">🗑️Glibc हटाएं❌</string>
-<string name="delete_bionic">🗑️Bionic हटाएं❌</string>
-<string name="toolbox_clean_wine">❌Wine साफ़ करें</string>
-<string name="cleanup_completed">सफ़ाई पूर्ण✅</string>
-<string name="cleanup_error">त्रुटि: %s</string>
+  </string-array>
+
+  <string name="clean_wine_title">डिलीट करने के लिए वाइन चुनें</string>
+  <string name="clean_wine_warning">चेतावनी ⚠️ यह वाइन और उसकी फाइल्स को ऐप से हमेशा के लिए हटा❌देगा⚠️स्टोरेज स्पेस फ्री करेगा। जारी रखें?</string>
+  <string name="delete_glibc">🗑️ग्लिबक डिलीट❌</string>
+  <string name="delete_bionic">🗑️बायोनिक डिलीट❌</string>
+  <string name="cleanup_completed">सफाई पूरी✅</string>
+  <string name="update_confirmation_title">सिस्टम अपडेट/इंस्टॉलेशन</string>
+  <string name="update_confirmation_message">सिस्टम अब अपडेट होगा। अगर XoDos इंस्टॉल नहीं है, तो इंस्टॉल हो जाएगा। क्या आप सुनिश्चित हैं?</string>
+  <string name="button_proceed">आगे बढ़ें</string>
+  <string name="install_xodos_title">XoDos इंस्टॉल/अपडेट कर रहा है</string>
+  <string name="install_preparing">तैयार कर रहे हैं…</string>
+  <string name="install_progress_message">इंस्टॉल हो रहा है…%d%%</string>
+  <string name="install_complete">✅ इंस्टॉलेशन पूरा!</string>
+  <string name="install_error">इंस्टॉलेशन त्रुटि</string>
+  <string name="install_failed">XoDos इंस्टॉल करने में विफल: %s</string>
+  <string name="launch_xodos_command">/data/data/com.termux/files/usr/bin/xodos\n</string>
+  <string name="cleanup_error">त्रुटि: %s</string>
+  <string name="install_copying">सिस्टम फाइल्स कॉपी कर रहा है…</string>
+  <string name="install_extracting">सिस्टम अपडेट कर रहा है…</string>
+  <string name="install_finalizing">इंस्टॉलेशन पूरा कर रहा है…</string>
 </resources>

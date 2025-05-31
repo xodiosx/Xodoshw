@@ -208,7 +208,9 @@
     <string name="toolbox_xbox">Xbox</string>
     <string name="toolbox_backup">Sauvegarde</string>
     <string name="toolbox_restore">Installer/Restaurer</string>
-    <string name="toolbox_wine">Wine</string>
+<string name="toolbox_update">Mettre à jour</string>
+  <string name="toolbox_clean_wine">Nettoyer Wine</string>
+ <string name="toolbox_wine">Wine</string>
     <string name="choose_wine_env">Environnement Wine</string>
     <string name="wine_glibc">Wine Glibc</string>
     <string name="wine_bionic">Wine Bionic</string>
@@ -232,55 +234,61 @@
         <item>Config rapide🪄 : Aide nouvelle installation</item>
         <item>Changer👥 : Conteneurs utilisateurs</item>
         <item>Raccourci➕ : Créer raccourcis</item>
-        <item>Supprimer❌Wine🍷 : Désinstaller complètement</item>
-    </string-array>
+       <item>Actualizar⏫: instalar actualizaciones sin perder datos ni reinstalar el sistema. Ayuda a corregir errores</item>
+    <item>Eliminar❌Wine🍷: quitar Wine/Windows completamente de la app⚠️para liberar espacio</item>
+  </string-array>
 
-    <string name="next">Suivant</string>
-    <string name="finish_tutorial">Terminer</string>
+  <string name="next">Siguiente</string>
+  <string name="finish_tutorial">Finalizar</string>
+  <string name="modern_android_title">⚠️Android moderno detectado</string>
+  <string name="cpu_title">Tipo de CPU</string>
+  <string name="wine_title">Tipo de Wine🍷</string>
+  <string name="dxvk_title">Seleccionar wrapper de DirectX</string>
+  <string name="driver_title">Seleccionar controlador</string>
+  <string name="cores_title">Asignación de núcleos de CPU</string>
+  <string name="wizard_complete_title">Asistente😁👌completado✅</string>
+  <string name="error_title">Error</string>
+  <string name="modern_android_message">⚠️Tu sistema es Android 11 o superior.\n\nPara evitar cierres, desactiva🛑Phantom Process Killer:\n\n%s</string>
+  <string name="cpu_message">¿Qué CPU tienes?</string>
+  <string name="wine_message">Elige versión de Wine🍷:</string>
+  <string name="error_no_dxvk">No❌hay archivos DXVK en %s</string>
+  <string name="error_no_driver">No❌hay controladores en %s</string>
+  <string name="wizard_complete_message">♻️xodwine.cfg guardado en:\n%s\n\nEjecutar Windows ahora✅.</string>
+  <string name="error_save_config">⚠️Error al guardar configuración:\n%s</string>
+  <string name="ok">Aceptar</string>
+  <string name="snapdragon">Snapdragon</string>
+  <string name="other">Otra</string>
+  <string name="glibc">🍷glibc</string>
+  <string name="bionic">🍷bionic</string>
+  
+  <string-array name="core_options">
+    <item>1 núcleo</item>
+    <item>2 núcleos</item>
+    <item>3 núcleos</item>
+    <item>4 núcleos</item>
+    <item>5 núcleos</item>
+    <item>6 núcleos</item>
+    <item>7 núcleos</item>
+    <item>8 núcleos</item>
+  </string-array>
 
-    <!-- Wizard -->
-    <string name="modern_android_title">⚠️Android Moderne Détecté</string>
-    <string name="cpu_title">Type de CPU</string>
-    <string name="wine_title">Type Wine🍷</string>
-    <string name="dxvk_title">Wrapper DirectX</string>
-    <string name="driver_title">Pilote</string>
-    <string name="cores_title">Cœurs CPU</string>
-    <string name="wizard_complete_title">Configuration😁👌Terminée✅</string>
-    <string name="error_title">Erreur</string>
-
-    <string name="modern_android_message">⚠️Android 11+ détecté.\n\nDésactivez🛑Phantom Process Killer:\n\n%s</string>
-    <string name="cpu_message">Type de CPU?</string>
-    <string name="wine_message">Version Wine🍷:</string>
-    <string name="error_no_dxvk">Aucun❌DXVK dans %s</string>
-    <string name="error_no_driver">Aucun❌pilote dans %s</string>
-    <string name="wizard_complete_message">♻️xodwine.cfg créé:\n%s\n\nLancer Windows✅</string>
-    <string name="error_save_config">⚠️Échec sauvegarde:\n%s</string>
-
-    <!-- Buttons -->
-    <string name="ok">OK</string>
-    <string name="snapdragon">Snapdragon</string>
-    <string name="other">Autre</string>
-    <string name="glibc">🍷glibc</string>
-    <string name="bionic">🍷bionic</string>
-
-    <!-- Core Options -->
-    <string-array name="core_options">
-        <item>1 cœur</item>
-        <item>2 cœurs</item>
-        <item>3 cœurs</item>
-        <item>4 cœurs</item>
-        <item>5 cœurs</item>
-        <item>6 cœurs</item>
-        <item>7 cœurs</item>
-        <item>8 cœurs</item>
-    </string-array>
-
-    <!-- Wine Cleaner -->
-    <string name="clean_wine_title">Sélectionnez Wine à supprimer</string>
-    <string name="clean_wine_warning">Attention ⚠️ Suppression définitive de Wine❌. Libère de l\'espace. Continuer?</string>
-    <string name="delete_glibc">🗑️Supprimer Glibc❌</string>
-    <string name="delete_bionic">🗑️Supprimer Bionic❌</string>
-    <string name="toolbox_clean_wine">❌Nettoyer Wine</string>
-    <string name="cleanup_completed">Nettoyage terminé✅</string>
-    <string name="cleanup_error">Erreur : %s</string>
+  <string name="clean_wine_title">Selecciona Wine para eliminar</string>
+  <string name="clean_wine_warning">Advertencia ⚠️ Esto eliminará❌Wine y sus archivos permanentemente.⚠️Liberará espacio. ¿Continuar?</string>
+  <string name="delete_glibc">🗑️Eliminar Glibc❌</string>
+  <string name="delete_bionic">🗑️Eliminar Bionic❌</string>
+  <string name="cleanup_completed">Limpieza completada✅</string>
+  <string name="update_confirmation_title">Actualización/Instalación del sistema</string>
+  <string name="update_confirmation_message">El sistema se actualizará. Si XoDos no está instalado, se instalará. ¿Continuar?</string>
+  <string name="button_proceed">Continuar</string>
+  <string name="install_xodos_title">Instalando/Actualizando XoDos</string>
+  <string name="install_preparing">Preparando…</string>
+  <string name="install_progress_message">Instalando… %d%%</string>
+  <string name="install_complete">✅ ¡Instalación completada!</string>
+  <string name="install_error">Error de instalación</string>
+  <string name="install_failed">Error al instalar XoDos: %s</string>
+  <string name="launch_xodos_command">/data/data/com.termux/files/usr/bin/xodos\n</string>
+  <string name="cleanup_error">Error: %s</string>
+  <string name="install_copying">Copiando archivos…</string>
+  <string name="install_extracting">Actualizando sistema…</string>
+  <string name="install_finalizing">Finalizando…</string>
 </resources>

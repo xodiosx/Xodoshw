@@ -240,6 +240,7 @@
 <string name="toolbox_wine_bionic">Wine-Bionic</string>
 <string name="toolbox_xbox">Xbox</string>
 <string name="toolbox_backup">Резервная копия</string>
+<string name="toolbox_update">Обновить</string>
 <string name="toolbox_restore">Установить/Восстановить </string>
 <string name="toolbox_wine">Wine </string>
 <string name="choose_wine_env">Выбрать окружение Wine</string>
@@ -265,30 +266,33 @@
     <item>Быстрые настройки🪄: помогают новичкам быстро настроить Wine/Windows (драйверы, DXVK, wineD3D)</item>
     <item>Переключить👥: Переключение между контейнерами пользователей</item>
     <item>Добавить кнопку➕: Создание ярлыков для скриптов/приложений/python</item>
-<item>удалить❌Wine🍷: полное удаление wine/windows из приложения⚠️для освобождения места.</item>
-</string-array>
-<string name="modern_android_title">⚠️Обнаружен современный Android</string>
-<string name="cpu_title">Тип CPU</string>
-<string name="wine_title">Тип Wine🍷</string>
-<string name="dxvk_title">Выбор обёртки DirectX</string>
-<string name="driver_title">Выбор драйвера</string>
-<string name="cores_title">Выделение ядер CPU</string>
-<string name="wizard_complete_title">Мастер завершён😁👌✅</string>
-<string name="error_title">Ошибка</string>
-<string name="modern_android_message">⚠️Ваша система — Android 11 или новее.\n\nЧтобы предотвратить завершение приложения, отключите🛑Phantom Process Killer:\n\n%s</string>
-<string name="cpu_message">Какой у вас процессор?</string>
-<string name="wine_message">Выберите версию Wine🍷:</string>
-<string name="error_no_dxvk">Нет❌файлов DXVK в %s</string>
-<string name="error_no_driver">Нет❌драйверов в %s</string>
-<string name="wizard_complete_message">♻️xodwine.cfg записан в:\n%s\n\nТеперь можно запускать Windows ✅.</string>
-<string name="error_save_config">⚠️Не удалось сохранить конфигурацию:\n%s</string>
-<string name="ok">ОК</string>
-<string name="snapdragon">Snapdragon</string>
-<string name="other">Другое</string>
-<string name="glibc">🍷glibc</string>
-<string name="bionic">🍷bionic</string>
-<string-array name="core_options">
-    <item>1 без ядер</item>
+   <item>Обновление⏫: установка обновлений без потери данных или переустановки системы. Помогает исправить ошибки</item>
+    <item>Удалить❌Wine🍷: полное удаление Wine/Windows из приложения⚠️для освобождения места</item>
+  </string-array>
+
+  <string name="modern_android_title">⚠️Обнаружен современный Android</string>
+  <string name="cpu_title">Тип процессора</string>
+  <string name="wine_title">Тип Wine🍷</string>
+  <string name="dxvk_title">Выбор обёртки DirectX</string>
+  <string name="driver_title">Выбор драйвера</string>
+  <string name="cores_title">Распределение ядер CPU</string>
+  <string name="wizard_complete_title">Мастер😁👌завершён✅</string>
+  <string name="error_title">Ошибка</string>
+  <string name="modern_android_message">⚠️Ваша система: Android 11 или выше.\n\nЧтобы предотвратить закрытие приложения, отключите🛑Phantom Process Killer:\n\n%s</string>
+  <string name="cpu_message">Какой у вас процессор?</string>
+  <string name="wine_message">Выберите версию Wine🍷:</string>
+  <string name="error_no_dxvk">Нет❌файлов DXVK в %s</string>
+  <string name="error_no_driver">Нет❌файлов драйверов в %s</string>
+  <string name="wizard_complete_message">♻️xodwine.cfg сохранён в:\n%s\n\nЗапустить Windows сейчас✅.</string>
+  <string name="error_save_config">⚠️Ошибка сохранения конфига:\n%s</string>
+  <string name="ok">OK</string>
+  <string name="snapdragon">Snapdragon</string>
+  <string name="other">Другой</string>
+  <string name="glibc">🍷glibc</string>
+  <string name="bionic">🍷bionic</string>
+  
+  <string-array name="core_options">
+    <item>1 ядро</item>
     <item>2 ядра</item>
     <item>3 ядра</item>
     <item>4 ядра</item>
@@ -296,14 +300,25 @@
     <item>6 ядер</item>
     <item>7 ядер</item>
     <item>8 ядер</item>
-</string-array>
+  </string-array>
 
-<!-- Wine Cleaner -->
-<string name="clean_wine_title">Выберите Wine для удаления</string>
-<string name="clean_wine_warning">Внимание ⚠️ Это навсегда удалит❌Wine и его файлы из приложения без возможности восстановления.⚠️Но освободит место. Продолжить?</string>
-<string name="delete_glibc">🗑️Удалить Glibc❌</string>
-<string name="delete_bionic">🗑️Удалить Bionic❌</string>
-<string name="toolbox_clean_wine">❌Очистить Wine</string>
-<string name="cleanup_completed">Очистка завершена✅</string>
-<string name="cleanup_error">Ошибка: %s</string>
+  <string name="clean_wine_title">Выберите Wine для удаления</string>
+  <string name="clean_wine_warning">Внимание ⚠️ Это безвозвратно удалит❌Wine и его файлы из приложения.⚠️Освободит место. Продолжить?</string>
+  <string name="delete_glibc">🗑️Удалить Glibc❌</string>
+  <string name="delete_bionic">🗑️Удалить Bionic❌</string>
+  <string name="cleanup_completed">Очистка завершена✅</string>
+  <string name="update_confirmation_title">Обновление/Установка системы</string>
+  <string name="update_confirmation_message">Система будет обновлена. Если XoDos не установлен, он будет инсталлирован. Продолжить?</string>
+  <string name="button_proceed">Продолжить</string>
+  <string name="install_xodos_title">Установка/Обновление XoDos</string>
+  <string name="install_preparing">Подготовка…</string>
+  <string name="install_progress_message">Установка… %d%%</string>
+  <string name="install_complete">✅ Установка завершена!</string>
+  <string name="install_error">Ошибка установки</string>
+  <string name="install_failed">Ошибка установки XoDos: %s</string>
+  <string name="launch_xodos_command">/data/data/com.termux/files/usr/bin/xodos\n</string>
+  <string name="cleanup_error">Ошибка: %s</string>
+  <string name="install_copying">Копирование файлов…</string>
+  <string name="install_extracting">Обновление системы…</string>
+  <string name="install_finalizing">Завершение…</string>
 </resources>
