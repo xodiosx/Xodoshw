@@ -253,7 +253,6 @@ clean {
 }
 
 task downloadBootstraps() {
-return;
     doLast {
         def packageVariant = project.ext.packageVariant
         if (packageVariant == "apt-android-7") {
