@@ -1,0 +1,21 @@
+name: Initialize Submodules
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:  # Allows you to trigger it manually too
+
+jobs:
+  update-submodules:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo with submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: List submodules to confirm
+        run: |
+          echo "Submodules initialized:"
+          git submodule status
