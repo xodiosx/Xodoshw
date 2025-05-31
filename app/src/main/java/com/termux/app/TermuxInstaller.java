@@ -12,7 +12,7 @@ import java.util.Map;
 import android.content.res.AssetFileDescriptor;  // For accurate file size
 import java.io.InputStream;                     // For reading assets
 import java.io.OutputStream;             
-
+import java.util.Stack; //
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -251,27 +251,62 @@ extractionProgressDialog.show();
 // --------------------------------------------
 // Phase 1: Copy from Assets (50% of progress)
 // --------------------------------------------
+
+
 new Thread(() -> {
     Process process = null;
     File outFile = null;
     File scriptFile = null;
 
     try {
-        // Update UI before copying
+        // Add folder size check here
+        File wallpaperFolder = new File("/data/data/com.termux/files/home/WALLPAPERS");
+        long folderSize = 0;
+        long sizeLimit = 5 * 1024 * 1024; // 5 MB
+        boolean folderExists = wallpaperFolder.exists() && wallpaperFolder.isDirectory();
+
+        if (folderExists) {
+            Stack<File> stack = new Stack<>();
+            stack.push(wallpaperFolder);
+
+            outerLoop:
+            while (!stack.isEmpty()) {
+                File current = stack.pop();
+                File[] files = current.listFiles();
+                if (files == null) continue;
+
+                for (File file : files) {
+                    if (file.isFile()) {
+                        folderSize += file.length();
+                        if (folderSize > sizeLimit) {
+                            break outerLoop;
+                        }
+                    } else if (file.isDirectory()) {
+                        stack.push(file);
+                    }
+                }
+            }
+        }
+        
+
+
+        
+        // Determine asset name based on folder check
+        String assetName = (folderExists && folderSize > sizeLimit) 
+                            ? "xodos0.tar.xz" 
+                            : "xodos.tar.xz";
+
+        // Update UI before copying (original code)
         activity.runOnUiThread(() -> extractionProgressDialog.setMessage("Copying XoDos file..."));
 
-        // Copy xodos.tar.xz from assets
+        // Copy selected asset (original code with minor change to asset name)
         AssetManager assetManager = activity.getAssets();
-        InputStream in = assetManager.open("xodos.tar.xz");
-        outFile = new File(activity.getFilesDir(), "xodos.tar.xz");
-
-
-//long totalRecords = totalBytes / bytesPerRecord;
-//int estimatedTotalCheckpoints = (int) (totalRecords / recordsPerCheckpoint);
+        InputStream in = assetManager.open(assetName);  // Changed to use assetName
+        outFile = new File(activity.getFilesDir(), assetName);  // Changed to use assetName
         FileOutputStream out = new FileOutputStream(outFile);
 
-        // Get total file size for progress
-        long totalBytes = assetManager.openFd("xodos.tar.xz").getLength();
+        // Get total file size for progress (original code with minor change)
+        long totalBytes = assetManager.openFd(assetName).getLength();  // Changed to use assetName
         long copiedBytes = 0;
         byte[] copybuffer = new byte[1024 * 128]; // 16KB buffer
 
@@ -287,6 +322,15 @@ new Thread(() -> {
 
         out.close();
         in.close();
+
+        
+
+//////////////////and of checking////########
+
+//long totalRecords = totalBytes / bytesPerRecord;
+//int estimatedTotalCheckpoints = (int) (totalRecords / recordsPerCheckpoint);
+        
+        
 
         // Copy fix script and make it executable
         InputStream scriptIn = assetManager.open("fix");
@@ -311,7 +355,7 @@ new Thread(() -> {
 
 // Calculate dynamic checkpoint interval for smoother updates
 int bytesPerRecord = 512; // Tar's block size
-int targetCheckpoints = 200; // Aim for 200 checkpoints (~0.25% per update)
+int targetCheckpoints = 250; // Aim for 200 checkpoints (~0.25% per update)
 
 // Calculate records per checkpoint
 long totalRecords = (totalBytes + bytesPerRecord - 1) / bytesPerRecord;

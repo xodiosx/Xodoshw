@@ -2,7 +2,7 @@ package com.termux.app.terminal;
 import android.util.DisplayMetrics;
 
 import static com.termux.shared.termux.TermuxConstants.TERMUX_BIN_PREFIX_DIR_PATH;
-
+import android.content.res.AssetManager;
 import android.widget.GridLayout;
 import android.widget.PopupWindow;
 import android.view.Gravity;
@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 // Add with other imports
 // Add these imports at the top
+import android.util.Log;
 import static com.termux.shared.termux.TermuxConstants.TERMUX_FILES_DIR_PATH;
 import java.util.HashMap;
 import java.util.Map;
@@ -201,7 +202,7 @@ private void extractBackupFile(File backupFile) throws Exception {
     long totalBytes = backupFile.length();
     int bytesPerRecord = 512;
     long totalRecords = (totalBytes + bytesPerRecord - 1) / bytesPerRecord;
-    int targetCheckpoints = 200;
+    int targetCheckpoints = 250;
     int recordsPerCheckpoint = Math.max(1, (int) (totalRecords / targetCheckpoints));
 
     // Identical environment setup
@@ -356,6 +357,11 @@ private void showBlockingView() {
     ));
     blockingLayout.setBackgroundColor(Color.parseColor("#80000000")); // Semi-transparent dark
     
+    // Make it intercept all touch events
+    blockingLayout.setClickable(true);
+    blockingLayout.setFocusable(true);
+    blockingLayout.setFocusableInTouchMode(true);
+    
     // Create loading container
     LinearLayout loadingContainer = new LinearLayout(mTermuxActivity);
     loadingContainer.setOrientation(LinearLayout.VERTICAL);
@@ -367,7 +373,7 @@ private void showBlockingView() {
     
     // Create loading text
     TextView text = new TextView(mTermuxActivity);
-    text.setText("Loading...");
+    text.setText("⏳Loading...");
     text.setTextColor(Color.WHITE);
     text.setTextSize(18);
     text.setPadding(0, 16, 0, 0);
@@ -543,6 +549,12 @@ layout.setBackgroundResource(R.drawable.button_press_effect);
 iv.setScaleType(ImageView.ScaleType.FIT_CENTER); // Add this for proper scaling
   
       switch(type) {
+      case "lnk":
+    iv.setImageResource(R.drawable.ilnk); 
+          break;
+      case "upda":
+    iv.setImageResource(R.drawable.iupdate); 
+          break;
       case "clean":
     iv.setImageResource(R.drawable.idel); 
     break;
@@ -1043,8 +1055,7 @@ xbioBtn.setOnClickListener(v -> {
 }); // Removed duplicate code block
 mToolboxGrid.addView(xbioBtn);
 
-// Wine Button (from error log)
-// Wine Button - FIXED
+// Wine Button
 LinearLayout wineBtn = createToolboxButton("wine", mTermuxActivity.getString(R.string.toolbox_wine));
 wineBtn.setOnClickListener(v -> {
     new AlertDialog.Builder(mTermuxActivity)
@@ -1168,6 +1179,217 @@ mToolboxGrid.addView(switchBtn);
         // Don't dismiss popup - keep open for selection
     });
     mToolboxGrid.addView(addBtn);
+  
+  // update button 
+// Add this inside the addSystemButtons() method
+LinearLayout updateBtn = createToolboxButton("upda", mTermuxActivity.getString(R.string.toolbox_update));
+updateBtn.setOnClickListener(v -> {
+    // Show confirmation dialog
+    new AlertDialog.Builder(mTermuxActivity)
+        .setTitle(mTermuxActivity.getString(R.string.update_confirmation_title))
+        .setMessage(mTermuxActivity.getString(R.string.update_confirmation_message))
+        .setPositiveButton(mTermuxActivity.getString(R.string.button_proceed), (dialog, which) -> {
+            // Start the installation process
+            showBlockingView();
+            mToolboxPopup.dismiss();
+            
+            // Show progress dialog
+            mRestoreProgressDialog = new ProgressDialog(mTermuxActivity);
+            mRestoreProgressDialog.setTitle(mTermuxActivity.getString(R.string.install_xodos_title));
+            mRestoreProgressDialog.setMessage(mTermuxActivity.getString(R.string.install_preparing));
+            mRestoreProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            mRestoreProgressDialog.setMax(100);
+            mRestoreProgressDialog.setCancelable(false);
+            mRestoreProgressDialog.show();
+            
+            // Run installation in background thread
+            new Thread(() -> {
+                Process process = null;
+                File outFile = null;
+                File scriptFile = null;
+                
+                try {
+                    // Phase 1: Copy xodos.tar.xz from assets (0-50%)
+                    mHandler.post(() -> {
+                        mRestoreProgressDialog.setMessage(
+                            mTermuxActivity.getString(R.string.install_copying));
+                        mRestoreProgressDialog.setProgress(0);
+                    });
+                    
+                    AssetManager assetManager = mTermuxActivity.getAssets();
+                    InputStream in = assetManager.open("xodos.tar.xz");
+                    outFile = new File(mTermuxActivity.getFilesDir(), "xodos.tar.xz");
+                    FileOutputStream out = new FileOutputStream(outFile);
+                    
+                    // Get total file size for progress
+                    long totalBytes = assetManager.openFd("xodos.tar.xz").getLength();
+                    long copiedBytes = 0;
+                    byte[] buffer = new byte[1024 * 128]; // 128KB buffer
+                    
+                    int bytesRead;
+                    while ((bytesRead = in.read(buffer)) != -1) {
+                        out.write(buffer, 0, bytesRead);
+                        copiedBytes += bytesRead;
+                        
+                        // Update progress (first 50%)
+                        int progress = (int) ((copiedBytes * 50) / totalBytes);
+                        final int finalProgress = progress;
+                        mHandler.post(() -> {
+                            mRestoreProgressDialog.setProgress(finalProgress);
+                            mRestoreProgressDialog.setMessage(
+                                mTermuxActivity.getString(R.string.install_copying) + 
+                                " " + finalProgress + "%");
+                        });
+                    }
+                    
+                    out.close();
+                    in.close();
+                    
+                    // Copy fix script and make it executable
+                    InputStream scriptIn = assetManager.open("fix");
+                    scriptFile = new File(mTermuxActivity.getFilesDir(), "fix");
+                    FileOutputStream scriptOut = new FileOutputStream(scriptFile);
+                    
+                    while ((bytesRead = scriptIn.read(buffer)) != -1) {
+                        scriptOut.write(buffer, 0, bytesRead);
+                    }
+                    
+                    scriptOut.close();
+                    scriptIn.close();
+                    scriptFile.setExecutable(true);
+                    
+                    // Phase 2: Extract with Tar (50-100%)
+                    mHandler.post(() -> {
+                        mRestoreProgressDialog.setProgress(50);
+                        mRestoreProgressDialog.setMessage(
+                            mTermuxActivity.getString(R.string.install_extracting));
+                    });
+                    
+                    // Calculate dynamic checkpoint interval
+                    int bytesPerRecord = 512; // Tar's block size
+                    int targetCheckpoints = 200; // Aim for 200 checkpoints
+                    long totalRecords = (totalBytes + bytesPerRecord - 1) / bytesPerRecord;
+                    int recordsPerCheckpoint = Math.max(1, (int) (totalRecords / targetCheckpoints));
+                    
+                    ProcessBuilder processBuilder = new ProcessBuilder(
+                        "sh", "-c",
+                        "tar -xf " + outFile.getAbsolutePath() +
+                        " -C " + TERMUX_FILES_DIR_PATH +
+                        " --preserve-permissions " +
+                        "--warning=no-file-ignored " +
+                        "--checkpoint=" + recordsPerCheckpoint + 
+                        " --checkpoint-action=echo=CHECKPOINT " +
+                        "--totals 2>&1"
+                    );
+                    
+                    // Set environment
+                    Map<String, String> env = processBuilder.environment();
+                    env.put("PATH", TERMUX_BIN_PREFIX_DIR_PATH + ":/system/bin");
+                    env.put("LD_LIBRARY_PATH", TERMUX_BIN_PREFIX_DIR_PATH.replace("bin", "lib"));
+                    
+                    // Start process
+                    process = processBuilder.start();
+                    
+                    // Monitor progress
+                    BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(process.getInputStream()));
+                    
+                    int checkpointCount = 0;
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        if (line.contains("CHECKPOINT")) {
+                            checkpointCount++;
+                            int progress = 50 + (int) ((checkpointCount * 50.0) / 50);
+                            progress = Math.min(progress, 99);
+                            final int finalProgress = progress;
+                            mHandler.post(() -> {
+                                mRestoreProgressDialog.setProgress(finalProgress);
+                                mRestoreProgressDialog.setMessage(
+                                    mTermuxActivity.getString(R.string.install_extracting) + 
+                                    " " + finalProgress + "%");
+                            });
+                        }
+                    }
+                    
+                    int exitCode = process.waitFor();
+                    if (exitCode != 0) {
+                        throw new IOException("Extraction failed (code " + exitCode + ")");
+                    }
+                    
+                    // Phase 3: Run fix after extraction
+                    mHandler.post(() -> {
+                        mRestoreProgressDialog.setProgress(99);
+                        mRestoreProgressDialog.setMessage(
+                            mTermuxActivity.getString(R.string.install_finalizing));
+                    });
+                    
+                    process = new ProcessBuilder("sh", scriptFile.getAbsolutePath()).start();
+                    int scriptExitCode = process.waitFor();
+                    if (scriptExitCode != 0) {
+                        throw new IOException("Fix script failed with code: " + scriptExitCode);
+                    }
+                    
+                    // Success
+                    mHandler.post(() -> {
+                        mRestoreProgressDialog.setProgress(100);
+                        mRestoreProgressDialog.setMessage(
+                            mTermuxActivity.getString(R.string.install_complete));
+                        
+                        new Handler().postDelayed(() -> {
+                            if (mRestoreProgressDialog.isShowing()) {
+                                mRestoreProgressDialog.dismiss();
+                            }
+                            hideBlockingView();
+                            
+                            // Exit app to complete installation
+                            mTermuxActivity.finishAffinity();
+                            System.exit(0);
+                        }, 2000);
+                    });
+                    
+                } catch (Exception e) {
+                    mHandler.post(() -> {
+                        new AlertDialog.Builder(mTermuxActivity)
+                            .setTitle(mTermuxActivity.getString(R.string.install_error))
+                            .setMessage(mTermuxActivity.getString(
+                                R.string.install_failed, e.getMessage()))
+                            .setPositiveButton(android.R.string.ok, null)
+                            .show();
+                        
+                        if (mRestoreProgressDialog != null && mRestoreProgressDialog.isShowing()) {
+                            mRestoreProgressDialog.dismiss();
+                        }
+                        hideBlockingView();
+                    });
+                } finally {
+                                        // Cleanup on error
+                        outFile.delete();
+                        scriptFile.delete();
+                    // Cleanup files in ALL cases (success or failure)
+                    if (outFile != null && outFile.exists()) {
+                        if (!outFile.delete()) {
+                            Log.e("StartEntryClient", "Failed to delete xodos.tar.xz");
+                        }
+                    }
+                    if (scriptFile != null && scriptFile.exists()) {
+                        if (!scriptFile.delete()) {
+                            Log.e("StartEntryClient", "Failed to delete fix script");
+                        }
+                    }
+                    if (process != null) {
+                        process.destroy();
+                    }
+                }
+            }).start();
+        })
+        .setNegativeButton(android.R.string.cancel, null)
+        .setIcon(android.R.drawable.ic_dialog_alert)
+        .show();
+});
+mToolboxGrid.addView(updateBtn);
+
+
+  
   
   // Add Clean Wine Button
     LinearLayout cleanWineBtn = createToolboxButton("clean", mTermuxActivity.getString(R.string.toolbox_clean_wine));
@@ -1308,7 +1530,7 @@ private void cleanWineEnvironment(boolean isGlibc) {
                          "mkdir -p " + prefix + "/glibc2/opt/prefix",
                         "mv " + prefix + "/glibc/opt/libs/d3d " + prefix + "/glibc2/opt/libs/d3d",
                         "mv " + prefix + "/glibc/opt/prefix/d3d " + prefix + "/glibc2/opt/prefix/d3d",                    
-                         "rm -rf " + prefix + "/glibc/*",
+                         "rm -rf " + prefix + "/glibc",
                           "mkdir -p " + prefix + "/glibc/opt/libs",
                          "mkdir -p " + prefix + "/glibc/opt/prefix",
                         "mv " + prefix + "/glibc2/opt/libs/d3d " + prefix + "/glibc/opt/libs/d3d",
@@ -1318,7 +1540,7 @@ private void cleanWineEnvironment(boolean isGlibc) {
                 } else {
                     // Just remove Glibc contents
                     commands = new String[]{
-                        "rm -rf " + prefix + "/glibc/*"
+                        "rm -rf " + prefix + "/glibc"
                     };
                 }
 
@@ -1344,7 +1566,7 @@ private void cleanWineEnvironment(boolean isGlibc) {
                     "rm -rf " + prefix + "/opt/wine",
                     "rm -rf " + prefix + "/drivers/25",
                     "rm -rf $HOME/.wine",
-                    "rm -rf " + prefix + "/glibc/*"
+                    "rm -rf " + prefix + "/glibc"
                 };
                 }
                 
