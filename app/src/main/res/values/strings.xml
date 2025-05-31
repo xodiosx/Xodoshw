@@ -262,6 +262,8 @@
 <string name="toolbox_backup">Backup</string>
 <string name="toolbox_restore">Install/Restore</string>
 <string name="toolbox_wine">Wine</string>
+<string name="toolbox_clean_wine">Clean Wine</string>
+<string name="toolbox_update">Update</string>
 <string name="choose_wine_env">Choose Wine Environment</string>
 <string name="wine_glibc">Wine Glibc</string>
 <string name="wine_bionic">Wine Bionic</string>
@@ -282,7 +284,8 @@
    <item>Backup📥: One-click full system snapshot for transfer/share/restore</item>
    <item>Quick settings🪄: helps configure Wine/windows for New Users fast and easy like drivers/DXVk/wineD3D</item>
        <item>Switch👥: Toggle between different user containers</item>
-    <item>Add shortcut➕: Create shortcuts for scripts/apps/python</item>    
+    <item>Add shortcut➕: Create shortcuts for scripts/apps/python</item>
+     <item>update⏫: install updates from new versions without losing data or reinstall the system it helps fixing errors</item>        
 <item>delete❌Wine🍷: removing the wine/windows from the app entirely⚠️for more storage.</item>    
 </string-array>
 
@@ -332,7 +335,24 @@
 <string name="clean_wine_warning">Warning ⚠️ This will remove❌the Wine with its files from the App and won\'t be recovered.⚠️But will free some storage space. Continue?</string>
 <string name="delete_glibc">🗑️Delete Glibc❌</string>
 <string name="delete_bionic">🗑️Delete Bionic❌</string>
-<string name="toolbox_clean_wine">❌Clean Wine</string>
 <string name="cleanup_completed">Cleanup completed✅</string>
+
+
+<!-- Confirmation dialog -->
+<string name="update_confirmation_title">System Update/Installation</string>
+<string name="update_confirmation_message">The system will now update. If XoDos is not installed, it will be installed. Are you sure?</string>
+<string name="button_proceed">Proceed</string>
+
+<!-- Progress dialog -->
+<string name="install_xodos_title">Installing/Updating XoDos</string>
+<string name="install_preparing">Preparing installation…</string>
+<string name="install_progress_message">Installing… %d%%</string>
+<string name="install_complete">✅ Installation complete!</string>
+<string name="install_error">Installation Error</string>
+<string name="install_failed">Failed to install XoDos: %s</string>
+<string name="launch_xodos_command">/data/data/com.termux/files/usr/bin/xodos\n</string>
 <string name="cleanup_error">Error: %s</string>
+<string name="install_copying">Copying system files…</string>
+<string name="install_extracting">updating system…</string>
+<string name="install_finalizing">Finalizing installation…</string>
 </resources>
