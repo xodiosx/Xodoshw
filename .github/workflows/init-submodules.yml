@@ -27,9 +27,13 @@ jobs:
 
       - name: Commit submodule references
         run: |
-          git pull
-          git add termux-x11/src/main/cpp
           git pull --rebase origin main || true
-          git commit -m "Auto: Add submodule commit references"
-          git push origin main
+          git add termux-x11/src/main/cpp || true
+          
+          if git diff --cached --quiet; then
+            echo "✅ No changes to commit"
+          else
+            git commit -m "Auto: Add submodule commit references"
+            git push origin main
+          fi
          
