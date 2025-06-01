@@ -14,30 +14,29 @@ jobs:
       - name: Checkout repo with submodules
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0                  # Required for full git history
+          fetch-depth: 0
           submodules: recursive
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Configure Git
+      - name: Configure Git identity and remote
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-      - name: Set upstream & pull latest
-        run: |
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+
+      - name: Pull with rebase
+        run: |
+          git fetch origin
           git checkout main
           git branch --set-upstream-to=origin/main main
-          git pull
           git pull --rebase origin main
 
-      - name: Init submodules
-        run: git submodule update --init --recursive
+      - name: Init submodules and prepare folders
+        run: |
+          git submodule update --init --recursive
+          mkdir -p termux-x11/src/main/cpp
 
-      - name: Make sure folders exist
-        run: mkdir -p termux-x11/src/main/cpp
-
-      - name: Add, commit & push changes if needed
+      - name: Stage, commit and push if needed
         run: |
           git add termux-x11/src/main/cpp || true
           if git diff --cached --quiet; then
