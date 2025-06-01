@@ -21,6 +21,7 @@ jobs:
 
       - name: Update and commit submodules
         run: |
+          mkdir -p termux-x11/src/main/cpp
           git submodule update --init --recursive
           git add termux-x11/src/main/cpp/*
           git diff --cached --quiet || git commit -m "Auto: Add submodule commit references"
