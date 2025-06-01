@@ -18,7 +18,7 @@ jobs:
 
       - name: Pull with rebase (force clean)
         run: |
-          git reset --hard       # Discard local changes (e.g., gradlew.bat)
+          
           git clean -fd          # Remove untracked files/folders if any
           git fetch origin
           git checkout main
@@ -28,6 +28,7 @@ jobs:
       
       - name: Fetch folder from external repo
         run: |
+          ls
           mkdir -p termux-x11/src/main
           git clone --depth=1 --filter=blob:none --sparse https://github.com/jiaxinchen-max/termux-app temprepo
           
