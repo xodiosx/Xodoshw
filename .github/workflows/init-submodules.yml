@@ -16,12 +16,24 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Pull with rebase (force clean)
+        run: |
+          git reset --hard       # Discard local changes (e.g., gradlew.bat)
+          git clean -fd          # Remove untracked files/folders if any
+          git fetch origin
+          git checkout main
+          git branch --set-upstream-to=origin/main main
+          git pull --rebase origin main
+      
+      
       - name: Fetch folder from external repo
         run: |
           mkdir -p termux-x11/src/main
           git clone --depth=1 --filter=blob:none --sparse https://github.com/jiaxinchen-max/termux-app temprepo
+          
           cd temprepo
           git sparse-checkout set termux-x11/src/main/cpp
+          ls termux-x11/src/main/cpp
           cp -r termux-x11/src/main/cpp ../termux-x11/src/main/
           cd ..
           rm -rf temprepo
@@ -31,9 +43,7 @@ jobs:
          git config user.name "github-actions"
          git config user.email "github-actions@github.com"
          git add termux-x11/src/main/cpp
-         if git diff --cached --quiet; then
-          echo "✅ No changes to commit"
-         else
+         
          git commit -m "Update cpp folder from external repo"
          git push
-         fi
+         
