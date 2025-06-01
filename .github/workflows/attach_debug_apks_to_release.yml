@@ -43,11 +43,10 @@ jobs:
           CURRENT_VERSION_NAME_REGEX='\s+versionName "([^"]+)"$'
           CURRENT_VERSION_NAME=$(grep -m 1 -E "$CURRENT_VERSION_NAME_REGEX" ./app/build.gradle | sed -r "s/$CURRENT_VERSION_NAME_REGEX/\1/")
           RELEASE_VERSION_NAME="v${CURRENT_VERSION_NAME}+${GITHUB_SHA:0:7}"
-          APK_DIR_PATH="./app/build/outputs/apk/debug"
           APK_VERSION_TAG="${RELEASE_VERSION_NAME}+${{ matrix.package_variant }}-github-debug"
-          APK_BASENAME_PREFIX="XoDos-app_${APK_VERSION_TAG}"
 
           echo "RELEASE_VERSION_NAME=${RELEASE_VERSION_NAME}" >> $GITHUB_ENV
+          echo "APK_VERSION_TAG=${APK_VERSION_TAG}" >> $GITHUB_ENV
           
           echo "Building APKs for ${APK_VERSION_TAG} release"
           ./gradlew assembleDebug
@@ -55,10 +54,10 @@ jobs:
           echo "Found XoDos APKs:"
           ls -la ./app/build/outputs/apk/debug/*.apk
           if ls ./app/build/outputs/apk/debug/*universal.apk 1> /dev/null 2>&1; then
-          echo "Universal APK found"
+            echo "Universal APK found"
           else
-          echo "::error::Universal APK not found!"
-          exit 1
+            echo "::error::Universal APK not found!"
+            exit 1
           fi
 
       - name: Upload APKs to GitHub artifact
@@ -75,15 +74,40 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - name: Download artifact
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Get release version
+        id: get_version
+        run: |
+          CURRENT_VERSION_NAME=$(grep -m1 'versionName' ./app/build.gradle | awk '{print $2}' | tr -d '"')
+          RELEASE_VERSION_NAME="v${CURRENT_VERSION_NAME}+${GITHUB_SHA:0:7}"
+          echo "release_version=${RELEASE_VERSION_NAME}" >> $GITHUB_OUTPUT
+          
+      - name: Download artifacts
         uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.get_version.outputs.release_version }}
+          release_name: ${{ steps.get_version.outputs.release_version }}
+          draft: false
+          prerelease: false
 
       - name: Upload APKs to release
         uses: termux/upload-release-action@v4.2.0
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ./app/build/outputs/apk/debug/*.apk
-          tag: ${{ needs.build.outputs.release_version }}
-          release_name: ${{ needs.build.outputs.release_version }}
+          file: |
+            artifacts/apt-android-7/*.apk
+            artifacts/apt-android-5/*.apk
+          file_glob: true
+          tag: ${{ steps.get_version.outputs.release_version }}
+          release_name: ${{ steps.get_version.outputs.release_version }}
           checksums: sha256,sha512,md5
-          create_release: true
