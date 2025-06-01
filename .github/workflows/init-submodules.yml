@@ -25,12 +25,12 @@ jobs:
          git reset --hard HEAD
          git clean -fd    
          echo "⬇️ Pulling with rebase"
-         git pull --rebase origin main
+         #git pull --rebase origin main
       
       
       - name: Fetch folder from external repo
         run: |
-          ls
+          pwd
           mkdir -p termux-x11/src/main/cpp
           git clone -b master-x11-submodule https://github.com/jiaxinchen-max/termux-app temprepo
           cd temprepo
@@ -38,7 +38,7 @@ jobs:
           git submodule update --init --recursive
           #git clone --depth=1 --filter=blob:none --sparse https://github.com/jiaxinchen-max/termux-app temprepo
           
-          cd temprepo
+          #cd temprepo
           git sparse-checkout set termux-x11/src/main/cpp
           ls termux-x11/src/main/cpp
           cp -r termux-x11/src/main/cpp ../termux-x11/src/main/
