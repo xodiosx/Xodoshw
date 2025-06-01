@@ -45,7 +45,7 @@ jobs:
           RELEASE_VERSION_NAME="v${CURRENT_VERSION_NAME}+${GITHUB_SHA:0:7}"
           APK_DIR_PATH="./app/build/outputs/apk/debug"
           APK_VERSION_TAG="${RELEASE_VERSION_NAME}+${{ matrix.package_variant }}-github-debug"
-          APK_BASENAME_PREFIX="termux-app_${APK_VERSION_TAG}"
+          APK_BASENAME_PREFIX="XoDos-app_${APK_VERSION_TAG}"
 
           echo "RELEASE_VERSION_NAME=${RELEASE_VERSION_NAME}" >> $GITHUB_ENV
           
@@ -56,6 +56,7 @@ jobs:
           for abi in universal arm64-v8a armeabi-v7a x86_64 x86; do
             if ! test -f "${APK_DIR_PATH}/${APK_BASENAME_PREFIX}_${abi}.apk"; then
               echo "APK not found: ${APK_DIR_PATH}/${APK_BASENAME_PREFIX}_${abi}.apk"
+              ls ./app/build/outputs/apk/debug
               exit 1
             fi
           done
