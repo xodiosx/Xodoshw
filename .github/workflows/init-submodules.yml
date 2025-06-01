@@ -28,11 +28,12 @@ jobs:
 
       - name: Commit and push changes
         run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git add termux-x11/src/main/cpp
-          if git diff --cached --quiet; then
-            echo "✅ No changes to commit"
-          else
-            git commit -m "Update cpp folder from external repo"
-            git push
+         git config user.name "github-actions"
+         git config user.email "github-actions@github.com"
+         git add termux-x11/src/main/cpp
+         if git diff --cached --quiet; then
+          echo "✅ No changes to commit"
+         else
+         git commit -m "Update cpp folder from external repo"
+         git push
+         fi
