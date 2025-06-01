@@ -16,14 +16,15 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Pull with rebase (force clean)
+      - name: Reset repo before pull
         run: |
-         
-         git clean -fdx                # Remove all untracked files/folders, including ignored ones
          git fetch origin
          git checkout main
-         git branch --set-upstream-to=origin/main main
-         git reset --hard              # Discard all local changes (like gradlew.bat)
+         git branch --set-upstream-to=origin/main main    
+         echo "🔁 Resetting local changes"
+         git reset --hard HEAD
+         git clean -fd    
+         echo "⬇️ Pulling with rebase"
          git pull --rebase origin main
       
       
