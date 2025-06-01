@@ -3,6 +3,9 @@ name: Init & Push Submodules
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   push-submodules:
     runs-on: ubuntu-latest
@@ -19,12 +22,13 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Update and commit submodules
-        run: |
-          mkdir -p termux-x11/src/main/cpp
-          git submodule update --init --recursive
-          git add termux-x11/src/main/cpp/
-          git commit -m "Auto: Add submodule commit references"
+      - name: Init submodules
+        run: git submodule update --init --recursive
 
-      - name: Push changes
-        run: git push
+      - name: Commit submodule references
+        run: |
+          git add termux-x11/src/main/cpp
+          git pull --rebase origin main || true
+          git commit -m "Auto: Add submodule commit references"
+          git push origin main
+         
