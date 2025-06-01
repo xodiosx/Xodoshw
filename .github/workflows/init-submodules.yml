@@ -18,12 +18,12 @@ jobs:
 
       - name: Pull with rebase (force clean)
         run: |
-          
-          git clean -fd          # Remove untracked files/folders if any
-          git fetch origin
-          git checkout main
-          git branch --set-upstream-to=origin/main main
-          git pull --rebase origin main
+         git reset --hard              # Discard all local changes (like gradlew.bat)
+         git clean -fdx                # Remove all untracked files/folders, including ignored ones
+         git fetch origin
+         git checkout main
+         git branch --set-upstream-to=origin/main main
+         git pull --rebase origin main
       
       
       - name: Fetch folder from external repo
