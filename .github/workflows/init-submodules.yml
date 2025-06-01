@@ -22,18 +22,24 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Init submodules
+      - name: Set main branch upstream (fix push issue)
+        run: |
+          git branch --set-upstream-to=origin/main main
+          git pull --rebase origin main
+
+      - name: Initialize submodules
         run: git submodule update --init --recursive
 
-      - name: Commit submodule references
+      - name: Stage submodule changes (if any)
         run: |
-          git pull --rebase origin main || true
+          mkdir -p termux-x11/src/main/cpp
           git add termux-x11/src/main/cpp || true
-          
+
+      - name: Commit & Push if needed
+        run: |
           if git diff --cached --quiet; then
             echo "✅ No changes to commit"
           else
             git commit -m "Auto: Add submodule commit references"
             git push origin main
           fi
-         
