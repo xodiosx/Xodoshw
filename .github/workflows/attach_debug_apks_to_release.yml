@@ -45,8 +45,9 @@ jobs:
           RELEASE_VERSION_NAME="v${CURRENT_VERSION_NAME}+${GITHUB_SHA:0:7}"
           APK_VERSION_TAG="${RELEASE_VERSION_NAME}+${{ matrix.package_variant }}-github-debug"
 
-          echo "RELEASE_VERSION_NAME=${RELEASE_VERSION_NAME}" >> $GITHUB_ENV
-          echo "APK_VERSION_TAG=${APK_VERSION_TAG}" >> $GITHUB_ENV
+          # Use modern output method
+          echo "RELEASE_VERSION_NAME=$RELEASE_VERSION_NAME" >> $GITHUB_ENV
+          echo "APK_VERSION_TAG=$APK_VERSION_TAG" >> $GITHUB_ENV
           
           echo "Building APKs for ${APK_VERSION_TAG} release"
           ./gradlew assembleDebug
@@ -82,12 +83,26 @@ jobs:
         run: |
           CURRENT_VERSION_NAME=$(grep -m1 'versionName' ./app/build.gradle | awk '{print $2}' | tr -d '"')
           RELEASE_VERSION_NAME="v${CURRENT_VERSION_NAME}+${GITHUB_SHA:0:7}"
-          echo "release_version=${RELEASE_VERSION_NAME}" >> $GITHUB_OUTPUT
+          # Use modern output method
+          echo "release_version=$RELEASE_VERSION_NAME" >> $GITHUB_OUTPUT
           
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
           path: artifacts
+
+      - name: Verify artifacts exist
+        run: |
+          echo "Downloaded artifacts:"
+          find artifacts -type f -name '*.apk' -print
+          
+          # Count APK files
+          APK_COUNT=$(find artifacts -type f -name '*.apk' | wc -l)
+          if [ "$APK_COUNT" -eq 0 ]; then
+            echo "::error::No APK files found in artifacts!"
+            exit 1
+          fi
+          echo "Found $APK_COUNT APK files"
 
       - name: Create Release
         id: create_release
@@ -101,13 +116,10 @@ jobs:
           prerelease: false
 
       - name: Upload APKs to release
-        uses: termux/upload-release-action@v4.2.0
+        uses: softprops/action-gh-release@v1
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: |
-            artifacts/apt-android-7/*.apk
-            artifacts/apt-android-5/*.apk
-          file_glob: true
-          tag: ${{ steps.get_version.outputs.release_version }}
-          release_name: ${{ steps.get_version.outputs.release_version }}
-          checksums: sha256,sha512,md5
+          files: |
+            artifacts/**/*.apk
+          tag_name: ${{ steps.get_version.outputs.release_version }}
+          generate_release_notes: true
+          fail_on_unmatched_files: true
