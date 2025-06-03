@@ -45,7 +45,6 @@ jobs:
           RELEASE_VERSION_NAME="v${CURRENT_VERSION_NAME}+${GITHUB_SHA:0:7}"
           APK_VERSION_TAG="${RELEASE_VERSION_NAME}+${{ matrix.package_variant }}-github-debug"
 
-          # Use modern output method
           echo "RELEASE_VERSION_NAME=$RELEASE_VERSION_NAME" >> $GITHUB_ENV
           echo "APK_VERSION_TAG=$APK_VERSION_TAG" >> $GITHUB_ENV
           
@@ -64,7 +63,7 @@ jobs:
       - name: Upload APKs to GitHub artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.package_variant }}
+          name: apks-${{ matrix.package_variant }}
           path: ./app/build/outputs/apk/debug/*.apk
 
   upload:
@@ -83,7 +82,6 @@ jobs:
         run: |
           CURRENT_VERSION_NAME=$(grep -m1 'versionName' ./app/build.gradle | awk '{print $2}' | tr -d '"')
           RELEASE_VERSION_NAME="v${CURRENT_VERSION_NAME}+${GITHUB_SHA:0:7}"
-          # Use modern output method
           echo "release_version=$RELEASE_VERSION_NAME" >> $GITHUB_OUTPUT
           
       - name: Download artifacts
@@ -96,7 +94,6 @@ jobs:
           echo "Downloaded artifacts:"
           find artifacts -type f -name '*.apk' -print
           
-          # Count APK files
           APK_COUNT=$(find artifacts -type f -name '*.apk' | wc -l)
           if [ "$APK_COUNT" -eq 0 ]; then
             echo "::error::No APK files found in artifacts!"
@@ -112,14 +109,15 @@ jobs:
         with:
           tag_name: ${{ steps.get_version.outputs.release_version }}
           release_name: ${{ steps.get_version.outputs.release_version }}
-          draft: true
+          draft: false
           prerelease: true
 
       - name: Upload APKs to release
-        uses: softprops/action-gh-release@v1
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: |
-            artifacts/**/*.apk
-          tag_name: ${{ steps.get_version.outputs.release_version }}
-          generate_release_notes: true
-          fail_on_unmatched_files: true
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: artifacts/apks-${{ matrix.package_variant }}/*.apk
+          asset_name: ${{ matrix.package_variant }}_${{ github.run_id }}_$(basename "${{ matrix.package_variant }}")
+          asset_content_type: application/vnd.android.package-archive
