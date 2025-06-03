@@ -1,4 +1,4 @@
-name: Attach Debug APKs To Release
+name: build Debug APKs To Release
 
 on:
   workflow_dispatch:
@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        package_variant: [apt-android-7, apt-android-5]
+        package_variant: [apt-android-7]
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -112,8 +112,8 @@ jobs:
         with:
           tag_name: ${{ steps.get_version.outputs.release_version }}
           release_name: ${{ steps.get_version.outputs.release_version }}
-          draft: false
-          prerelease: false
+          draft: true
+          prerelease: true
 
       - name: Upload APKs to release
         uses: softprops/action-gh-release@v1
