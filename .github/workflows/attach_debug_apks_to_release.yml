@@ -101,23 +101,14 @@ jobs:
           fi
           echo "Found $APK_COUNT APK files"
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Release and Upload APKs
+        uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ steps.get_version.outputs.release_version }}
-          release_name: ${{ steps.get_version.outputs.release_version }}
+          name: Release ${{ steps.get_version.outputs.release_version }}
+          files: |
+            artifacts/**/*.apk
+          generate_release_notes: true
           draft: false
           prerelease: true
-
-      - name: Upload APKs to release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: artifacts/apks-${{ matrix.package_variant }}/*.apk
-          asset_name: ${{ matrix.package_variant }}_${{ github.run_id }}_$(basename "${{ matrix.package_variant }}")
-          asset_content_type: application/vnd.android.package-archive
+          fail_on_unmatched_files: true
