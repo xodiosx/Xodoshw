@@ -1,7 +1,9 @@
 package com.termux.x11;
 
 ////////
-
+import android.view.MotionEvent;
+import android.view.InputDevice;
+//import android.widget.Toast;
 
 
 import android.annotation.SuppressLint;
@@ -52,6 +54,35 @@ public class LorieView extends SurfaceView implements InputStub {
 
 // In LorieView.java
 
+@Override
+public boolean onGenericMotionEvent(MotionEvent event) {
+    if ((event.getSource() & InputDevice.SOURCE_CLASS_POINTER) != 0) {
+        float vScroll = event.getAxisValue(MotionEvent.AXIS_VSCROLL);
+        float hScroll = event.getAxisValue(MotionEvent.AXIS_HSCROLL);
+
+        if (vScroll != 0 || hScroll != 0) {
+            if (vScroll > 0) {
+                injectPointerButtonPress(Pointer.Button.BUTTON_SCROLL_UP);
+                injectPointerButtonRelease(Pointer.Button.BUTTON_SCROLL_UP);
+            } else if (vScroll < 0) {
+                injectPointerButtonPress(Pointer.Button.BUTTON_SCROLL_DOWN);
+                injectPointerButtonRelease(Pointer.Button.BUTTON_SCROLL_DOWN);
+            }
+
+            if (hScroll > 0) {
+                injectPointerButtonPress(Pointer.Button.BUTTON_SCROLL_CLICK_RIGHT);
+                injectPointerButtonRelease(Pointer.Button.BUTTON_SCROLL_CLICK_RIGHT);
+            } else if (hScroll < 0) {
+                injectPointerButtonPress(Pointer.Button.BUTTON_SCROLL_CLICK_LEFT);
+                injectPointerButtonRelease(Pointer.Button.BUTTON_SCROLL_CLICK_LEFT);
+            }
+
+            return true;
+        }
+    }
+
+    return super.onGenericMotionEvent(event);
+}
 
 
     public void setWinHandler(WinHandler handler) {

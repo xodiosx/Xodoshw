@@ -4,6 +4,9 @@ import android.view.InputDevice; // For InputDevice.SOURCE_GAMEPAD
 import android.widget.Toast;
 import android.graphics.PointF;
 import com.termux.x11.input.InputEventSender;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
 
 import static android.Manifest.permission.WRITE_SECURE_SETTINGS;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
@@ -116,7 +119,17 @@ public class MainActivity extends LoriePreferences implements View.OnApplyWindow
     protected boolean mEnableFloatBallMenu = false;
 
 ///////////////////////////////////////////////////////////////////
-
+private void checkConnectedControllers() {
+    int[] deviceIds = InputDevice.getDeviceIds();
+    for (int id : deviceIds) {
+        InputDevice device = InputDevice.getDevice(id);
+        if ((device.getSources() & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD) {
+            String msg = "Controller:🎮" + device.getName() + " (ID:" + id + ")";
+            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+            Log.d("ControllerDebug", msg);
+        }
+    }
+}
 private boolean isGamepadConnected() {
     int[] deviceIds = InputDevice.getDeviceIds();
     for (int id : deviceIds) {
@@ -129,6 +142,19 @@ private boolean isGamepadConnected() {
     }
     return false; // No gamepad found
 }
+
+public boolean isWineRunning() {
+    try {
+        // Use pgrep for more reliable process detection
+        Process process = Runtime.getRuntime().exec("pgrep -f winhandler.exe");
+      // runOnUiThread(() -> Toast.makeText(this, "winhandler: ", Toast.LENGTH_SHORT).show());
+         return process.waitFor() == 0;
+        
+    } catch (Exception e) {
+        return false;
+    }
+}
+
 
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -213,7 +239,14 @@ private boolean isGamepadConnected() {
         int touch_sensitivity = preferences.getInt("touch_sensitivity", 1);
         mInputHandler.setLongPressedDelay(touch_sensitivity);
 //        Log.d("MainActivity","touch_sensitivity:"+touch_sensitivity);
-        mLorieKeyListener = (v, k, e) -> {
+     
+        
+           
+              
+                    mLorieKeyListener = (v, k, e) -> {
+                    if (e.getDevice() == null) {
+       return mInputHandler.sendKeyEvent(v, e);
+   }
 if (k == KeyEvent.KEYCODE_VOLUME_UP && e.getAction() == KeyEvent.ACTION_DOWN) {
         Log.d("MainActivity", "Volume Up Pressed - Toggling Soft Keyboard");
 
@@ -266,16 +299,40 @@ toggleExtraKeys();
                 }
             }
         
-    if (isGamepadConnected()) { // Run only if a gamepad is connected
-        InputDevice device = e.getDevice();
-        if (device != null && (device.getSources() & InputDevice.SOURCE_GAMEPAD) != 0) {
-            Log.d("MainActivity", "Forwarding Gamepad Button: " + e.getKeyCode());
-            winHandler.onKeyEvent(e); // Send gamepad button to Wine
-            return mInputHandler.sendKeyEvent(v, e); // Consume event
+if (isGamepadConnected()) {
+    InputDevice device = e.getDevice();
+    if (device != null && (device.getSources() & InputDevice.SOURCE_GAMEPAD) != 0) {
+
+        boolean handledByWine = false;
+        boolean handledByX11 = false;
+        boolean handledByInputHandler = false;
+
+        if (isWineRunning()) {
+            winHandler.onKeyEvent(e); // usually no return value
+            handledByWine = true;
         }
+
+        // call X11
+        handledByX11 = inputControlsView.dispatchKeyEvent(e);
+
+        // call Termux fallback input
+        handledByInputHandler = mInputHandler.sendKeyEvent(v, e);
+
+        // Debug toast if needed
+        // Toast.makeText(this, "Handled: wine=" + handledByWine + " x11=" + handledByX11 + " fallback=" + handledByInputHandler, Toast.LENGTH_SHORT).show();
+
+        // Combine logic safely
+        return handledByWine || handledByX11 || handledByInputHandler;
     }
-            return mInputHandler.sendKeyEvent(v, e);
+}
+
+// If not a gamepad
+return mInputHandler.sendKeyEvent(v, e);
+            
         };
+        
+        
+        
         lorieParent.setOnTouchListener((v, event) -> true);
 //        lorieParent.setOnTouchListener((v, e) -> mInputHandler.handleTouchEvent(lorieParent, lorieView, e));
 //        lorieParent.setOnHoverListener((v, e) -> mInputHandler.handleTouchEvent(lorieParent, lorieView, e));
@@ -291,19 +348,17 @@ toggleExtraKeys();
         
         lorieView.setOnGenericMotionListener((v, e) -> {
     if (isGamepadConnected() && (e.getSource() & InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK) {
-        Log.d("MainActivity", "Joystick Moved: AXIS_X=" + e.getAxisValue(MotionEvent.AXIS_X) +
-                ", AXIS_Y=" + e.getAxisValue(MotionEvent.AXIS_Y) +
-                ", AXIS_RX=" + e.getAxisValue(MotionEvent.AXIS_RX) +
-                ", AXIS_RY=" + e.getAxisValue(MotionEvent.AXIS_RY));
-                 // Add trigger axes to logging (optional)
-        Log.d("MainActivity", "Joystick Moved: LT=" + e.getAxisValue(MotionEvent.AXIS_LTRIGGER) +
-                ", RT=" + e.getAxisValue(MotionEvent.AXIS_RTRIGGER));
-
-                
-                
-        return winHandler.onGenericMotionEvent(e); // Send to Wine
+        // Send to Wine if running
+        if (isWineRunning()) {
+            winHandler.onGenericMotionEvent(e);
+        }
+        
+        // Always send to X11
+        boolean handledByX11 = inputControlsView.dispatchGenericMotionEvent(e);
+        
+        return true;
     }
-    return false; // Ignore if no gamepad is connected
+    return false;
 });
         
         //=====================
@@ -353,6 +408,7 @@ toggleExtraKeys();
         initStylusAuxButtons();
         initMouseAuxButtons();
         setupInputController();
+        checkConnectedControllers(); // check for gamepad controllers
 //        inputControlsView.setOnHoverListener((v, e) -> {
 //            int[] view0Location = new int[2];
 //            int[] viewLocation = new int[2];
@@ -401,6 +457,7 @@ toggleExtraKeys();
         inputControlsView.setXServer(xServer);
         inputControlsView.setVisibility(View.GONE);
         frm.addView(inputControlsView);
+       // inputControlsView.setVisibility(View.VISIBLE);
         inputControlsManager = new InputControlsManager(this);
         String shortcutPath = getIntent().getStringExtra("shortcut_path");
         container = new Container(0);

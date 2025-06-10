@@ -397,7 +397,7 @@ public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable S
                 desc.setMovementMethod(LinkMovementMethod.getInstance());
                 new android.app.AlertDialog.Builder(getActivity())
                     .setView(view)
-                    .setTitle("ReInstall XoDos + xinput")
+                    .setTitle("Install XoDos display")
                     .setPositiveButton("OK",
                         (dialog, whichButton) -> {
                             if (preferenceActivity != null) {
@@ -411,7 +411,7 @@ public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable S
             }
             if ("stop_desktop".contentEquals(preference.getKey())) {
                 new android.app.AlertDialog.Builder(getActivity())
-                    .setTitle("Stop Desktop")
+                    .setTitle("Stop🛑Desktop")
                     .setPositiveButton("OK",
                         (dialog, whichButton) -> {
                             if (preferenceActivity != null) {

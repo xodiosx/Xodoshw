@@ -85,6 +85,12 @@ public class WinHandler {
         });
     }
 
+// In WinHandler.java
+public boolean isControllerRegistered(int deviceId) {
+    return currentController != null && currentController.getDeviceId() == deviceId;
+
+}
+
     public void killProcess(final String processName) {
         addAction(() -> {
             sendData.rewind();
@@ -385,8 +391,9 @@ public class WinHandler {
         if (currentController != null && currentController.getDeviceId() == event.getDeviceId()) {
             handled = currentController.updateStateFromMotionEvent(event);
             if (handled) sendGamepadState();
+            return false;
         }
-        return handled;
+        return false;
     }
     public void saveGamepadState(GamepadState state) {
         synchronized (gamepadStateQueue) {
@@ -406,9 +413,10 @@ public class WinHandler {
                 handled = currentController.updateStateFromKeyEvent(event);
             }
 
-            if (handled) sendGamepadState();
+if (handled) sendGamepadState();
+return false; //  don’t consume the event, let X11 use it too
         }
-        return handled;
+        return false;
     }
 
     public byte getDInputMapperType() {

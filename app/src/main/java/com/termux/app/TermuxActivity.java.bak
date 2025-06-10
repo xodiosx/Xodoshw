@@ -547,14 +547,20 @@ FileUtils.copyAssetsFile2Phone(activity, "fix");
         };
     }
 
-    private void setFloatBallMenuClient() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        mEnableFloatBallMenu = preferences.getBoolean("enableFloatBallMenu", false);
-        if (mEnableFloatBallMenu) {
-            mFloatBallMenuClient = new FloatBallMenuClient(this);
-            mFloatBallMenuClient.onCreate();
-        }
+    pprivate void setFloatBallMenuClient() {
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+    mEnableFloatBallMenu = preferences.getBoolean("enableFloatBallMenu", false);
+
+    if (mFloatBallMenuClient != null) {
+        mFloatBallMenuClient.onDestroy(); // ✅ Cleanup previous if any (from last session)
+        mFloatBallMenuClient = null;
     }
+
+    if (mEnableFloatBallMenu) {
+        mFloatBallMenuClient = new FloatBallMenuClient(this);
+        mFloatBallMenuClient.onCreate(); // ✅ Recreate only if preference is enabled
+    }
+}
 
     @Override
     public void onStart() {
