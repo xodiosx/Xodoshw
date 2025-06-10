@@ -1,5 +1,6 @@
 package com.termux.x11.controller.xserver;
 
+ import android.view.MotionEvent;
 import static com.termux.x11.controller.xserver.Keyboard.createKeycodeMap;
 import static com.termux.x11.input.InputStub.BUTTON_UNDEFINED;
 
@@ -97,4 +98,20 @@ public class InputDeviceManager implements Pointer.OnPointerMotionListener, Keyb
 //        Log.d("onKeyRelease",realKeyCode+"");
         xServer.sendKeyEvent(0, realKeyCode, false);
     }
+    
+    
+public void handleTouchEvent(MotionEvent event) {
+    xServer.sendTouchEvent(
+        event.getActionMasked(),
+        event.getPointerId(0),
+        (int) event.getX(),
+        (int) event.getY()
+    );
+}
+
+public void handleHoverEvent(MotionEvent event) {
+    xServer.injectPointerMove((int) event.getX(), (int) event.getY());
+}   
+        
+    
 }
