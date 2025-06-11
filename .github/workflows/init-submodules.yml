@@ -32,12 +32,12 @@ jobs:
         run: |
           pwd
           mkdir -p termux-x11/src/main/cpp
-          git clone -b master-x11-submodule https://github.com/jiaxinchen-max/termux-app temprepo
+          git clone -b master-x11-submodule https://github.com/xodiosx/XoDos-test temprepo
           cd temprepo
           ls
            
           git submodule update --init --recursive
-          #git clone --depth=1 --filter=blob:none --sparse https://github.com/jiaxinchen-max/termux-app temprepo
+          #git clone --depth=1 --filter=blob:none --sparse https://github.com/xodiosx/XoDos-test temprepo
           
           #cd temprepo
           git sparse-checkout set termux-x11/src/main/cpp
@@ -52,7 +52,7 @@ jobs:
          git config user.name "github-actions"
          git config user.email "github-actions@github.com"
          git add termux-x11/src/main/cpp         
-         git commit -m "Update cpp full v5"
+         git commit -m "Update cpp and restore"
          sleep 2
          git push
          
