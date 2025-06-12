@@ -99,19 +99,7 @@ public class InputDeviceManager implements Pointer.OnPointerMotionListener, Keyb
         xServer.sendKeyEvent(0, realKeyCode, false);
     }
     
-    
-public void handleTouchEvent(MotionEvent event) {
-    xServer.sendTouchEvent(
-        event.getActionMasked(),
-        event.getPointerId(0),
-        (int) event.getX(),
-        (int) event.getY()
-    );
-}
-
-public void handleHoverEvent(MotionEvent event) {
-    xServer.injectPointerMove((int) event.getX(), (int) event.getY());
-}   
+   
         
     
 }
