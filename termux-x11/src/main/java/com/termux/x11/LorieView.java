@@ -53,17 +53,7 @@ public class LorieView extends SurfaceView implements InputStub {
 ///////////////
 
 // In LorieView.java
-@Override
-public boolean onTouchEvent(MotionEvent event) {
-    inputDeviceManager.handleTouchEvent(event);
-    return true;
-}
 
-@Override
-public boolean onHoverEvent(MotionEvent event) {
-    inputDeviceManager.handleHoverEvent(event);
-    return true;
-}
 
 
 @Override
