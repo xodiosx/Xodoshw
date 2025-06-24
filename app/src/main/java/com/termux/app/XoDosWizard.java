@@ -2,12 +2,10 @@ package com.termux.app;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import com.termux.R; // Ensure this matches your package
+import android.content.SharedPreferences;
+import com.termux.R;
 import java.io.File;
 import java.io.FileWriter;
-import android.view.ContextThemeWrapper;
-import android.graphics.Color;
-import android.view.View;
 
 public class XoDosWizard {
 
@@ -28,7 +26,30 @@ public class XoDosWizard {
     }
 
     public void start() {
-        detectAndroidVersion();
+        if (!hasShownPhantomKillerWarning()) {
+            showPhantomKillerWarning();
+        } else {
+            detectAndroidVersion();
+        }
+    }
+
+    private boolean hasShownPhantomKillerWarning() {
+        SharedPreferences prefs = mActivity.getSharedPreferences("xodos_prefs", Activity.MODE_PRIVATE);
+        return prefs.getBoolean("phantom_killer_warning_shown", false);
+    }
+
+    private void showPhantomKillerWarning() {
+        new AlertDialog.Builder(mActivity)
+            .setTitle("⚠️ Disable Phantom Process Killer")
+            .setMessage("To ensure background processes work correctly, please disable Phantom Process Killer for Termux. You only need to do this once.\n\nDetails: https://github.com/xodiosx/XoDos/wiki/PhantomKiller")
+            .setPositiveButton("OK", (dialog, which) -> {
+                SharedPreferences.Editor editor = mActivity.getSharedPreferences("xodos_prefs", Activity.MODE_PRIVATE).edit();
+                editor.putBoolean("phantom_killer_warning_shown", true);
+                editor.apply();
+                detectAndroidVersion();
+            })
+            .setCancelable(false)
+            .show();
     }
 
     private void detectAndroidVersion() {
@@ -82,21 +103,14 @@ public class XoDosWizard {
 
     private void askDxvkVersion() {
         File dxvkDir = new File(USR_PREFIX + "/glibc/opt/libs/d3d");
-        
-       // String[] dxvkFiles = dxvkDir.list((dir, name) -> name.endsWith(".7z"));
-         // Filter files based on conditions
-    String[] dxvkFiles = dxvkDir.list((dir, name) -> {
-        boolean isD3DRequired = !"snapdragon".equalsIgnoreCase(cpuChoice) 
-                              && "glibc".equalsIgnoreCase(wineChoice);
-        
-        boolean is7z = name.toLowerCase().endsWith(".7z");
-        boolean hasWineD3D = name.toLowerCase().contains("wined3d");
-        
-        return is7z && (isD3DRequired ? hasWineD3D : true);
-    });
+        String[] dxvkFiles = dxvkDir.list((dir, name) -> {
+            boolean isD3DRequired = !"snapdragon".equalsIgnoreCase(cpuChoice) 
+                                  && "glibc".equalsIgnoreCase(wineChoice);
+            boolean is7z = name.toLowerCase().endsWith(".7z");
+            boolean hasWineD3D = name.toLowerCase().contains("wined3d");
+            return is7z && (isD3DRequired ? hasWineD3D : true);
+        });
 
-        
-        
         if (dxvkFiles == null || dxvkFiles.length == 0) {
             showError(String.format(mActivity.getString(R.string.error_no_dxvk), dxvkDir.getAbsolutePath()));
             return;
@@ -143,38 +157,14 @@ public class XoDosWizard {
             .setTitle(mActivity.getString(R.string.cores_title))
             .setItems(coreOptions, (dialog, which) -> {
                 switch (which) {
-                    case 0:
-                        primaryCores = null;
-                        secondaryCores = null;
-                        break;
-                    case 1:
-                        primaryCores = "6-7";
-                        secondaryCores = "0-5";
-                        break;
-                    case 2:
-                        primaryCores = "5-7";
-                        secondaryCores = "0-4";
-                        break;
-                    case 3:
-                        primaryCores = "4-7";
-                        secondaryCores = "0-3";
-                        break;
-                    case 4:
-                        primaryCores = "3-7";
-                        secondaryCores = "0-2";
-                        break;
-                    case 5:
-                        primaryCores = "2-7";
-                        secondaryCores = "0-1";
-                        break;
-                    case 6:
-                        primaryCores = "1-7";
-                        secondaryCores = "0-1";
-                        break;
-                    case 7:
-                        primaryCores = "0-7";
-                        secondaryCores = "0-1";
-                        break;
+                    case 0: primaryCores = null; secondaryCores = null; break;
+                    case 1: primaryCores = "6-7"; secondaryCores = "0-5"; break;
+                    case 2: primaryCores = "5-7"; secondaryCores = "0-4"; break;
+                    case 3: primaryCores = "4-7"; secondaryCores = "0-3"; break;
+                    case 4: primaryCores = "3-7"; secondaryCores = "0-2"; break;
+                    case 5: primaryCores = "2-7"; secondaryCores = "0-1"; break;
+                    case 6: primaryCores = "1-7"; secondaryCores = "0-1"; break;
+                    case 7: primaryCores = "0-7"; secondaryCores = "0-1"; break;
                 }
                 saveConfig();
             })
@@ -255,4 +245,4 @@ public class XoDosWizard {
             .setPositiveButton(mActivity.getString(R.string.ok), null)
             .show();
     }
-}
+            }
