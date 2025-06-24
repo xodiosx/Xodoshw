@@ -45,7 +45,7 @@
     <string name="open_controller">Open Controller</string>
     <string name="close_controller">Close Controller</string>
     <string name="progress_manager">Progress manager</string>
-    <string name="install_x11_server_bridge">ReInstall XoDos xinput</string>
+    <string name="install_x11_server_bridge">Install Fix to XoDos</string>
     <string name="stop_desktop">Stop desktop</string>
     <string name="stretch_to_fit_display">Stretch to fit display</string>
     <string name="reseed_screen">Reseed screen while soft keyboard is  open</string>
