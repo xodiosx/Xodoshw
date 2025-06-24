@@ -8,6 +8,8 @@ am broadcast --user 0 \
     pkg remove termux-display-nightly -y
 pkg remove termux-x11-nightly -y
 dpkg -i /data/data/com.termux/files/home/termux-x11-nightly-1.03.10-0-all.deb  
+dpkg -i /data/data/com.termux/files/home/xkeyboard-config_2.45_all.deb
+
 sleep 1
 #cp /data/data/com.termux/files/usr/bin/xodos /data/data/com.termux/files/xodos-normal
 #cp /data/data/com.termux/files/usr/bin/xodxx /data/data/com.termux/files/xodxx-gamemode
