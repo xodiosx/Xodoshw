@@ -1,4 +1,4 @@
-name: Upload XoDos Release
+name: Upload XoDos 5.7
 
 on:
   workflow_dispatch:
