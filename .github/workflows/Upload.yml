@@ -1,12 +1,12 @@
-name: Upload archive
+name: Upload XoDos Release
 
 on:
   workflow_dispatch:
     inputs:
       version_tag:
-        description: 'Version tag (1.5.0)'
+        description: 'Version tag (5.7.0)'
         required: true
-        default: '1.5.0'
+        default: '5.7.0'
 
 permissions:
   contents: write
@@ -28,14 +28,14 @@ jobs:
           git tag ${{ github.event.inputs.version_tag }}
           git push origin ${{ github.event.inputs.version_tag }}
 
-      - name: Install gdown
+      - name: Download Main APK
         run: |
           pip install gdown
-           
+          gdown "13WcI0cWLsiJCzArZBpbuxjue08_jl4Li" -O XoDos-${{ github.event.inputs.version_tag }}-full_arm64-v8a.apk || exit 1
 
       - name: Download Additional File
         run: |
-          gdown "15qri8QVfafGjzahNQLg__DZlDgyjg-mW" -O XoDos-kali-1.5.tar.xz || exit 1
+          ls
 
       - name: Create Release with Both Files
         uses: softprops/action-gh-release@v1
@@ -44,10 +44,11 @@ jobs:
         with:
           tag_name: ${{ github.event.inputs.version_tag }}
           name: XoDos ${{ github.event.inputs.version_tag }}
-          files: |         
-            XoDos-kali-1.5.tar.xz
+          files: |
+            XoDos-${{ github.event.inputs.version_tag }}-full_arm64-v8a.apk
+            
           body: | 
-            **XoDos Kali Linux system for arm64**
+            New XoDos release for arm64
             What's new?
             - 
             
