@@ -130,16 +130,11 @@ XoDos V5.1.0 glibc/bionic
 
 <!-- CONTRIBUTING -->
 
-## ☕ buy me a coffee ☕
+## ⭐
 <a id="support"></a> <!-- Anchor for funding button -->
 ## ❤️ Support This Project To grow ❤️
 
-**USDT (Polygon Network Only):**  
-```0x046ac894C15fcC88D492835445938291c00DD0a7```
 
-*⚠️ Only send via Polygon network*
-
-<!-- LICENSE -->
 
 ## License
 Released under the [GPLv3 license](https://www.gnu.org/licenses/gpl-3.0.html).
