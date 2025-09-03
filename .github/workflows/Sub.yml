@@ -1,7 +1,10 @@
 name: xUpdate Submodules
 
 on:
-  workflow_dispatch: # Run manually from GitHub Actions tab
+  workflow_dispatch:
+
+permissions:
+  contents: write   # allow workflow to push changes
 
 jobs:
   update-submodules:
@@ -27,4 +30,4 @@ jobs:
 
           git add .
           git commit -m "5.9.0" || echo "No changes to commit"
-          git push origin HEAD:main￼Enter
+          git push origin HEAD:main
