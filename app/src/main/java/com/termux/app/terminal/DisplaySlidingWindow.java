@@ -174,7 +174,9 @@ public class DisplaySlidingWindow extends HorizontalScrollView {
             }
             return false;
         }
-        return super.onInterceptTouchEvent(ev);
+       return super.onInterceptTouchEvent(ev);
+        
+     
     }
 
     @Override
