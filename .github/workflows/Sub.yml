@@ -1,0 +1,30 @@
+name: xUpdate Submodules
+
+on:
+  workflow_dispatch: # Run manually from GitHub Actions tab
+
+jobs:
+  update-submodules:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Init, sync and update submodules
+        run: |
+          git submodule sync --recursive
+          git submodule update --init --recursive --remote
+
+      - name: Commit and push submodules to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add .
+          git commit -m "5.9.0" || echo "No changes to commit"
+          git push origin HEAD:main￼Enter
