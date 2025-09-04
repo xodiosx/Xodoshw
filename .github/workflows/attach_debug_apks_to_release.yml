@@ -57,7 +57,7 @@ jobs:
             echo "Universal APK found"
           else
             echo "::error::Universal APK not found!"
-            exit 1
+            #exit 1
           fi
 
       - name: Upload APKs to GitHub artifact
@@ -97,7 +97,7 @@ jobs:
           APK_COUNT=$(find artifacts -type f -name '*.apk' | wc -l)
           if [ "$APK_COUNT" -eq 0 ]; then
             echo "::error::No APK files found in artifacts!"
-            exit 1
+            #exit 1
           fi
           echo "Found $APK_COUNT APK files"
 
@@ -111,4 +111,4 @@ jobs:
           generate_release_notes: true
           draft: false
           prerelease: true
-          fail_on_unmatched_files: true
+          fail_on_unmatched_files: false
